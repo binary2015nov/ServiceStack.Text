@@ -486,7 +486,7 @@ namespace ServiceStack.Text.Json
             var length = input.Length;
             int start = 0;
             int count = 0;
-            var output = StringBuilderThreadStatic.Allocate();
+            var output = StringBuilderCache.Allocate();
             for (; count < length;)
             {
                 if (input.GetChar(count) == JsonUtils.QuoteChar)
@@ -590,7 +590,7 @@ namespace ServiceStack.Text.Json
                 }
             }
             output.Append(input.Buffer, input.Offset + start, length - start);
-            return new StringSegment(StringBuilderThreadStatic.ReturnAndFree(output));
+            return new StringSegment(StringBuilderCache.Retrieve(output));
         }
 
         /// <summary>

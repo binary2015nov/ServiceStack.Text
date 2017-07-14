@@ -57,7 +57,7 @@ namespace ServiceStack.Text.Jsv
 
         public static void Refresh()
         {
-            JsConfig.InitStatics();
+            //JsConfig.InitStatics();
 
             if (JsvReader.Instance == null)
                 return;

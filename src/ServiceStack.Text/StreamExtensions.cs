@@ -232,7 +232,7 @@ namespace ServiceStack
             if (str == null)
                 return null;
 
-            var sb = StringBuilderThreadStatic.Allocate();
+            var sb = StringBuilderCache.Allocate();
             var lastChar = (char)0;
             for (var i = 0; i < str.Length; i++)
             {
@@ -247,7 +247,7 @@ namespace ServiceStack
                 lastChar = c;
             }
 
-            return StringBuilderThreadStatic.ReturnAndFree(sb);
+            return StringBuilderCache.Retrieve(sb);
         }
 
         public static byte[] Combine(this byte[] bytes, params byte[][] withBytes)
@@ -298,7 +298,7 @@ namespace ServiceStack
             {
                 sb.Append(b.ToString("x2"));
             }
-            return StringBuilderCache.ReturnAndFree(sb);
+            return StringBuilderCache.Retrieve(sb);
         }
 
         public static string ToMd5Hash(this byte[] bytes)
@@ -309,7 +309,7 @@ namespace ServiceStack
             {
                 sb.Append(b.ToString("x2"));
             }
-            return StringBuilderCache.ReturnAndFree(sb);
+            return StringBuilderCache.Retrieve(sb);
         }
 #endif
     }

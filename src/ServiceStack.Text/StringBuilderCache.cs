@@ -3,96 +3,42 @@ using System.Text;
 
 namespace ServiceStack.Text
 {
-    /// <summary>
-    /// Reusable StringBuilder ThreadStatic Cache
-    /// </summary>
     public static class StringBuilderCache
     {
         [ThreadStatic]
-        static StringBuilder cache;
+        private static StringBuilder cache;
+        public static StringBuilder Cache => cache;
 
         public static StringBuilder Allocate()
         {
-            var ret = cache;
-            if (ret == null)
-                return new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder(256);
+            cache = stringBuilder;
+            return stringBuilder;
+        }
 
-            ret.Length = 0;
-            cache = null;  //don't re-issue cached instance until it's freed
-            return ret;
+        public static StringBuilder Allocate(string value)
+        {
+            StringBuilder stringBuilder = new StringBuilder(value);
+            cache = stringBuilder;
+            return stringBuilder;
         }
 
         public static void Free(StringBuilder sb)
         {
-            cache = sb;
+            if (sb == null)
+                throw new ArgumentNullException(nameof(sb));
+
+            sb.Clear();
         }
 
-        public static string ReturnAndFree(StringBuilder sb)
+        public static string Retrieve(StringBuilder sb, bool free = true)
         {
+            if (sb == null)
+                throw new ArgumentNullException(nameof(sb));
+
             var ret = sb.ToString();
-            cache = sb;
-            return ret;
-        }
-    }
-
-    /// <summary>
-    /// Alternative Reusable StringBuilder ThreadStatic Cache
-    /// </summary>
-    public static class StringBuilderCacheAlt
-    {
-        [ThreadStatic]
-        static StringBuilder cache;
-
-        public static StringBuilder Allocate()
-        {
-            var ret = cache;
-            if (ret == null)
-                return new StringBuilder();
-
-            ret.Length = 0;
-            cache = null;  //don't re-issue cached instance until it's freed
-            return ret;
-        }
-
-        public static void Free(StringBuilder sb)
-        {
-            cache = sb;
-        }
-
-        public static string ReturnAndFree(StringBuilder sb)
-        {
-            var ret = sb.ToString();
-            cache = sb;
-            return ret;
-        }
-    }
-
-    //Use separate cache internally to avoid reallocations and cache misses
-    internal static class StringBuilderThreadStatic
-    {
-        [ThreadStatic]
-        static StringBuilder cache;
-
-        public static StringBuilder Allocate()
-        {
-            var ret = cache;
-            if (ret == null)
-                return new StringBuilder();
-
-            ret.Length = 0;
-            cache = null;  //don't re-issue cached instance until it's freed
-            return ret;
-        }
-
-        public static void Free(StringBuilder sb)
-        {
-            cache = sb;
-        }
-
-        public static string ReturnAndFree(StringBuilder sb)
-        {
-            var ret = sb.ToString();
-            cache = sb;
+            if (free)
+                Free(sb);
             return ret;
         }
     }

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using ServiceStack.Text;
 
@@ -73,74 +74,6 @@ namespace ServiceStack
 #endif
         }
 
-        internal static string CombinePaths(StringBuilder sb, params string[] paths)
-        {
-            AppendPaths(sb, paths);
-            return sb.ToString();
-        }
-
-        public static void AppendPaths(StringBuilder sb, string[] paths)
-        {
-            foreach (var path in paths)
-            {
-                if (string.IsNullOrEmpty(path))
-                    continue;
-
-                if (sb.Length > 0 && sb[sb.Length - 1] != '/')
-                    sb.Append("/");
-
-                sb.Append(path.Replace('\\', '/').TrimStart('/'));
-            }
-        }
-
-        public static string CombinePaths(params string[] paths)
-        {
-            var sb = StringBuilderThreadStatic.Allocate();
-            AppendPaths(sb, paths);
-            return StringBuilderThreadStatic.ReturnAndFree(sb);
-        }
-
-        public static string AssertDir(this string dirPath)
-        {
-            if (!dirPath.DirectoryExists())
-                dirPath.CreateDirectory();
-            return dirPath;
-        }
-
-        public static string CombineWith(this string path, params string[] thesePaths)
-        {
-            if (path == null)
-                path = "";
-
-            if (thesePaths.Length == 1 && thesePaths[0] == null) return path;
-            var startPath = path.Length > 1 ? path.TrimEnd('/', '\\') : path;
-
-            var sb = StringBuilderThreadStatic.Allocate();
-            sb.Append(startPath);
-            AppendPaths(sb, thesePaths);
-            return StringBuilderThreadStatic.ReturnAndFree(sb);
-        }
-
-        public static string CombineWith(this string path, params object[] thesePaths)
-        {
-            if (thesePaths.Length == 1 && thesePaths[0] == null) return path;
-
-            var sb = StringBuilderThreadStatic.Allocate();
-            sb.Append(path.TrimEnd('/', '\\'));
-            AppendPaths(sb, ToStrings(thesePaths));
-            return StringBuilderThreadStatic.ReturnAndFree(sb);
-        }
-
-        public static string[] ToStrings(object[] thesePaths)
-        {
-            var to = new string[thesePaths.Length];
-            for (var i = 0; i < thesePaths.Length; i++)
-            {
-                to[i] = thesePaths[i].ToString();
-            }
-            return to;
-        }
-
         internal static List<To> Map<To>(System.Collections.IEnumerable items, Func<object, To> converter)
         {
             if (items == null)
@@ -152,7 +85,46 @@ namespace ServiceStack
                 list.Add(converter(item));
             }
             return list;
-        }    
+        }
+
+        /// <summary>
+        /// Combines an array of strings into an url.
+        /// </summary>
+        /// <param name="baseUrl">The base url to combine.</param>
+        /// <param name="paths">An array of parts of the url.</param>
+        /// <returns>The combined urls.</returns>
+        public static string CombineWith(this string baseUrl, params string[] paths)
+        {
+            if (string.IsNullOrEmpty(baseUrl))
+                return CombinePaths(paths);
+
+            return baseUrl.Replace('\\', '/').TrimEnd('/') + CombinePaths(paths);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string CombinePaths(params string[] paths)
+        {
+            if (paths.Length == 0) return "/";
+
+            var sb = StringBuilderCache.Allocate();
+            PathUtils.AppendPaths(sb, paths);
+            return StringBuilderCache.Retrieve(sb);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void AppendPaths(StringBuilder sb, string[] paths)
+        {
+            foreach (var path in paths)
+            {
+                if (string.IsNullOrEmpty(path))
+                    continue;
+                if (path[0] != '/' && path[0] != '\\')
+                    sb.Append('/');
+                int length = sb.Length;
+                sb.Append(path);
+                sb.Replace('\\', '/', length, path.Length);
+            }
+        }
     }
 
 }

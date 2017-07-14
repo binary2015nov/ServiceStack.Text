@@ -30,7 +30,7 @@ namespace ServiceStack
     {
         static QueryStringSerializer()
         {
-            JsConfig.InitStatics();
+            //JsConfig.InitStatics();
             Instance = new JsWriter<JsvTypeSerializer>();
         }
 
@@ -68,7 +68,7 @@ namespace ServiceStack
             }
             catch (Exception ex)
             {
-                Tracer.Instance.WriteError(ex);
+                Tracer.Default.WriteError(ex);
                 throw;
             }
         }

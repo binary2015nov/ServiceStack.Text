@@ -25,7 +25,7 @@ namespace ServiceStack.Text
             if (string.IsNullOrEmpty(serializedText)) return null;
 
             var tabCount = 0;
-            var sb = StringBuilderThreadStatic.Allocate();
+            var sb = StringBuilderCache.Allocate();
             var firstKeySeparator = true;
             var inString = false;
 
@@ -87,7 +87,7 @@ namespace ServiceStack.Text
                 }
             }
 
-            return StringBuilderThreadStatic.ReturnAndFree(sb);
+            return StringBuilderCache.Retrieve(sb);
         }
 
         private static void AppendTabLine(StringBuilder sb, int tabCount)

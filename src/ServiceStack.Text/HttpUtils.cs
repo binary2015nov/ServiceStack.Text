@@ -843,10 +843,32 @@ namespace ServiceStack
             }
         }
 
-        public static string ReadToEnd(this WebResponse webRes)
+        /// <summary>
+        /// Reads all characters from the current position to the end of the data stream from the Internet response.
+        /// </summary>
+        /// <param name="response">The response from a Uniform Resource Identifier (URI).</param>
+        /// <returns>The rest of the data stream from the Internet response as a string, from the current position to the end. If
+        /// the current position is at the end of the stream, returns an empty string.</returns>
+        public static string ReadToEnd(this WebResponse response)
         {
-            using (var stream = webRes.GetResponseStream())
-            using (var reader = new StreamReader(stream, UseEncoding))
+            using (var stream = response.GetResponseStream())
+            using (var reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        /// <summary>
+        /// Reads all characters from the current position to the end of the data stream from the Internet response, with the specified character encoding.
+        /// </summary>
+        /// <param name="response">The response from a Uniform Resource Identifier (URI).</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        /// <returns>The rest of the data stream from the Internet response as a string, from the current position to the end. If
+        /// the current position is at the end of the stream, returns an empty string.</returns>
+        public static string ReadToEnd(this WebResponse response, Encoding encoding)
+        {
+            using (var stream = response.GetResponseStream())
+            using (var reader = new StreamReader(stream, encoding ?? Encoding.UTF8))
             {
                 return reader.ReadToEnd();
             }
@@ -865,20 +887,27 @@ namespace ServiceStack
             }
         }
 
-        public static HttpWebResponse GetErrorResponse(this string url)
+        /// <summary>
+        /// Gets an HTTP-specific response to an Internet request.
+        /// </summary>
+        /// <param name="urlString">The original Uniform Resource Identifier (URI) of the request.</param>
+        /// <returns>A System.Net.HttpWebResponse containing the response to the Internet request.</returns>
+        /// <exception cref="System.UriFormatException">The URI specified in requestUriString is not a valid URI.</exception>
+        /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- An error occurred
+        /// while processing the request.</exception>
+        public static HttpWebResponse GetWebResponse(this string urlString)
         {
             try
             {
-                var webReq = WebRequest.Create(url);
-                using (var webRes = PclExport.Instance.GetResponse(webReq))
-                {
-                    webRes.ReadToEnd();
-                    return null;
-                }
+                var request = WebRequest.Create(urlString);
+                return (HttpWebResponse)PclExport.Instance.GetResponse(request);
             }
             catch (WebException webEx)
             {
-                return (HttpWebResponse)webEx.Response;
+                if (webEx.Response is HttpWebResponse)
+                    return (HttpWebResponse)webEx.Response;
+
+                throw;
             }
         }
 

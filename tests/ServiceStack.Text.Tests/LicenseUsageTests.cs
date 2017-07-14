@@ -99,15 +99,15 @@ namespace ServiceStack.Text.Tests
     {
         public static void RegisterLicense()
         {
-            var envKey = System.Environment.GetEnvironmentVariable("SERVICESTACK_LICENSE");
-            if (envKey != null)
-            {
-                Licensing.RegisterLicense(envKey);
-            }
+//            var envKey = System.Environment.GetEnvironmentVariable("SERVICESTACK_LICENSE");
+//            if (envKey != null)
+//            {
+//                Licensing.RegisterLicense(envKey);
+//            }
 
-#if !NETCORE
-            Licensing.RegisterLicense(new AppSettings().GetString("servicestack:license"));
-#endif
+//#if !NETCORE
+//            Licensing.RegisterLicense(new AppSettings().GetString("servicestack:license"));
+//#endif
         }
     }
     

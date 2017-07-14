@@ -55,11 +55,11 @@ namespace ServiceStack.Text.Common
 
                     if (explicitType == null || explicitType.IsInterface() || explicitType.IsAbstract())
                     {
-                        Tracer.Instance.WriteWarning("Could not find type: " + propertyValueStr);
+                        Tracer.Default.WriteWarning("Could not find type: " + propertyValueStr);
                     }
                     else if (!type.IsAssignableFromType(explicitType))
                     {
-                        Tracer.Instance.WriteWarning("Could not assign type: " + propertyValueStr);
+                        Tracer.Default.WriteWarning("Could not assign type: " + propertyValueStr);
                     }
                     else
                     {
@@ -122,7 +122,7 @@ namespace ServiceStack.Text.Common
                     {
                         if (JsConfig.OnDeserializationError != null) JsConfig.OnDeserializationError(instance, propType, propertyName.Value, propertyValueStr.Value, e);
                         if (JsConfig.ThrowOnDeserializationError) throw DeserializeTypeRef.GetSerializationException(propertyName.Value, propertyValueStr.Value, propType, e);
-                        else Tracer.Instance.WriteWarning("WARN: failed to set dynamic property {0} with: {1}", propertyName, propertyValueStr);
+                        else Tracer.Default.WriteWarning("WARN: failed to set dynamic property {0} with: {1}", propertyName, propertyValueStr);
                     }
                 }
 
@@ -140,7 +140,7 @@ namespace ServiceStack.Text.Common
                     {
                         if (JsConfig.OnDeserializationError != null) JsConfig.OnDeserializationError(instance, propType ?? typeAccessor.PropertyType, propertyName.Value, propertyValueStr.Value, e);
                         if (JsConfig.ThrowOnDeserializationError) throw DeserializeTypeRef.GetSerializationException(propertyName.Value, propertyValueStr.Value, propType, e);
-                        else Tracer.Instance.WriteWarning("WARN: failed to set property {0} with: {1}", propertyName, propertyValueStr);
+                        else Tracer.Default.WriteWarning("WARN: failed to set property {0} with: {1}", propertyName, propertyValueStr);
                     }
                 }
                 else

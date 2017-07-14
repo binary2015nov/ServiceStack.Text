@@ -28,10 +28,10 @@ namespace ServiceStack.Text
     /// </summary>
     public static class TypeSerializer
     {
-        static TypeSerializer()
-        {
-            JsConfig.InitStatics();
-        }
+        //static TypeSerializer()
+        //{
+        //    JsConfig.InitStatics();
+        //}
 
         public static Encoding UTF8Encoding = PclExport.Instance.GetUTF8Encoding(false);
 
@@ -265,7 +265,7 @@ namespace ServiceStack.Text
         public static string Dump(this Delegate fn)
         {
             var method = fn.GetType().GetMethod("Invoke");
-            var sb = StringBuilderThreadStatic.Allocate();
+            var sb = StringBuilderCache.Allocate();
             foreach (var param in method.GetParameters())
             {
                 if (sb.Length > 0)
@@ -276,7 +276,7 @@ namespace ServiceStack.Text
 
             var methodName = fn.Method().Name;
             var info = "{0} {1}({2})".Fmt(method.ReturnType.Name, methodName, 
-                StringBuilderThreadStatic.ReturnAndFree(sb));
+                StringBuilderCache.Retrieve(sb));
             return info;
         }
 
@@ -346,7 +346,7 @@ namespace ServiceStack.Text
         {
             var indent = 0;
             var quoted = false;
-            var sb = StringBuilderThreadStatic.Allocate();
+            var sb = StringBuilderCache.Allocate();
 
             for (var i = 0; i < json.Length; i++)
             {
@@ -398,7 +398,7 @@ namespace ServiceStack.Text
                         break;
                 }
             }
-            return StringBuilderThreadStatic.ReturnAndFree(sb);
+            return StringBuilderCache.Retrieve(sb);
         }
     }
 

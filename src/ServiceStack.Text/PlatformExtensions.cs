@@ -1183,7 +1183,7 @@ namespace ServiceStack
             if (argTypes == null)
                 argTypes = TypeConstants.EmptyTypeArray;
 
-            var sb = StringBuilderThreadStatic.Allocate()
+            var sb = StringBuilderCache.Allocate()
                 .Append(type.FullName);
 
             foreach (var argType in argTypes)
@@ -1192,7 +1192,7 @@ namespace ServiceStack
                     .Append(argType.FullName);
             }
 
-            var key = StringBuilderThreadStatic.ReturnAndFree(sb);
+            var key = StringBuilderCache.Retrieve(sb);
 
             Type genericType;
             if (GenericTypeCache.TryGetValue(key, out genericType))

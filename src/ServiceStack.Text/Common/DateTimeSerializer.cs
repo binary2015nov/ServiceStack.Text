@@ -633,11 +633,11 @@ namespace ServiceStack.Text.Common
 
         public static string ToWcfJsonDate(DateTime dateTime)
         {
-            var sb = StringBuilderThreadStatic.Allocate();
+            var sb = StringBuilderCache.Allocate();
             using (var writer = new StringWriter(sb))
             {
                 WriteWcfJsonDate(writer, dateTime);
-                return StringBuilderThreadStatic.ReturnAndFree(sb);
+                return StringBuilderCache.Retrieve(sb);
             }
         }
 
@@ -665,11 +665,11 @@ namespace ServiceStack.Text.Common
 
         public static string ToWcfJsonDateTimeOffset(DateTimeOffset dateTimeOffset)
         {
-            var sb = StringBuilderThreadStatic.Allocate();
+            var sb = StringBuilderCache.Allocate();
             using (var writer = new StringWriter(sb))
             {
                 WriteWcfJsonDateTimeOffset(writer, dateTimeOffset);
-                return StringBuilderThreadStatic.ReturnAndFree(sb);
+                return StringBuilderCache.Retrieve(sb);
             }
         }
     }

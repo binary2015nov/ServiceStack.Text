@@ -55,7 +55,7 @@ namespace ServiceStack.Text.Jsv
             }
             catch (Exception ex)
             {
-                Tracer.Instance.WriteError(ex);
+                Tracer.Default.WriteError(ex);
                 throw;
             }
         }
@@ -69,7 +69,7 @@ namespace ServiceStack.Text.Jsv
             {
                 if (++JsState.Depth > JsConfig.MaxDepth)
                 {
-                    Tracer.Instance.WriteError("Exceeded MaxDepth limit of {0} attempting to serialize {1}"
+                    Tracer.Default.WriteError("Exceeded MaxDepth limit of {0} attempting to serialize {1}"
                         .Fmt(JsConfig.MaxDepth, value.GetType().Name));
                     return;
                 }
@@ -143,7 +143,7 @@ namespace ServiceStack.Text.Jsv
             {
                 if (++JsState.Depth > JsConfig.MaxDepth)
                 {
-                    Tracer.Instance.WriteError("Exceeded MaxDepth limit of {0} attempting to serialize {1}"
+                    Tracer.Default.WriteError("Exceeded MaxDepth limit of {0} attempting to serialize {1}"
                         .Fmt(JsConfig.MaxDepth, value.GetType().Name));
                     return;
                 }

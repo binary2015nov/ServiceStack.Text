@@ -107,7 +107,7 @@ namespace ServiceStack.Text.Common
 
                 if (type == null)
                 {
-                    Tracer.Instance.WriteWarning("Could not find type: " + typeName);
+                    Tracer.Default.WriteWarning("Could not find type: " + typeName);
                     return null;
                 }
 
@@ -128,7 +128,7 @@ namespace ServiceStack.Text.Common
                 {
                     return Serializer.GetParseStringSegmentFn(concreteType)(value);
                 }
-                Tracer.Instance.WriteWarning(
+                Tracer.Default.WriteWarning(
                     "Could not deserialize Abstract Type with unknown concrete type: " + typeof(T).FullName);
             }
             return null;
@@ -280,7 +280,7 @@ namespace ServiceStack.Text.Common
                 var type = JsConfig.TypeFinder(typeName);
 
                 if (type == null)
-                    Tracer.Instance.WriteWarning("Could not find type: " + typeName);
+                    Tracer.Default.WriteWarning("Could not find type: " + typeName);
 
                 return type;
             }

@@ -97,7 +97,7 @@ namespace ServiceStack.Text.Common
             if (!Serializer.EatMapStartChar(value, ref index))
             {
                 //Don't throw ex because some KeyValueDataContractDeserializer don't have '{}'
-                Tracer.Instance.WriteDebug("WARN: Map definitions should start with a '{0}', expecting serialized type '{1}', got string starting with: {2}",
+                Tracer.Default.WriteDebug("WARN: Map definitions should start with a '{0}', expecting serialized type '{1}', got string starting with: {2}",
                                            JsWriter.MapStartChar, createMapType != null ? createMapType.Name : "Dictionary<,>", value.Substring(0, value.Length < 50 ? value.Length : 50));
             }
             return index;
@@ -144,7 +144,7 @@ namespace ServiceStack.Text.Common
 
         private static string GetTypesKey(params Type[] types)
         {
-            var sb = StringBuilderThreadStatic.Allocate();
+            var sb = StringBuilderCache.Allocate();
             foreach (var type in types)
             {
                 if (sb.Length > 0)
@@ -152,7 +152,7 @@ namespace ServiceStack.Text.Common
 
                 sb.Append(type.FullName);
             }
-            return StringBuilderThreadStatic.ReturnAndFree(sb);
+            return StringBuilderCache.Retrieve(sb);
         }
     }
 }

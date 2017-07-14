@@ -24,10 +24,10 @@ namespace ServiceStack.Text
     /// </summary>
     public static class JsonSerializer
     {
-        static JsonSerializer()
-        {
-            JsConfig.InitStatics();
-        }
+        //static JsonSerializer()
+        //{
+        //    JsConfig.InitStatics();
+        //}
 
         public static Encoding UTF8Encoding = PclExport.Instance.GetUTF8Encoding(false);
 

@@ -61,7 +61,7 @@ namespace ServiceStack
                 }
                 catch (Exception ex)
                 {
-                    Tracer.Instance.WriteError(ex);
+                    Tracer.Default.WriteError(ex);
                 }
             }
         }

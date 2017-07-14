@@ -174,7 +174,7 @@ namespace ServiceStack.Text.Tests.JsonTests
             {
                 sb.AppendLine(key + " = " + d[key]);
             }
-            return StringBuilderCache.ReturnAndFree(sb);
+            return StringBuilderCache.Retrieve(sb);
         }
 
         public class ModelWithHashSet

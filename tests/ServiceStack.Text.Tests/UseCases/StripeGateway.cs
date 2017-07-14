@@ -581,7 +581,7 @@ namespace ServiceStack.Stripe
             Timeout = TimeSpan.FromSeconds(60);
             UserAgent = "servicestack .net stripe v1";
             Currency = Currencies.UnitedStatesDollar;
-            JsConfig.InitStatics();
+            //JsConfig.InitStatics();
         }
 
         protected virtual void InitRequest(HttpWebRequest req, string method, string idempotencyKey)

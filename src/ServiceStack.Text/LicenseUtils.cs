@@ -125,11 +125,11 @@ namespace ServiceStack
             PclExport.Instance.RegisterLicenseFromConfig();
         }
 
-        private static bool hasInit;
-        public static void Init()
-        {
-            hasInit = true; //Dummy method to init static constructor
-        }
+        //private static bool hasInit;
+        //public static void Init()
+        //{
+        //    hasInit = true; //Dummy method to init static constructor
+        //}
 
         public static class ErrorMessages
         {
@@ -167,8 +167,6 @@ namespace ServiceStack
         private static LicenseKey __activatedLicense;
         public static void RegisterLicense(string licenseKeyText)
         {
-            JsConfig.InitStatics();
-
             if (__activatedLicense != null) //Skip multple license registrations. Use RemoveLicense() to reset.
                 return;
 

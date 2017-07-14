@@ -49,7 +49,7 @@ namespace ServiceStack.Text.Common
             }
             catch (ArgumentException)
             {
-                Tracer.Instance.WriteDebug("Nonstandard Parse method on type {0}", typeof(T));
+                Tracer.Default.WriteDebug("Nonstandard Parse method on type {0}", typeof(T));
             }
 
             if (parseDelegate != null)
@@ -81,7 +81,7 @@ namespace ServiceStack.Text.Common
             }
             catch (ArgumentException)
             {
-                Tracer.Instance.WriteDebug("Nonstandard Parse method on type {0}", typeof(T));
+                Tracer.Default.WriteDebug("Nonstandard Parse method on type {0}", typeof(T));
             }
 
             if (parseDelegate != null)

@@ -44,7 +44,7 @@ namespace ServiceStack.Text
             }
             catch (Exception ex)
             {
-                Tracer.Instance.WriteError(ex);
+                Tracer.Default.WriteError(ex);
                 throw;
             }
         }
@@ -78,7 +78,7 @@ namespace ServiceStack.Text
             }
             catch (Exception ex)
             {
-                Tracer.Instance.WriteError(ex);
+                Tracer.Default.WriteError(ex);
                 throw;
             }
         }

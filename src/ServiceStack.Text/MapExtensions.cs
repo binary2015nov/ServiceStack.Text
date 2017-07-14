@@ -26,7 +26,7 @@ namespace ServiceStack
 
         public static string Join<K, V>(this Dictionary<K, V> values, string itemSeperator, string keySeperator)
         {
-            var sb = StringBuilderThreadStatic.Allocate();
+            var sb = StringBuilderCache.Allocate();
             foreach (var entry in values)
             {
                 if (sb.Length > 0)
@@ -34,7 +34,7 @@ namespace ServiceStack
 
                 sb.Append(entry.Key).Append(keySeperator).Append(entry.Value);
             }
-            return StringBuilderThreadStatic.ReturnAndFree(sb);
+            return StringBuilderCache.Retrieve(sb);
         }
     }
 }

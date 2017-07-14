@@ -114,7 +114,7 @@ namespace ServiceStack
                 }
                 catch (Exception ex)
                 {
-                    Tracer.Instance.WriteError(ex);
+                    Tracer.Default.WriteError(ex);
                 }
             }
             return TypeSerializer.DeserializeFromString(strValue, type);
@@ -392,7 +392,7 @@ namespace ServiceStack
         {
             if (!propertyInfo.CanWrite)
             {
-                Tracer.Instance.WriteWarning("Attempted to set read only property '{0}'", propertyInfo.Name);
+                Tracer.Default.WriteWarning("Attempted to set read only property '{0}'", propertyInfo.Name);
                 return;
             }
 
@@ -429,7 +429,7 @@ namespace ServiceStack
             catch (Exception ex)
             {
                 var name = (fieldInfo != null) ? fieldInfo.Name : propertyInfo.Name;
-                Tracer.Instance.WriteDebug("Could not set member: {0}. Error: {1}", name, ex.Message);
+                Tracer.Default.WriteDebug("Could not set member: {0}. Error: {1}", name, ex.Message);
             }
         }
 
@@ -534,7 +534,7 @@ namespace ServiceStack
             var args = realisedListType.GenericTypeArguments();
             if (args.Length != 1)
             {
-                Tracer.Instance.WriteError("Found a generic list that does not take one generic argument: {0}", realisedListType);
+                Tracer.Default.WriteError("Found a generic list that does not take one generic argument: {0}", realisedListType);
 
                 return;
             }
@@ -748,7 +748,7 @@ namespace ServiceStack
                 }
                 catch (Exception ex)
                 {
-                    Tracer.Instance.WriteWarning("Error trying to set properties {0}.{1} > {2}.{3}:\n{4}",
+                    Tracer.Default.WriteWarning("Error trying to set properties {0}.{1} > {2}.{3}:\n{4}",
                         FromType.FullName, fromType.Name,
                         ToType.FullName, toType.Name, ex);
                 }
