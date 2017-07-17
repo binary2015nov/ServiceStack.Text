@@ -122,14 +122,8 @@ namespace ServiceStack
 
         static LicenseUtils()
         {
-            PclExport.Instance.RegisterLicenseFromConfig();
+            //PclExport.Instance.RegisterLicenseFromConfig();
         }
-
-        //private static bool hasInit;
-        //public static void Init()
-        //{
-        //    hasInit = true; //Dummy method to init static constructor
-        //}
 
         public static class ErrorMessages
         {
@@ -239,7 +233,8 @@ namespace ServiceStack
 
         public static LicenseFeature ActivatedLicenseFeatures()
         {
-            return __activatedLicense != null ? __activatedLicense.GetLicensedFeatures() : LicenseFeature.None;
+            //return __activatedLicense != null ? __activatedLicense.GetLicensedFeatures() : LicenseFeature.None;
+            return __activatedLicense != null ? __activatedLicense.GetLicensedFeatures() : LicenseFeature.All;
         }
 
         public static void ApprovedUsage(LicenseFeature licenseFeature, LicenseFeature requestedFeature,
