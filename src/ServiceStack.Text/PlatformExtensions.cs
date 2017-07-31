@@ -607,8 +607,7 @@ namespace ServiceStack
 #if (NETFX_CORE || PCL || NETSTANDARD1_1)
             return memberInfo.GetCustomAttributes(true).Where(x => x.GetType().IsInstanceOf(attrType)).ToArray();
 #else
-            var prop = memberInfo as PropertyInfo;
-            if (prop != null)
+            if (memberInfo is PropertyInfo prop)
                 return prop.AllAttributes(attrType);
 
             return memberInfo.GetCustomAttributes(attrType, true);
@@ -1142,9 +1141,9 @@ namespace ServiceStack
 
 #if !(NETFX_CORE || WP || PCL || NETSTANDARD1_1)
             return mi.ReflectedType.Name;
-#endif
-
+#else
             return null;
+#endif
         }
 
         public static Delegate CreateDelegate(this MethodInfo methodInfo, Type delegateType)
@@ -1283,12 +1282,10 @@ namespace ServiceStack
             if (obj == null)
                 return null;
 
-            var alreadyDict = obj as Dictionary<string, object>;
-            if (alreadyDict != null)
+            if (obj is Dictionary<string, object> alreadyDict)
                 return alreadyDict;
 
-            var interfaceDict = obj as IDictionary<string, object>;
-            if (interfaceDict != null)
+            if (obj is IDictionary<string, object> interfaceDict)
                 return new Dictionary<string, object>(interfaceDict);
 
             var type = obj.GetType();
@@ -1386,8 +1383,7 @@ namespace ServiceStack
                     }
                     else if (!TypeSerializer.HasCircularReferences(entry.Value))
                     {
-                        var enumerable = entry.Value as IEnumerable;
-                        if (enumerable != null)
+                        if (entry.Value is IEnumerable enumerable)
                         {
                             to[entry.Key] = entry.Value;
                         }

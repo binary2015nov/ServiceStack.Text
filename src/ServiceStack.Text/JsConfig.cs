@@ -597,14 +597,13 @@ namespace ServiceStack.Text
             }
         }
 
-
+        private static bool? sEmitCamelCaseNames;
         /// <summary>
-        /// <see langword="true"/> if the <see cref="ITypeSerializer"/> is configured
+        /// <see langword="true"/> if the <see cref="ServiceStack.Text.Common.ITypeSerializer"/> is configured
         /// to take advantage of <see cref="CLSCompliantAttribute"/> specification,
         /// to support user-friendly serialized formats, ie emitting camelCasing for JSON
         /// and parsing member names and enum values in a case-insensitive manner.
         /// </summary>
-        private static bool? sEmitCamelCaseNames;
         public static bool EmitCamelCaseNames
         {
             // obeying the use of ThreadStatic, but allowing for setting JsConfig once as is the normal case

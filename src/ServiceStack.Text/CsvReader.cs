@@ -249,8 +249,7 @@ namespace ServiceStack.Text
             for (var i = Headers.Count - 1; i >= 0; i--)
             {
                 var oldHeader = Headers[i];
-                string newHeaderValue;
-                if (!customHeadersMap.TryGetValue(oldHeader, out newHeaderValue))
+                if (!customHeadersMap.TryGetValue(oldHeader, out string newHeaderValue))
                 {
                     Headers.RemoveAt(i);
                     PropertySetters.RemoveAt(i);

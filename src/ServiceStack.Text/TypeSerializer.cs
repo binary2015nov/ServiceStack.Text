@@ -19,7 +19,6 @@ using System.Linq;
 using System.Text;
 using ServiceStack.Text.Common;
 using ServiceStack.Text.Jsv;
-using ServiceStack.Text.Pools;
 
 namespace ServiceStack.Text
 {
@@ -28,13 +27,6 @@ namespace ServiceStack.Text
     /// </summary>
     public static class TypeSerializer
     {
-        //static TypeSerializer()
-        //{
-        //    JsConfig.InitStatics();
-        //}
-
-        public static Encoding UTF8Encoding = PclExport.Instance.GetUTF8Encoding(false);
-
         public const string DoubleQuoteString = "\"\"";
 
         /// <summary>
@@ -164,7 +156,7 @@ namespace ServiceStack.Text
             }
             else
             {
-                var writer = new StreamWriter(stream, UTF8Encoding);
+                var writer = new StreamWriter(stream, PclExport.Instance.GetUseEncoding(false));
                 JsvWriter<T>.WriteRootObject(writer, value);
                 writer.Flush();
             }
@@ -172,7 +164,7 @@ namespace ServiceStack.Text
 
         public static void SerializeToStream(object value, Type type, Stream stream)
         {
-            var writer = new StreamWriter(stream, UTF8Encoding);
+            var writer = new StreamWriter(stream, PclExport.Instance.GetUseEncoding(false));
             JsvWriter.GetWriteFn(type)(writer, value);
             writer.Flush();
         }
@@ -186,7 +178,7 @@ namespace ServiceStack.Text
 
         public static T DeserializeFromStream<T>(Stream stream)
         {
-            using (var reader = new StreamReader(stream, UTF8Encoding))
+            using (var reader = new StreamReader(stream, PclExport.Instance.GetUseEncoding(false)))
             {
                 return DeserializeFromString<T>(reader.ReadToEnd());
             }
@@ -194,7 +186,7 @@ namespace ServiceStack.Text
 
         public static object DeserializeFromStream(Type type, Stream stream)
         {
-            using (var reader = new StreamReader(stream, UTF8Encoding))
+            using (var reader = new StreamReader(stream, PclExport.Instance.GetUseEncoding(false)))
             {
                 return DeserializeFromString(reader.ReadToEnd(), type);
             }
@@ -226,17 +218,6 @@ namespace ServiceStack.Text
         public static void PrintDump<T>(this T instance)
         {
             PclExport.Instance.WriteLine(SerializeAndFormat(instance));
-        }
-
-        /// <summary>
-        /// Print string.Format to Console.WriteLine
-        /// </summary>
-        public static void Print(this string text, params object[] args)
-        {
-            if (args.Length > 0)
-                PclExport.Instance.WriteLine(text, args);
-            else
-                PclExport.Instance.WriteLine(text);
         }
 
         public static void Print(this int intValue)

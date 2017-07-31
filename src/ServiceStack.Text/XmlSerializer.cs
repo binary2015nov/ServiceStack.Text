@@ -16,7 +16,7 @@ namespace ServiceStack.Text
 
         public XmlSerializer(bool omitXmlDeclaration = false, int maxCharsInDocument = 1024 * 1024)
         {
-            XWSettings.Encoding = PclExport.Instance.GetUTF8Encoding(false);
+            XWSettings.Encoding = PclExport.Instance.GetUseEncoding(false);
             XWSettings.OmitXmlDeclaration = omitXmlDeclaration;
             XRSettings.MaxCharactersInDocument = maxCharsInDocument;
         }

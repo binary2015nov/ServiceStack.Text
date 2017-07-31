@@ -2,9 +2,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>Silverlight</TargetFramework>
+    <TargetFrameworks>Silverlight</TargetFrameworks>
     <AssemblyName>ServiceStack.Text</AssemblyName>
-    <RootNamespace>ServiceStack.Text</RootNamespace>
     <PackageId>ServiceStack.Text</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -69,6 +68,4 @@
     <Reference Include="System.Windows" />
   </ItemGroup>
 
-  <!--<Import Project="$(MSBuildSDKExtrasTargets)" Condition="Exists('$(MSBuildSDKExtrasTargets)')" />-->
-  <Import Project="$(MSBuildProgramFiles32)\MSBuild\Microsoft\Silverlight\v5.0\Microsoft.Silverlight.CSharp.targets" />
 </Project>

@@ -10,7 +10,6 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading;
 using ServiceStack.Text;
-using ServiceStack.Text.Common;
 
 namespace ServiceStack
 {
@@ -846,5 +845,4 @@ namespace ServiceStack
             return null;
         }
     }
-
 }

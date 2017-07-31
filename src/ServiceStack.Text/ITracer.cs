@@ -1,6 +1,6 @@
 using System;
 
-namespace ServiceStack.Text
+namespace ServiceStack
 {
     public interface ITracer
     {

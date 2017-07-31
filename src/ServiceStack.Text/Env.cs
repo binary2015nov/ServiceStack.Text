@@ -15,7 +15,8 @@ namespace ServiceStack.Text
                 throw new ArgumentException("PclExport.Instance needs to be initialized");
 
             var platformName = PclExport.Instance.PlatformName;
-            if (platformName != PclExport.Platforms.WindowsStore)
+
+            if (platformName != Platforms.WindowsStore)
             {
                 IsMono = AssemblyUtils.FindType("Mono.Runtime") != null;
 
@@ -50,7 +51,7 @@ namespace ServiceStack.Text
 
             VersionString = ServiceStackVersion.ToString(CultureInfo.InvariantCulture);
 
-            __releaseDate = new DateTime(2017,07,17);
+            __releaseDate = new DateTime(2017,07,28);
         }
 
         public static string VersionString { get; set; }

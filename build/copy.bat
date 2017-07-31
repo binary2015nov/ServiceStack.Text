@@ -23,12 +23,12 @@ COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.1\*.* ..\..\ServiceStack.
 COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.3\*.* ..\..\ServiceStack.OrmLite\lib\netstandard1.3
 COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.1\*.* ..\..\ServiceStack.Aws\lib\netstandard1.1
 COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.3\*.* ..\..\ServiceStack.Aws\lib\netstandard1.3
-COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.1\*.* ..\..\Admin\lib\netstandard1.1
-COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.3\*.* ..\..\Admin\lib\netstandard1.3
+COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.1\*.* ..\..\ServiceStack.Admin\lib\netstandard1.1
+COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.3\*.* ..\..\ServiceStack.Admin\lib\netstandard1.3
 COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.1\*.* ..\..\Stripe\lib\netstandard1.1
 COPY ..\src\ServiceStack.Text\bin\%BUILD%\netstandard1.3\*.* ..\..\Stripe\lib\netstandard1.3
 
-COPY "..\src\ServiceStack.Text\bin\%BUILD%\portable45-net45+win8\ServiceStack.Text.dll" ..\..\ServiceStack\lib\pcl
-COPY "..\src\ServiceStack.Text\bin\%BUILD%\portable45-net45+win8\ServiceStack.Text.*" ..\..\Stripe\lib\pcl
+COPY ..\src\ServiceStack.Text\bin\%BUILD%\portable45-net45+win8\ServiceStack.Text.dll ..\..\ServiceStack\lib\pcl
+COPY ..\src\ServiceStack.Text\bin\%BUILD%\portable45-net45+win8\ServiceStack.Text.* ..\..\Stripe\lib\pcl
 
 COPY ..\src\ServiceStack.Text\bin\SL5\ServiceStack.Text.* ..\..\ServiceStack\lib\sl5

@@ -18,6 +18,8 @@ namespace ServiceStack
     {
         public static Sl5PclExport Provider = new Sl5PclExport();
 
+        public bool EmulateHttpViaPost { get; set; }
+
         public Sl5PclExport()
         {
             this.PlatformName = Platforms.Silverlight5;
@@ -58,47 +60,76 @@ namespace ServiceStack
                 .FirstOrDefault(t => t.IsGenericType && t.GetGenericTypeDefinition() == typeof(ICollection<>));
         }
 
-        public override void Config(HttpWebRequest req,
-            bool? allowAutoRedirect = null,
-            TimeSpan? timeout = null,
-            TimeSpan? readWriteTimeout = null,
-            string userAgent = null,
-            bool? preAuthenticate = null)
+        public override HttpWebRequest CreateWebRequest(string urlString)
         {
-            //throws NotImplementedException in both BrowserHttp + ClientHttp
-            //if (allowAutoRedirect.HasValue) req.AllowAutoRedirect = allowAutoRedirect.Value;
-            //if (userAgent != null) req.UserAgent = userAgent; 
-
-            //Methods others than GET and POST are only supported by Client request creator, see
-            //http://msdn.microsoft.com/en-us/library/cc838250(v=vs.95).aspx
-            if (!IsBrowserHttp(req)) return;
-            if (req.Method != "GET" && req.Method != "POST")
-            {
-                req.Headers[HttpHeaders.XHttpMethodOverride] = req.Method;
-                req.Method = "POST";
-            }
-        }
-
-        public override HttpWebRequest CreateWebRequest(string requestUri, bool? emulateHttpViaPost = null)
-        {
-            var creator = emulateHttpViaPost.GetValueOrDefault()
+            var creator = EmulateHttpViaPost
                 ? System.Net.Browser.WebRequestCreator.BrowserHttp
                 : System.Net.Browser.WebRequestCreator.ClientHttp;
 
-            return (HttpWebRequest)creator.Create(new Uri(requestUri));
+            return (HttpWebRequest)creator.Create(new Uri(urlString));
         }
 
-        private static bool IsBrowserHttp(WebRequest req)
+        public override Stream GetRequestStream(WebRequest webReq)
         {
-            return req.GetType().Name == "BrowserHttpWebRequest";
+            var async = GetRequestStreamAsync(webReq);
+            async.Wait();
+            return async.Result;
         }
 
-        public override WebResponse GetResponse(WebRequest webRequest)
+        public static Task<Stream> GetRequestStreamAsync(WebRequest webReq)
         {
-            var task = webRequest.GetResponseAsync();
-            task.Wait();
-            var webRes = task.Result;
-            return webRes;
+            var tcs = new TaskCompletionSource<Stream>();
+
+            try
+            {
+                webReq.BeginGetRequestStream(iar =>
+                {
+                    try
+                    {
+                        var response = webReq.EndGetRequestStream(iar);
+                        tcs.SetResult(response);
+                    }
+                    catch (Exception exc)
+                    {
+                        tcs.SetException(exc);
+                    }
+                }, null);
+            }
+            catch (Exception exc)
+            {
+                tcs.SetException(exc);
+            }
+
+            return tcs.Task;
+        }
+
+        public override WebResponse GetResponse(WebRequest webReq)
+        {
+            using (var autoResetEvent = new AutoResetEvent(false))
+            {
+                MethodOverride(webReq);
+
+                var asyncResult = webReq.BeginGetResponse(r => autoResetEvent.Set(), null);
+                if (autoResetEvent.WaitOne(15000))
+                {
+                    return webReq.EndGetResponse(asyncResult);
+                }
+                else
+                {
+                    throw new WebException("Timeout.", new TimeoutException());
+                }
+            }        
+        }
+
+        private void MethodOverride(WebRequest webReq)
+        {
+            //Methods others than GET and POST are only supported by Client request creator, see
+            //http://msdn.microsoft.com/en-us/library/cc838250(v=vs.95).aspx
+            if (webReq.GetType().Name == "BrowserHttpWebRequest" && webReq.Method != "GET" && webReq.Method != "POST")
+            {
+                webReq.Headers[HttpHeaders.XHttpMethodOverride] = webReq.Method;
+                webReq.Method = "POST";
+            }
         }
     }
 

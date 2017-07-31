@@ -20,10 +20,12 @@ using System.Text.RegularExpressions;
 using ServiceStack.Text;
 using ServiceStack.Text.Common;
 using ServiceStack.Text.Support;
-using static System.String;
 
 namespace ServiceStack
 {
+    /// <summary>
+    /// Provides a set of static methods for <see cref="System.String"/> object.
+    /// </summary>
     public static class StringExtensions
     {
         public static T To<T>(this string value)
@@ -33,7 +35,7 @@ namespace ServiceStack
 
         public static T To<T>(this string value, T defaultValue)
         {
-            return String.IsNullOrEmpty(value) ? defaultValue : TypeSerializer.DeserializeFromString<T>(value);
+            return value.IsNullOrEmpty() ? defaultValue : TypeSerializer.DeserializeFromString<T>(value);
         }
 
         public static T ToOrDefaultValue<T>(this string value)
@@ -58,19 +60,19 @@ namespace ServiceStack
             var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             var len = source.Length;
             if (len == 0)
-                throw new Exception(Format("Parameter: '{0}' is not valid integer (in base {1}).", source, from));
+                throw new Exception(string.Format("Parameter: '{0}' is not valid integer (in base {1}).", source, from));
             var minus = source[0] == '-' ? "-" : "";
             var src = minus == "" ? source : source.Substring(1);
             len = src.Length;
             if (len == 0)
-                throw new Exception(Format("Parameter: '{0}' is not valid integer (in base {1}).", source, from));
+                throw new Exception(string.Format("Parameter: '{0}' is not valid integer (in base {1}).", source, from));
 
             var d = 0;
             for (int i = 0; i < len; i++) // Convert to decimal
             {
                 int c = chars.IndexOf(src[i]);
                 if (c >= from)
-                    throw new Exception(Format("Parameter: '{0}' is not valid integer (in base {1}).", source, from));
+                    throw new Exception(string.Format("Parameter: '{0}' is not valid integer (in base {1}).", source, from));
                 d = d * from + c;
             }
             if (to == 10 || d == 0)
@@ -92,7 +94,7 @@ namespace ServiceStack
 
         public static string EncodeJson(this string value)
         {
-            return Concat
+            return string.Concat
             ("\"",
                 value.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\r", "").Replace("\n", "\\n"),
                 "\""
@@ -107,7 +109,7 @@ namespace ServiceStack
             }
             return String.IsNullOrEmpty(value) || !JsWriter.HasAnyEscapeChars(value)
                 ? value
-                : Concat
+                : string.Concat
                     (
                         JsWriter.QuoteString,
                         value.Replace(JsWriter.QuoteString, TypeSerializer.DoubleQuoteString),
@@ -222,7 +224,7 @@ namespace ServiceStack
                 encodedUrlComponents[i] = x.UrlEncode();
             }
 
-            return Format(url, encodedUrlComponents);
+            return string.Format(url, encodedUrlComponents);
         }
 
         public static string ToRot13(this string value)
@@ -485,7 +487,7 @@ namespace ServiceStack
                 return null;
 
             var extPos = filePath.LastIndexOf('.');
-            return extPos == -1 ? Empty : filePath.Substring(extPos);
+            return extPos == -1 ? string.Empty : filePath.Substring(extPos);
         }
 
         public static string ParentDirectory(this string filePath)
@@ -549,12 +551,12 @@ namespace ServiceStack
 
         public static string FormatWith(this string text, params object[] args)
         {
-            return Format(text, args);
+            return string.Format(text, args);
         }
 
         public static string Fmt(this string text, params object[] args)
         {
-            return Format(text, args);
+            return string.Format(text, args);
         }
 
         /// <summary>
@@ -572,12 +574,12 @@ namespace ServiceStack
 
         public static string Fmt(this string text, object arg1, object arg2)
         {
-            return Format(text, arg1, arg2);
+            return string.Format(text, arg1, arg2);
         }
 
         public static string Fmt(this string text, object arg1, object arg2, object arg3)
         {
-            return Format(text, arg1, arg2, arg3);
+            return string.Format(text, arg1, arg2, arg3);
         }
 
         public static bool StartsWithIgnoreCase(this string text, string startsWith)
@@ -793,12 +795,12 @@ namespace ServiceStack
 
         public static string SafeSubstring(this string value, int startIndex, int length)
         {
-            if (String.IsNullOrEmpty(value)) return Empty;
+            if (String.IsNullOrEmpty(value)) return string.Empty;
             if (startIndex < 0) startIndex = 0;
             if (value.Length >= (startIndex + length))
                 return value.Substring(startIndex, length);
 
-            return value.Length > startIndex ? value.Substring(startIndex) : Empty;
+            return value.Length > startIndex ? value.Substring(startIndex) : string.Empty;
         }
 
         public static string SubstringWithElipsis(this string value, int startIndex, int length)
@@ -819,7 +821,7 @@ namespace ServiceStack
 
         public static int CompareIgnoreCase(this string strA, string strB)
         {
-            return Compare(strA, strB, PclExport.Instance.InvariantComparisonIgnoreCase);
+            return string.Compare(strA, strB, PclExport.Instance.InvariantComparisonIgnoreCase);
         }
 
         public static bool EndsWithInvariant(this string str, string endsWith)
@@ -1250,5 +1252,15 @@ namespace ServiceStack
         }
 #endif
 
+        /// <summary>
+        /// Prints a formatted message.
+        /// </summary>
+        /// <param name="format">A composite format string (see Remarks) that contains text intermixed with zero or more format items,
+        /// which correspond to objects in the args array.</param>
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        public static void Print(this string format, params object[] args)
+        {
+            PclExport.Instance.WriteLine(format, args);    
+        }
     }
 }

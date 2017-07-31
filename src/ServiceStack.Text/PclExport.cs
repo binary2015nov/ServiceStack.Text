@@ -17,19 +17,19 @@ using ServiceStack.Text.Common;
 
 namespace ServiceStack
 {
+    public static class Platforms
+    {
+        public const string WindowsStore = "WindowsStore";
+        public const string Android = "Android";
+        public const string IOS = "IOS";
+        public const string Mac = "MAC";
+        public const string Silverlight5 = "Silverlight5";
+        public const string WindowsPhone = "WindowsPhone";
+        public const string NetStandard = "NETStandard";
+    }
+
     public abstract class PclExport
     {
-        public static class Platforms
-        {
-            public const string WindowsStore = "WindowsStore";
-            public const string Android = "Android";
-			public const string IOS = "IOS";
-            public const string Mac = "MAC";
-            public const string Silverlight5 = "Silverlight5";
-            public const string WindowsPhone = "WindowsPhone";
-            public const string NetStandard = "NETStandard";
-        }
-
         public static PclExport Instance
 #if PCL
           /*attempts to be inferred otherwise needs to be set explicitly by host project*/
@@ -51,16 +51,13 @@ namespace ServiceStack
           = new AndroidPclExport()
 #elif NET45
           = new Net45PclExport()
-#else
+#elif NET40
           = new Net40PclExport()
 #endif
         ;
 
         static PclExport()
         {
-            if (Instance != null) 
-                return;
-
             try
             {
                 if (ConfigureProvider("ServiceStack.IosPclExportClient, ServiceStack.Pcl.iOS"))
@@ -194,44 +191,82 @@ namespace ServiceStack
             return TypeConstants.EmptyStringArray;
         }
 
-        public virtual void WriteLine(string line)
+        /// <summary>
+        /// When overridden in a descendant class, writes a message followed by a line terminator, to the platform-specific output stream.
+        /// The default is <see cref="System.Diagnostics.Debug"/>.
+        /// </summary>
+        /// <param name="message">A message to write.</param>
+        public virtual void WriteLine(string message)
         {
+            System.Diagnostics.Debug.WriteLine(message);
         }
 
-        public virtual void WriteLine(string line, params object[] args)
+        /// <summary>
+        /// When overridden in a descendant class, writes a formatted message followed by a line terminator, to the platform-specific output stream.
+        /// The default is <see cref="System.Diagnostics.Debug"/>.    
+        /// </summary>
+        /// <param name="format">A composite format string (see Remarks) that contains text intermixed with zero or more format items,
+        /// which correspond to objects in the args array.</param>
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        public virtual void WriteLine(string format, params object[] args)
         {
+            System.Diagnostics.Debug.WriteLine(format, args);
         }
 
-        public virtual HttpWebRequest CreateWebRequest(string requestUri, bool? emulateHttpViaPost = null)
+        /// <summary>
+        /// When overridden in a descendant class, provides a instance of the <see cref="System.Text.Encoding"/> class. A parameter
+        /// specifies whether to provide a Unicode byte order mark.
+        /// </summary>
+        /// <param name="byteOrderMark">true to specify that the <see cref="System.Text.Encoding.GetPreamble"/> method returns
+        /// a Unicode byte order mark; otherwise, false. See the Remarks section for more information.</param>
+        /// <returns>A System.Text.Encoding instance.</returns>
+        public virtual Encoding GetUseEncoding(bool byteOrderMark)
         {
-            return (HttpWebRequest)WebRequest.Create(requestUri);
+#if !PCL
+            return new UTF8Encoding(byteOrderMark);
+#else
+            return Encoding.UTF8;
+#endif
         }
 
-        public virtual void Config(HttpWebRequest req,
-            bool? allowAutoRedirect = null,
-            TimeSpan? timeout = null,
-            TimeSpan? readWriteTimeout = null,
-            string userAgent = null,
-            bool? preAuthenticate = null)
+        /// <summary>
+        /// When overridden in a descendant class, Initializes a new System.Net.HttpWebRequest instance for the specified URI scheme.
+        /// </summary>
+        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <returns>A System.Net.HttpWebRequest instance for the specific URI scheme.</returns>
+        /// <exception cref="System.ArgumentNullException">The urlString is null.</exception>
+        /// <exception cref="System.NotSupportedException">The request scheme specified in urlString has not been registered.</exception>
+        /// <exception cref="System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI
+        /// that the request is redirected to.</exception>
+        /// <exception cref="System.FormatException">The URI specified in uriString is not a valid URI.</exception>
+        public virtual HttpWebRequest CreateWebRequest(string urlString)
         {
+            var webReq = WebRequest.CreateHttp(urlString);
+#if NET45 || NET40
+            webReq.UserAgent = Env.ServerUserAgent ?? "ServiceStack.Text";
+#else
+            webReq.Headers[HttpRequestHeader.UserAgent] = Env.ServerUserAgent ?? "ServiceStack.Text";
+#endif
+            return webReq;
         }
 
-        public virtual void AddCompression(WebRequest webRequest)
+        public virtual Stream GetRequestStream(WebRequest webReq)
         {
-        }
-
-        public virtual Stream GetRequestStream(WebRequest webRequest)
-        {
-            var async = webRequest.GetRequestStreamAsync();
+#if NET45 || NETSTANDARD1_1 || NETSTANDARD1_6
+            var async = webReq.GetRequestStreamAsync();
             async.Wait();
             return async.Result;
+#else
+            throw new NotImplementedException(GetType().Name);
+#endif
         }
 
-        public virtual WebResponse GetResponse(WebRequest webRequest)
+        public virtual WebResponse GetResponse(WebRequest webReq)
         {
+#if NET45 || NETSTANDARD1_1 || NETSTANDARD1_6
             try
             {
-                var async = webRequest.GetResponseAsync();
+                var async = webReq.GetResponseAsync();
                 async.Wait();
                 return async.Result;
             }
@@ -239,6 +274,9 @@ namespace ServiceStack
             {
                 throw ex.UnwrapIfSingleException();
             }
+#else
+            throw new NotImplementedException(GetType().Name);
+#endif
         }
 
         public virtual bool IsDebugBuild(Assembly assembly)
@@ -264,11 +302,6 @@ namespace ServiceStack
         public virtual void AddHeader(WebRequest webReq, string name, string value)
         {
             webReq.Headers[name] = value;
-        }
-
-        public virtual void SetUserAgent(HttpWebRequest httpReq, string value)
-        {
-            httpReq.Headers[HttpRequestHeader.UserAgent] = value;
         }
 
         public virtual void SetContentLength(HttpWebRequest httpReq, long value)
@@ -317,15 +350,6 @@ namespace ServiceStack
         public virtual byte[] GetAsciiBytes(string str)
         {
             return Encoding.UTF8.GetBytes(str);
-        }
-
-        public virtual Encoding GetUTF8Encoding(bool emitBom=false)
-        {
-#if !PCL
-            return new UTF8Encoding(emitBom);
-#else
-            return Encoding.UTF8;
-#endif
         }
 
         public virtual SetMemberDelegate CreateSetter(FieldInfo fieldInfo)
@@ -479,12 +503,6 @@ namespace ServiceStack
             where TSerializer : ITypeSerializer
         {
             return null;
-        }
-
-
-        public virtual void InitHttpWebRequest(HttpWebRequest httpReq,
-            long? contentLength = null, bool allowAutoRedirect = true, bool keepAlive = true)
-        {            
         }
 
         public virtual void CloseStream(Stream stream)

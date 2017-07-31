@@ -55,11 +55,6 @@ namespace ServiceStack
             "--MM--zzzzzz",
         };
 
-        static readonly Action<HttpWebRequest, string> SetUserAgentDelegate =
-            (Action<HttpWebRequest, string>)typeof(HttpWebRequest)
-                .GetProperty("UserAgent")
-                ?.SetMethod()?.CreateDelegate(typeof(Action<HttpWebRequest, string>));
-
         static readonly Action<HttpWebRequest, bool> SetAllowAutoRedirectDelegate =
             (Action<HttpWebRequest, bool>)typeof(HttpWebRequest)
                 .GetProperty("AllowAutoRedirect")
@@ -94,6 +89,13 @@ namespace ServiceStack
             {
                 allowToChangeRestrictedHeaders = false;
             }
+        }
+
+        public override HttpWebRequest CreateWebRequest(string urlString)
+        {
+            var webReq = base.CreateWebRequest(urlString);
+            webReq.Headers[HttpRequestHeader.AcceptEncoding] = "gzip,deflate";
+            return webReq;
         }
 
         public override string ReadAllText(string filePath)
@@ -229,13 +231,6 @@ namespace ServiceStack
         }
 
 #if NETSTANDARD1_3
-        public override void AddCompression(WebRequest webReq)
-        {
-            var httpReq = (HttpWebRequest)webReq;
-            //TODO: Restore when AutomaticDecompression added to WebRequest
-            //httpReq.Headers[HttpRequestHeader.AcceptEncoding] = "gzip,deflate";
-            //httpReq.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-        }
 
         public override void AddHeader(WebRequest webReq, string name, string value)
         {
@@ -446,18 +441,6 @@ namespace ServiceStack
             return null;
         }
 
-        public override void SetUserAgent(HttpWebRequest httpReq, string value)
-        {
-            if (SetUserAgentDelegate != null)
-            {
-                SetUserAgentDelegate(httpReq, value);
-            } else 
-            {
-                if (allowToChangeRestrictedHeaders)
-                    httpReq.Headers[HttpRequestHeader.UserAgent] = value;
-            }
-        }
-
         public override void SetContentLength(HttpWebRequest httpReq, long value)
         {
             if (SetContentLengthDelegate != null)
@@ -478,34 +461,6 @@ namespace ServiceStack
         public override void SetKeepAlive(HttpWebRequest httpReq, bool value)
         {
             SetKeepAliveDelegate?.Invoke(httpReq, value);
-        }
-
-        public override void InitHttpWebRequest(HttpWebRequest httpReq,
-            long? contentLength = null, bool allowAutoRedirect = true, bool keepAlive = true)
-        {
-            SetUserAgent(httpReq, Env.ServerUserAgent);
-            SetAllowAutoRedirect(httpReq, allowAutoRedirect);
-            SetKeepAlive(httpReq, keepAlive);
-
-            if (contentLength != null)
-            {
-                SetContentLength(httpReq, contentLength.Value);
-            }
-        }
-
-        public override void Config(HttpWebRequest req,
-            bool? allowAutoRedirect = null,
-            TimeSpan? timeout = null,
-            TimeSpan? readWriteTimeout = null,
-            string userAgent = null,
-            bool? preAuthenticate = null)
-        {
-            //req.MaximumResponseHeadersLength = int.MaxValue; //throws "The message length limit was exceeded" exception
-            if (allowAutoRedirect.HasValue) SetAllowAutoRedirect(req, allowAutoRedirect.Value);
-            //if (readWriteTimeout.HasValue) req.ReadWriteTimeout = (int)readWriteTimeout.Value.TotalMilliseconds;
-            //if (timeout.HasValue) req.Timeout = (int)timeout.Value.TotalMilliseconds;
-            if (userAgent != null) SetUserAgent(req, userAgent);
-            //if (preAuthenticate.HasValue) req.PreAuthenticate = preAuthenticate.Value;
         }
         
 #if NETSTANDARD1_3

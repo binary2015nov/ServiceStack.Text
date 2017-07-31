@@ -1,15 +1,16 @@
 {
   "runtimeTarget": {
     "name": ".NETStandard,Version=v1.1/",
-    "signature": "7aaf50bd5bb7a0e9e022e66b1a864a454937f3c6"
+    "signature": "cb432f629c82d7647b611e8fd0dd620890038e98"
   },
   "compilationOptions": {},
   "targets": {
     ".NETStandard,Version=v1.1": {},
     ".NETStandard,Version=v1.1/": {
-      "servicestack.client/1.0.0": {
+      "servicestack.client/4.5.0": {
         "dependencies": {
           "MSBuild.Sdk.Extras": "1.0.1",
+          "Microsoft.Extensions.Primitives": "1.1.1",
           "Microsoft.NETCore.Portable.Compatibility": "1.0.1",
           "NETStandard.Library": "1.6.1",
           "System.Net.Requests": "4.3.0",
@@ -18,6 +19,15 @@
         },
         "runtime": {
           "ServiceStack.Client.dll": {}
+        }
+      },
+      "microsoft.extensions.primitives/1.1.1": {
+        "dependencies": {
+          "NETStandard.Library": "1.6.1",
+          "System.Runtime.CompilerServices.Unsafe": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.0/Microsoft.Extensions.Primitives.dll": {}
         }
       },
       "microsoft.netcore.jit/1.0.2": {},
@@ -232,6 +242,14 @@
           "Microsoft.NETCore.Targets": "1.1.0"
         }
       },
+      "system.runtime.compilerservices.unsafe/4.3.0": {
+        "dependencies": {
+          "System.Runtime": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.0/System.Runtime.CompilerServices.Unsafe.dll": {}
+        }
+      },
       "system.runtime.extensions/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
@@ -363,10 +381,17 @@
     }
   },
   "libraries": {
-    "servicestack.client/1.0.0": {
+    "servicestack.client/4.5.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "microsoft.extensions.primitives/1.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-MrsHOyFpwT+LBzGWp/Oq3pV1Vku8FYE6hgO+2XR0WBRtoI9EaJcpRbtBabS7pXYrkIN1/LOXACpZ9Stqmbrs6A==",
+      "path": "microsoft.extensions.primitives/1.1.1",
+      "hashPath": "microsoft.extensions.primitives.1.1.1.nupkg.sha512"
     },
     "microsoft.netcore.jit/1.0.2": {
       "type": "package",
@@ -570,6 +595,13 @@
       "sha512": "sha512-JufQi0vPQ0xGnAczR13AUFglDyVYt4Kqnz1AZaiKZ5+GICq0/1MH/mO/eAJHt/mHW1zjKBJd7kV26SrxddAhiw==",
       "path": "system.runtime/4.3.0",
       "hashPath": "system.runtime.4.3.0.nupkg.sha512"
+    },
+    "system.runtime.compilerservices.unsafe/4.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-rcnXA1U9W3QUtMSGoyoNHH6w4V5Rxa/EKXmzpORUYlDAlDB34hIQoU57ATXl8xHa83VvzRm6PcElEizgUd7U5w==",
+      "path": "system.runtime.compilerservices.unsafe/4.3.0",
+      "hashPath": "system.runtime.compilerservices.unsafe.4.3.0.nupkg.sha512"
     },
     "system.runtime.extensions/4.3.0": {
       "type": "package",

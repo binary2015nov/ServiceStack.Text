@@ -4,13 +4,14 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.CompilerServices;
+using System.Linq;
 using System.Text;
-using ServiceStack.Text;
 
 namespace ServiceStack
 {
+    /// <summary>
+    /// Provides extension methods on System.String instances that contain file or directory path information or uri.
+    /// </summary>
     public static class PathUtils
     {
         public static string MapAbsolutePath(this string relativePath, string appendPartialPathModifier)
@@ -34,6 +35,7 @@ namespace ServiceStack
             return PclExport.Instance.MapAbsolutePath(relativePath, $"{sep}..{sep}..{sep}..");
 #endif
         }
+
         /// <summary>
         /// Maps the path of a file in the context of a VS 2017+ multi-platform project in a Console App
         /// </summary>
@@ -88,43 +90,42 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Combines an array of strings into an url.
+        /// Combines the path elements in a specified System.String array into an base path.
         /// </summary>
-        /// <param name="baseUrl">The base url to combine.</param>
-        /// <param name="paths">An array of parts of the url.</param>
-        /// <returns>The combined urls.</returns>
-        public static string CombineWith(this string baseUrl, params string[] paths)
+        /// <param name="basePath">The base path to combine.</param>
+        /// <param name="paths">An string array that contains the path elements to combine.</param>
+        /// <returns>The combined path string.</returns>
+        public static string CombineWith(this string basePath, params string[] paths)
         {
-            if (string.IsNullOrEmpty(baseUrl))
+            if (basePath.IsNullOrEmpty())
                 return CombinePaths(paths);
 
-            return baseUrl.Replace('\\', '/').TrimEnd('/') + CombinePaths(paths);
+            return basePath.Replace('\\', '/').TrimEnd('/') + CombinePaths(paths);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        /// <summary>
+        /// Combines the path elements in a specified System.String array.
+        /// </summary>
+        /// <param name="paths">An string array that contains the path elements to combine.</param>
+        /// <returns>The combined path string.</returns>
         public static string CombinePaths(params string[] paths)
         {
-            if (paths.Length == 0) return "/";
+            if (paths.Length == 0)
+                return "/";
 
-            var sb = StringBuilderCache.Allocate();
-            PathUtils.AppendPaths(sb, paths);
-            return StringBuilderCache.Retrieve(sb);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static void AppendPaths(StringBuilder sb, string[] paths)
-        {
+            StringBuilder sb = new StringBuilder(128);
             foreach (var path in paths)
             {
-                if (string.IsNullOrEmpty(path))
+                if (path.IsNullOrEmpty())
                     continue;
-                if (path[0] != '/' && path[0] != '\\')
+                
+                if (path[0] != '/' && path[0] != '\\' && (sb.Length == 0 || sb[sb.Length - 1] != '/' && sb[sb.Length - 1] != '\\'))
                     sb.Append('/');
-                int length = sb.Length;
+
                 sb.Append(path);
-                sb.Replace('\\', '/', length, path.Length);
             }
+            sb.Replace('\\', '/');
+            return sb.ToString();
         }
     }
-
 }

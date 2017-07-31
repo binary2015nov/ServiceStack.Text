@@ -12,8 +12,16 @@ namespace ServiceStack.Text
 {
     public class CsvSerializer
     {
-        //Don't emit UTF8 BOM by default
-        public static Encoding UseEncoding { get; set; } = PclExport.Instance.GetUTF8Encoding(false);
+        private static Encoding useEncoding;
+        /// <summary>
+        /// Gets or sets the default character encoding using in A system.IO.Stream 
+        /// to write data or read data. The default value is <c>PclExport.Instance.GetUseEncoding(false)</c>.
+        /// </summary>
+        public static Encoding UseEncoding
+        {
+            get { return useEncoding ?? (useEncoding = PclExport.Instance.GetUseEncoding(false)); }
+            set { useEncoding = value; }
+        }
 
         private static Dictionary<Type, WriteObjectDelegate> WriteFnCache = new Dictionary<Type, WriteObjectDelegate>();
         internal static WriteObjectDelegate GetWriteFn(Type type)

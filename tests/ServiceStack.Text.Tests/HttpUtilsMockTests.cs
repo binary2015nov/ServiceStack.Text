@@ -23,10 +23,10 @@ namespace ServiceStack.Text.Tests
                 StringResult = "mocked"
             })
             {
+                Assert.That(ExampleGoogleUrl.GetStringFromUrl(), Is.EqualTo("mocked"));
                 Assert.That(ExampleGoogleUrl.GetJsonFromUrl(), Is.EqualTo("mocked"));
                 Assert.That(ExampleGoogleUrl.GetXmlFromUrl(), Is.EqualTo("mocked"));
-                Assert.That(ExampleGoogleUrl.GetStringFromUrl(), Is.EqualTo("mocked"));
-                Assert.That(ExampleGoogleUrl.GetStringFromUrl(accept: "text/csv"), Is.EqualTo("mocked"));
+                Assert.That(ExampleGoogleUrl.GetCsvFromUrl(), Is.EqualTo("mocked"));
 
                 Assert.That(ExampleGoogleUrl.PostJsonToUrl(json: "{\"postdata\":1}"), Is.EqualTo("mocked"));
                 Assert.That(ExampleGoogleUrl.PostXmlToUrl(xml: "<postdata>1</postdata>"), Is.EqualTo("mocked"));
@@ -43,10 +43,10 @@ namespace ServiceStack.Text.Tests
                 StringResult = "mocked"
             })
             {
+                Assert.That(await ExampleGoogleUrl.GetStringFromUrlAsync(), Is.EqualTo("mocked"));
                 Assert.That(await ExampleGoogleUrl.GetJsonFromUrlAsync(), Is.EqualTo("mocked"));
                 Assert.That(await ExampleGoogleUrl.GetXmlFromUrlAsync(), Is.EqualTo("mocked"));
-                Assert.That(await ExampleGoogleUrl.GetStringFromUrlAsync(), Is.EqualTo("mocked"));
-                Assert.That(await ExampleGoogleUrl.GetStringFromUrlAsync(accept: "text/csv"), Is.EqualTo("mocked"));
+                Assert.That(await ExampleGoogleUrl.GetCsvFromUrlAsync(), Is.EqualTo("mocked"));
 
                 Assert.That(await ExampleGoogleUrl.PostJsonToUrlAsync(json: "{\"postdata\":1}"), Is.EqualTo("mocked"));
                 Assert.That(await ExampleGoogleUrl.PostXmlToUrlAsync(xml: "<postdata>1</postdata>"), Is.EqualTo("mocked"));
@@ -108,7 +108,7 @@ namespace ServiceStack.Text.Tests
 
                 fileNamesUploaded.Clear();
 
-                var webReq = WebRequest.Create(ExampleGoogleUrl);
+                var webReq = WebRequest.CreateHttp(ExampleGoogleUrl);
                 webReq.UploadFile(new FileInfo(tempTextPath), "text/plain");
                 Assert.That(fileNamesUploaded, Is.EquivalentTo(new[] { "test.txt" }));
             }

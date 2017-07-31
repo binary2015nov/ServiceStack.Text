@@ -571,6 +571,7 @@ namespace ServiceStack.Stripe
         private string apiKey;
         private string publishableKey;
         public ICredentials Credentials { get; set; }
+
         private string UserAgent { get; set; }
 
         public StripeGateway(string apiKey, string publishableKey = null)
@@ -581,12 +582,12 @@ namespace ServiceStack.Stripe
             Timeout = TimeSpan.FromSeconds(60);
             UserAgent = "servicestack .net stripe v1";
             Currency = Currencies.UnitedStatesDollar;
-            //JsConfig.InitStatics();
         }
 
         protected virtual void InitRequest(HttpWebRequest req, string method, string idempotencyKey)
         {
             req.Accept = MimeTypes.Json;
+           
             req.Credentials = Credentials;
 
             if (method == HttpMethods.Post || method == HttpMethods.Put)
@@ -596,11 +597,17 @@ namespace ServiceStack.Stripe
                 req.Headers["Idempotency-Key"] = idempotencyKey;
 
             req.Headers["Stripe-Version"] = APIVersion;
+#if NET45
 
-            PclExport.Instance.Config(req,
-                userAgent: UserAgent,
-                timeout: Timeout,
-                preAuthenticate: true);
+            req.UserAgent = UserAgent;
+            req.Timeout = (int)Timeout.TotalMilliseconds;
+            req.PreAuthenticate = true;
+
+#else
+
+            req.Headers[HttpRequestHeader.UserAgent] = UserAgent;
+
+#endif
         }
 
         protected virtual void HandleStripeException(WebException ex)
@@ -623,7 +630,7 @@ namespace ServiceStack.Stripe
             try
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
-                var response = url.SendStringToUrl(method: method, requestBody: body, requestFilter: req =>
+                var response = url.GetStringFromUrl(method: method, requestBody: body, requestFilter: req =>
                 {
                     InitRequest(req, method, idempotencyKey);
                 });
@@ -653,7 +660,7 @@ namespace ServiceStack.Stripe
             try
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
-                var response = await url.SendStringToUrlAsync(method: method, requestBody: body, requestFilter: req =>
+                var response = await url.GetStringFromUrlAsync(method: method, requestBody: body, requestFilter: req =>
                 {
                     InitRequest(req, method, idempotencyKey);
                 });
