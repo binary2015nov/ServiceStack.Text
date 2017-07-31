@@ -1028,6 +1028,16 @@ namespace ServiceStack
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo[] GetInstanceMethods(this Type type)
+        {
+#if (NETFX_CORE || PCL || NETSTANDARD1_1)
+            return type.GetTypeInfo().DeclaredMethods.Where(x => !x.IsStatic).ToArray();
+#else
+            return type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+#endif
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo[] GetMethodInfos(this Type type)
         {
 #if (NETFX_CORE || PCL || NETSTANDARD1_1)
@@ -1287,6 +1297,16 @@ namespace ServiceStack
 
             if (obj is IDictionary<string, object> interfaceDict)
                 return new Dictionary<string, object>(interfaceDict);
+
+            if (obj is Dictionary<string, string> stringDict)
+            {
+                var to = new Dictionary<string, object>();
+                foreach (var entry in stringDict)
+                {
+                    to[entry.Key] = entry.Value;
+                }
+                return to;
+            }
 
             var type = obj.GetType();
 
