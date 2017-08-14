@@ -19,7 +19,6 @@ using System.Threading;
 using System.Linq;
 using ServiceStack.Text.Json;
 using ServiceStack.Text.Pools;
-using ServiceStack.Text.Support;
 #if NETSTANDARD1_1
 using Microsoft.Extensions.Primitives;
 #else

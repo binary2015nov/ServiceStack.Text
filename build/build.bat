@@ -5,4 +5,3 @@ REM %MSBUILD% build-sn.proj /target:NuGetPack /property:Configuration=Signed;REL
 %MSBUILD% build.proj /target:NuGetPack /property:Configuration=Release;PatchVersion=9
 %MSBUILD% build-pcl.proj /target:NuGetPack /property:Configuration=Release;PatchVersion=9
 %MSBUILD% build-sl5.proj /target:NuGetPack /property:Configuration=Release;PatchVersion=9
-

@@ -20,7 +20,8 @@
   <PropertyGroup> 
     <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp1.0'">Full</DebugType> 
   </PropertyGroup>
-    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp2.0'">Full</DebugType> 
+  <PropertyGroup>
+    <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp2.0'">Full</DebugType>
   </PropertyGroup>  
   
   <ItemGroup>
