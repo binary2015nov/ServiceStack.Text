@@ -256,14 +256,14 @@ namespace ServiceStack
         }
 
         /// <summary>
-        ///  Appends a copy of the specified uriComponent without character escaping to the base URI.
+        ///  Appends a copy of the specified uriComponent with character escaping to the base URI.
         /// </summary>
         /// <param name="baseUriString">The base System.Uri, represented as a System.String.</param>
         /// <param name="uriComponent">The uri component to add to the base System.Uri.</param>
         /// <returns>A string representation for a System.Uri instance.</returns>
         public static string AppendPath(this string baseUriString, string uriComponent)
         {
-            return AppendPaths(baseUriString, new[] { uriComponent }, false);
+            return AppendPaths(baseUriString, new[] { uriComponent }, true);
         }
 
         /// <summary>
