@@ -127,5 +127,47 @@ namespace ServiceStack
             sb.Replace('\\', '/');
             return sb.ToString();
         }
+
+        public static string ResolvePaths(this string path)
+        {
+            if (path == null || path.IndexOfAny("./", "/.") == -1)
+                return path;
+
+            var schemePos = path.IndexOf("://", StringComparison.Ordinal);
+            var prefix = schemePos >= 0
+                ? path.Substring(0, schemePos + 3)
+                : "";
+
+            var parts = path.Substring(prefix.Length).Split('/').ToList();
+            var combinedPaths = new List<string>();
+            foreach (var part in parts)
+            {
+                if (string.IsNullOrEmpty(part) || part == ".")
+                    continue;
+
+                if (part == ".." && combinedPaths.Count > 0)
+                    combinedPaths.RemoveAt(combinedPaths.Count - 1);
+                else
+                    combinedPaths.Add(part);
+            }
+
+            var resolvedPath = string.Join("/", combinedPaths);
+            if (path[0] == '/' && prefix.Length == 0)
+                resolvedPath = '/' + resolvedPath;
+
+            return path[path.Length - 1] == '/' && resolvedPath.Length > 0
+                ? prefix + resolvedPath + '/'
+                : prefix + resolvedPath;
+        }
+
+        public static string[] ToStrings(object[] thesePaths)
+        {
+            var to = new string[thesePaths.Length];
+            for (var i = 0; i < thesePaths.Length; i++)
+            {
+                to[i] = thesePaths[i].ToString();
+            }
+            return to;
+        }
     }
 }
