@@ -232,27 +232,22 @@ namespace ServiceStack
         /// <summary>
         /// When overridden in a descendant class, Initializes a new System.Net.HttpWebRequest instance for the specified URI scheme.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="uriString">A URI string that identifies the Internet resource.</param>
         /// <returns>A System.Net.HttpWebRequest instance for the specific URI scheme.</returns>
-        /// <exception cref="System.ArgumentNullException">The urlString is null.</exception>
-        /// <exception cref="System.NotSupportedException">The request scheme specified in urlString has not been registered.</exception>
+        /// <exception cref="System.ArgumentNullException">The uriString is null.</exception>
+        /// <exception cref="System.NotSupportedException">The request scheme specified in uriString has not been registered.</exception>
         /// <exception cref="System.Security.SecurityException">The caller does not have permission to connect to the requested URI or a URI
         /// that the request is redirected to.</exception>
+        /// <exception cref="System.NotSupportedException">The request scheme specified in uriString is the http or https scheme.</exception>
         /// <exception cref="System.FormatException">The URI specified in uriString is not a valid URI.</exception>
-        public virtual HttpWebRequest CreateWebRequest(string urlString)
+        public virtual HttpWebRequest CreateWebRequest(string uriString)
         {
-            var webReq = WebRequest.CreateHttp(urlString);
-#if NET45 || NET40
-            webReq.UserAgent = Env.ServerUserAgent ?? "ServiceStack.Text";
-#else
-            webReq.Headers[HttpRequestHeader.UserAgent] = Env.ServerUserAgent ?? "ServiceStack.Text";
-#endif
-            return webReq;
+            return WebRequest.CreateHttp(uriString);
         }
 
         public virtual Stream GetRequestStream(WebRequest webReq)
         {
-#if NET45 || NETSTANDARD1_1 || NETSTANDARD1_6
+#if NETSTANDARD1_1 || NETSTANDARD1_6
             var async = webReq.GetRequestStreamAsync();
             async.Wait();
             return async.Result;
@@ -263,7 +258,7 @@ namespace ServiceStack
 
         public virtual WebResponse GetResponse(WebRequest webReq)
         {
-#if NET45 || NETSTANDARD1_1 || NETSTANDARD1_6
+#if NETSTANDARD1_1 || NETSTANDARD1_6
             try
             {
                 var async = webReq.GetResponseAsync();

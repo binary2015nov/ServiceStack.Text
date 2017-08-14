@@ -28,7 +28,7 @@ namespace ServiceStack.Text.Tests
             Assert.That("/a/b/".CombineWith("/c/d"), Is.EqualTo("/a/b/c/d"));
             Assert.That("/a/b/".CombineWith("/c", "/d"), Is.EqualTo("/a/b/c/d"));
 
-            Assert.That("http://example.org/a/b/".CombineWith("/c/", "/d"), Is.EqualTo("http://example.org/a/b/c/d"));
+            Assert.That("http://example.org/a/b/".AppendPaths("/c/", "/d"), Is.EqualTo("http://example.org/a/b/c/d"));
         }
 
         [Test]

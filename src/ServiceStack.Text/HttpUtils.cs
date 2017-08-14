@@ -918,7 +918,7 @@ namespace ServiceStack
         /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.</exception>
-        public static HttpWebResponse GetWebResponse(string urlString)
+        public static HttpWebResponse GetWebResponse(this string urlString)
         {
             try
             {

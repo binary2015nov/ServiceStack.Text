@@ -94,7 +94,13 @@ namespace ServiceStack
         public override HttpWebRequest CreateWebRequest(string urlString)
         {
             var webReq = base.CreateWebRequest(urlString);
-            webReq.Headers[HttpRequestHeader.AcceptEncoding] = "gzip,deflate";
+#if NETSTANDARD2_0
+            webReq.KeepAlive = false;
+            webReq.UserAgent = Env.ServerUserAgent ?? "ServiceStack.Text";
+# else
+            webReq.Headers[HttpRequestHeader.KeepAlive] = "false";
+            webReq.Headers[HttpRequestHeader.UserAgent] = Env.ServerUserAgent ?? "ServiceStack.Text";
+#endif
             return webReq;
         }
 
@@ -106,7 +112,7 @@ namespace ServiceStack
             {
                 return rdr.ReadToEnd();
             }
-#else            
+#else
             return String.Empty;
 #endif
         }
