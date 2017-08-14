@@ -131,7 +131,7 @@ namespace ServiceStack.Text.Tests
 #if !NETCORE_SUPPORT
         private T StringToPoco<T>(string str)
         {
-            using (new BasicAppHost().Init())
+            using (new MockAppHost().Init())
             {
                 NameValueCollection queryString = HttpUtility.ParseQueryString(str);
                 var restPath = new RestPath(typeof(T), "/query", "GET, POST");

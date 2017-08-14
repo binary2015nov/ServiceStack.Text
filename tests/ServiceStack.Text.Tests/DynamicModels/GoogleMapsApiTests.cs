@@ -354,7 +354,7 @@ namespace ServiceStack.Text.Tests.DynamicModels
         [Test]
         public void Can_parse_GMaps_api()
         {
-            //short for JsonSerializer.DeserializeFromString<GeoLocationResults>(Json)
+            //short for JsonSerializer.Deserialize<GeoLocationResults>(Json)
             var geoApiResponse = JsonDto.FromJson<GeoLocationResponse>();
             //geoApiResponse.PrintDump();
 

@@ -3,13 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using NUnit.Framework;
-using ServiceStack.Text.Tests.Support;
 
 namespace ServiceStack.Text.Tests
 {
     [TestFixture]
-    public class DataContractTests
-    : TestBase
+    public class DataContractTests : TestBase
     {
         [Test]
         public void Only_Serializes_DataMember_fields_for_DataContracts()
@@ -63,8 +61,8 @@ namespace ServiceStack.Text.Tests
         [Test]
         public void XmlSerializerHonorsIgnoreMemberAttribute()
         {
-            DoIgnoreMemberTest(r => XmlSerializer.SerializeToString(r),
-                               s => XmlSerializer.DeserializeFromString<RequestWithIgnoredMembers>(s));
+            DoIgnoreMemberTest(r => XmlSerializer.Serialize(r),
+                               s => XmlSerializer.Deserialize<RequestWithIgnoredMembers>(s));
         }
 
         [DataContract]
@@ -154,7 +152,7 @@ namespace ServiceStack.Text.Tests
 
             // Fails at this point, with a "Cannot access a closed Stream." exception.
             // Am I doing something wrong? 
-            string output = XmlSerializer.SerializeToString(p);
+            string output = XmlSerializer.Serialize(p);
 
             Console.WriteLine(output);
         }
@@ -210,7 +208,7 @@ namespace ServiceStack.Text.Tests
             };
 
             Assert.That(CsvSerializer.SerializeToString(classTwo),
-                        Is.EqualTo(String.Format("NewName\r\nValue\r\n")));
+                        Is.EqualTo("NewName\r\nValue\r\n"));
         }
 
         [Test]
@@ -330,6 +328,5 @@ namespace ServiceStack.Text.Tests
             var dto = new AliasWithoutDataContract { Id = 1, Name = "foo" };
             Assert.That(dto.ToJson(), Is.EqualTo("{\"Id\":1,\"alias\":\"foo\"}"));
         }
-
     }
 }

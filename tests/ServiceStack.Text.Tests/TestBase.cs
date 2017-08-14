@@ -65,7 +65,7 @@ namespace ServiceStack.Text.Tests
                 using (var xmlWriter = new System.IO.StringWriter())
                 {
                     stopwatch = Stopwatch.StartNew();
-                    XmlSerializer.SerializeToWriter((object)model, xmlWriter);
+                    XmlSerializer.Serialize(model, xmlWriter);
                     var xml = xmlWriter.ToString();
                     stopwatch.Stop();
                     var partialXml = xml.Length > 100 ? xml.Substring(0, 100) + "..." : xml;

@@ -22,11 +22,7 @@
 
   <PropertyGroup> 
     <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp1.0'">Full</DebugType> 
-  </PropertyGroup>  
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\ServiceStack.Text\ServiceStack.Text.csproj" />
-  </ItemGroup>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.6.1" />
@@ -50,8 +46,8 @@
     <Reference Include="..\..\lib\pcl\ServiceStack.Interfaces.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.Client.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.Common.dll" />
-    <Reference Include="..\..\lib\net45\Northwind.Common.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.dll" />
+    <Reference Include="..\..\lib\net45\Northwind.Common.dll" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' ">
@@ -67,6 +63,10 @@
     <DefineConstants>$(DefineConstants);NUNITLITE</DefineConstants>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\ServiceStack.Text\ServiceStack.Text.csproj" />
+  </ItemGroup>
+  
   <ItemGroup Condition=" '$(NUNITLITE)' != '' ">
     <PackageReference Include="NUnitLite" Version="3.6.1" />
   </ItemGroup>
@@ -77,15 +77,15 @@
     <PackageReference Include="System.Drawing.Primitives" Version="4.*" />
     <PackageReference Include="System.Collections.Specialized" Version="4.*" />
     <PackageReference Include="System.Runtime.Serialization.Json" Version="4.*" />
-    <PackageReference Include="System.Collections.NonGeneric" Version="4.*" />
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.*" />
+    <!--<PackageReference Include="System.Collections.NonGeneric" Version="4.*" />-->
+    <!--<PackageReference Include="System.Diagnostics.TraceSource" Version="4.*" />-->
     <PackageReference Include="System.Reflection.Extensions" Version="4.*" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.*" />
 
     <Reference Include="..\..\lib\netstandard1.1\ServiceStack.Interfaces.dll" />
     <Reference Include="..\..\lib\netstandard1.6\ServiceStack.Client.dll" />
     <Reference Include="..\..\lib\netstandard1.3\ServiceStack.Common.dll" />
-    <Reference Include="..\..\lib\netstandard1.6\ServiceStack.dll" />
+    <Reference Include="..\..\lib\netstandard1.6\ServiceStack.dll" />    
     <Reference Include="..\..\lib\netstandard1.3\Northwind.Common.dll" />
   </ItemGroup>
 

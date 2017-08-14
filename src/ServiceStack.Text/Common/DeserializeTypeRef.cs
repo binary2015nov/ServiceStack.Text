@@ -11,14 +11,13 @@ namespace ServiceStack.Text.Common
     {
         internal static SerializationException CreateSerializationError(Type type, string strType)
         {
-            return new SerializationException(String.Format(
-            "Type definitions should start with a '{0}', expecting serialized type '{1}', got string starting with: {2}",
+            return new SerializationException("Type definitions should start with a '{0}', expecting serialized type '{1}', got string starting with: {2}".Fmt(
             JsWriter.MapStartChar, type.Name, strType.Substring(0, strType.Length < 50 ? strType.Length : 50)));
         }
 
         internal static SerializationException GetSerializationException(string propertyName, string propertyValueString, Type propertyType, Exception e)
         {
-            var serializationException = new SerializationException(String.Format("Failed to set property '{0}' with '{1}'", propertyName, propertyValueString), e);
+            var serializationException = new SerializationException("Failed to set property '{0}' with '{1}'".Fmt(propertyName, propertyValueString, e));
             if (propertyName != null)
             {
                 serializationException.Data.Add("propertyName", propertyName);

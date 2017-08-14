@@ -46,5 +46,12 @@ namespace ServiceStack.Text.Tests
             Assert.That("http://example.com#s=0/f=1/s=1".SetHashParam("f", "2"), Is.EqualTo("http://example.com#s=0/f=2/s=1"));
             Assert.That("http://example.com#s=rf/f=1".SetHashParam("f", "2"), Is.EqualTo("http://example.com#s=rf/f=2"));
         }
+
+        [Test]
+        public void Gets_Html_Response()
+        {
+            var response = HttpUtils.GetHtmlFromUrl("https://github.com/ServiceStack/ServiceStack.Text");
+            Assert.That(response.Contains("<title>GitHub - ServiceStack/ServiceStack.Text: .NET&#39;s fastest JSON, JSV and CSV Text Serializers</title>"));
+        }
     }
 }

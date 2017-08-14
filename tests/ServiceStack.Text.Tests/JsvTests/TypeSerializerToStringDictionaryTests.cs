@@ -94,11 +94,11 @@ namespace ServiceStack.Text.Tests.JsvTests
             var actual = NorthwindData.Employees
                 .First(x => x.LastName == "Davolio")
                 .ToStringDictionary();
-
+            actual.PrintDump();
             Assert.That(actual.EquivalentTo(
                 new Dictionary<string, string>
                 {
-                    {"Id","2"},
+                    {"Id","1"},
                     {"LastName","Davolio"},
                     {"FirstName","Nancy"},
                     {"Title","Sales Representative"},
@@ -113,7 +113,7 @@ namespace ServiceStack.Text.Tests.JsvTests
                     {"HomePhone","(206) 555-9857"},
                     {"Extension","5467"},
                     {"Notes","Education includes a BA in psychology from Colorado State University in 1970.  She also completed 'The Art of the Cold Call.'  Nancy is a member of Toastmasters International."},
-                    {"ReportsTo","1"},
+                    {"ReportsTo","2"},
                     {"PhotoPath","http://accweb/emmployees/davolio.bmp"},
                 }));
         }

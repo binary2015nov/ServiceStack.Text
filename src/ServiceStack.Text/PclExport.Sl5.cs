@@ -50,7 +50,7 @@ namespace ServiceStack
 #if !(SL5 && CORECLR) && !NO_DYNAMIC
             return ((dynamic)AppDomain.CurrentDomain).GetAssemblies() as Assembly[];
 #else
-            return new Assembly[0]; 
+            return new Assembly[0];
 #endif
         }
 
@@ -66,7 +66,16 @@ namespace ServiceStack
                 ? System.Net.Browser.WebRequestCreator.BrowserHttp
                 : System.Net.Browser.WebRequestCreator.ClientHttp;
 
-            return (HttpWebRequest)creator.Create(new Uri(urlString));
+            var webReq = (HttpWebRequest) creator.Create(new Uri(urlString));
+
+            //Methods others than GET and POST are only supported by Client request creator, see
+            //http://msdn.microsoft.com/en-us/library/cc838250(v=vs.95).aspx
+            if (webReq.GetType().Name == "BrowserHttpWebRequest" && webReq.Method != "GET" && webReq.Method != "POST")
+            {
+                webReq.Headers[HttpHeaders.XHttpMethodOverride] = webReq.Method;
+                webReq.Method = "POST";
+            }
+            return webReq;
         }
 
         public override Stream GetRequestStream(WebRequest webReq)
@@ -105,31 +114,36 @@ namespace ServiceStack
 
         public override WebResponse GetResponse(WebRequest webReq)
         {
-            using (var autoResetEvent = new AutoResetEvent(false))
-            {
-                MethodOverride(webReq);
-
-                var asyncResult = webReq.BeginGetResponse(r => autoResetEvent.Set(), null);
-                if (autoResetEvent.WaitOne(15000))
-                {
-                    return webReq.EndGetResponse(asyncResult);
-                }
-                else
-                {
-                    throw new WebException("Timeout.", new TimeoutException());
-                }
-            }        
+            var task = GetResponseAsync(webReq);
+            task.Wait();
+            return task.Result;
         }
 
-        private void MethodOverride(WebRequest webReq)
+        public static Task<HttpWebResponse> GetResponseAsync(WebRequest request)
         {
-            //Methods others than GET and POST are only supported by Client request creator, see
-            //http://msdn.microsoft.com/en-us/library/cc838250(v=vs.95).aspx
-            if (webReq.GetType().Name == "BrowserHttpWebRequest" && webReq.Method != "GET" && webReq.Method != "POST")
+            var tcs = new TaskCompletionSource<HttpWebResponse>();
+
+            try
             {
-                webReq.Headers[HttpHeaders.XHttpMethodOverride] = webReq.Method;
-                webReq.Method = "POST";
+                request.BeginGetResponse(iar =>
+                {
+                    try
+                    {
+                        var response = (HttpWebResponse) request.EndGetResponse(iar);
+                        tcs.SetResult(response);
+                    }
+                    catch (Exception exc)
+                    {
+                        tcs.SetException(exc);
+                    }
+                }, null);
             }
+            catch (Exception exc)
+            {
+                tcs.SetException(exc);
+            }
+
+            return tcs.Task;
         }
     }
 

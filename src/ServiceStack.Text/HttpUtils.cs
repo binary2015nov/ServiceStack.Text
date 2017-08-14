@@ -11,13 +11,10 @@ using System.Threading.Tasks;
 namespace ServiceStack
 {
     /// <summary>
-    /// Provides extension methods for the HTTP-specific request to a Uniform Resource Identifier (URI).
+    /// Provides methods for the HTTP-specific request to a Uniform Resource Identifier (URI).
     /// </summary>
     public static class HttpUtils
     {
-        [ThreadStatic]
-        public static IHttpResultsFilter ResultsFilter;
-
         public static string AddQueryParam(this string urlString, string key, object val, bool encode = true)
         {
             return urlString.AddQueryParam(key, val.ToString(), encode);
@@ -106,134 +103,190 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request
-        /// whose Accept HTTP header is <see cref="MimeTypes.Json"/> with the optional request and response filter.
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Accept HTTP header is <see cref="MimeTypes.Json"/>.
         /// </summary>
         /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
+        /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
+        /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
         /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
-        public static string GetJsonFromUrl(this string urlString,
+        public static string GetJsonFromUrl(this string urlString, string method = HttpMethods.Get,
+            string requestBody = null, string contentType = null, Encoding encoding = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, accept: MimeTypes.Json, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrl(urlString, method: method, contentType: contentType, requestBody: requestBody, 
+                accept: MimeTypes.Json, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+        }
+
+        /// <summary>
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Accept HTTP header is <see cref="MimeTypes.Json"/>.
+        /// </summary>
+        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
+        /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
+        /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
+        /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
+        /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
+        /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
+        public static Task<string> GetJsonFromUrlAsync(this string urlString, string method = HttpMethods.Get,
+            string requestBody = null, string contentType = null, Encoding encoding = null,
+            Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
+        {
+            return GetStringFromUrlAsync(urlString, method: method, contentType: contentType, requestBody: requestBody, 
+                accept: MimeTypes.Json, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+        }
+
+        /// <summary>
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Accept HTTP header is <see cref="MimeTypes.Xml"/>.
+        /// </summary>
+        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
+        /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
+        /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
+        /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
+        /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
+        /// <returns>The string representation response to the HTTP-specific request.</returns>
+        /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
+        /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
+        /// for the request expired.-or- An error occurred while processing the request.</exception>
+        public static string GetXmlFromUrl(this string urlString, string method = HttpMethods.Get,
+            string requestBody = null, string contentType = null, Encoding encoding = null,
+            Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
+        {
+            return GetStringFromUrl(urlString, method: method, contentType: contentType, requestBody: requestBody,
+                accept: MimeTypes.Xml, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
         /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation
-        /// whose Accept HTTP header is <see cref="MimeTypes.Json"/> with the optional request and response filter.
-        /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
-        /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
-        /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
-        /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
-        public static Task<string> GetJsonFromUrlAsync(this string urlString,
-            Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
-        {
-            return GetStringFromUrlAsync(urlString, accept: MimeTypes.Json, requestFilter: requestFilter, responseFilter: responseFilter);
-        }
-
-        /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request
         /// whose Accept HTTP header is <see cref="MimeTypes.Xml"/> with the optional request and response filter.
         /// </summary>
         /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
+        /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
+        /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
+        /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
+        /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
+        /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
+        public static Task<string> GetXmlFromUrlAsync(this string urlString, string method = HttpMethods.Get,
+            string requestBody = null, string contentType = null, Encoding encoding = null,
+            Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
+        {
+            return GetStringFromUrlAsync(urlString, method: method, contentType: contentType, requestBody: requestBody,
+                accept: MimeTypes.Xml, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+        }
+
+        /// <summary>
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Accept HTTP header is <see cref="MimeTypes.Csv"/>.
+        /// </summary>
+        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
+        /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
+        /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>    
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
         /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
-        public static string GetXmlFromUrl(this string urlString,
+        public static string GetCsvFromUrl(this string urlString, string method = HttpMethods.Get,
+            string requestBody = null, string contentType = null, Encoding encoding = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, accept: MimeTypes.Xml, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrl(urlString, method: method, contentType: contentType, requestBody: requestBody,
+                accept: MimeTypes.Csv, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation
-        /// whose Accept HTTP header is <see cref="MimeTypes.Xml"/> with the optional request and response filter.
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Accept HTTP header is <see cref="MimeTypes.Csv"/>.
         /// </summary>
         /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
+        /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
+        /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
-        public static Task<string> GetXmlFromUrlAsync(this string urlString,
+        public static Task<string> GetCsvFromUrlAsync(this string urlString, string method = HttpMethods.Get,
+            string requestBody = null, string contentType = null, Encoding encoding = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, accept: MimeTypes.Xml, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrlAsync(urlString, method: method, contentType: contentType, requestBody: requestBody,
+                accept: MimeTypes.Csv, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request
-        /// whose Accept HTTP header is <see cref="MimeTypes.Csv"/> with the optional request and response filter.
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Accept HTTP header is <see cref="MimeTypes.Html"/>.
         /// </summary>
         /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
+        /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
+        /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
         /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
-        public static string GetCsvFromUrl(this string urlString,
+        public static string GetHtmlFromUrl(this string urlString, string method = HttpMethods.Get, 
+            string requestBody = null, string contentType = null, Encoding encoding = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, accept: MimeTypes.Csv, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrl(urlString, method: method, contentType: contentType, requestBody: requestBody, 
+                accept: MimeTypes.Html, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation
-        /// whose Accept HTTP header is <see cref="MimeTypes.Csv"/> with the optional request and response filter.
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Accept HTTP header is <see cref="MimeTypes.Html"/>.
         /// </summary>
         /// <param name="urlString">A URI string that identifies the Internet resource.</param>
-        /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
-        /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
-        /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
-        public static Task<string> GetCsvFromUrlAsync(this string urlString,
-            Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
-        {
-            return GetStringFromUrlAsync(urlString, accept: MimeTypes.Csv, requestFilter: requestFilter, responseFilter: responseFilter);
-        }
-
-        /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request
-        /// whose Accept HTTP header is <see cref="MimeTypes.Html"/> with the optional request and response filter.
-        /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
+        /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
+        /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
-        /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
-        /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
-        /// for the request expired.-or- An error occurred while processing the request.</exception>
-        public static string GetHtmlFromUrl(this string urlString,
+        public static Task<string> GetHtmlFromUrlAsync(this string urlString, string method = HttpMethods.Get,
+            string requestBody = null, string contentType = null, Encoding encoding = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, accept: MimeTypes.Html, requestFilter: requestFilter, responseFilter: responseFilter);
-        }
-
-        /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request
-        /// whose Accept HTTP header is <see cref="MimeTypes.Html"/> with the optional request and response filter.
-        /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
-        /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
-        /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
-        /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
-        public static Task<string> GetHtmlFromUrlAsync(this string urlString,
-            Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
-        {
-            return GetStringFromUrlAsync(urlString, accept: MimeTypes.Html, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrlAsync(urlString, method: method, contentType: contentType, requestBody: requestBody,
+                accept: MimeTypes.Html, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PostStringToUrl(this string urlString, string requestBody = null,
             string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "POST",
+            return GetStringFromUrl(urlString, method: HttpMethods.Post,
                 requestBody: requestBody, contentType: contentType,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -242,7 +295,7 @@ namespace ServiceStack
             string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "POST",
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Post,
                 requestBody: requestBody, contentType: contentType,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -250,7 +303,7 @@ namespace ServiceStack
         public static string PostToUrl(this string urlString, string formData = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "POST",
+            return GetStringFromUrl(urlString, method: HttpMethods.Post,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: formData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -258,7 +311,7 @@ namespace ServiceStack
         public static Task<string> PostToUrlAsync(this string urlString, string formData = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "POST",
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Post,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: formData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -268,7 +321,7 @@ namespace ServiceStack
         {
             string postFormData = formData != null ? QueryStringSerializer.SerializeToString(formData) : null;
 
-            return GetStringFromUrl(urlString, method: "POST",
+            return GetStringFromUrl(urlString, method: HttpMethods.Post,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: postFormData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -278,7 +331,7 @@ namespace ServiceStack
         {
             string postFormData = formData != null ? QueryStringSerializer.SerializeToString(formData) : null;
 
-            return GetStringFromUrlAsync(urlString, method: "POST",
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Post,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: postFormData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -286,56 +339,56 @@ namespace ServiceStack
         public static string PostJsonToUrl(this string urlString, string json,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "POST", requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrl(urlString, method: HttpMethods.Post, requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PostJsonToUrlAsync(this string urlString, string json,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "POST", requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Post, requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PostJsonToUrl(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "POST", requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrl(urlString, method: HttpMethods.Post, requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PostJsonToUrlAsync(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "POST", requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Post, requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PostXmlToUrl(this string urlString, string xml,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "POST", requestBody: xml, contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
+            return GetStringFromUrl(urlString, method: HttpMethods.Post, requestBody: xml, contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PostXmlToUrlAsync(this string urlString, string xml,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "POST", requestBody: xml, contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Post, requestBody: xml, contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PostCsvToUrl(this string urlString, string csv,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "POST", requestBody: csv, contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
+            return GetStringFromUrl(urlString, method: HttpMethods.Post, requestBody: csv, contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PostCsvToUrlAsync(this string urlString, string csv,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "POST", requestBody: csv, contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Post, requestBody: csv, contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
@@ -343,7 +396,7 @@ namespace ServiceStack
             string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PUT",
+            return GetStringFromUrl(urlString, method: HttpMethods.Put,
                 requestBody: requestBody, contentType: contentType,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -352,7 +405,7 @@ namespace ServiceStack
             string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PUT",
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Put,
                 requestBody: requestBody, contentType: contentType,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -360,7 +413,7 @@ namespace ServiceStack
         public static string PutToUrl(this string urlString, string formData = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PUT",
+            return GetStringFromUrl(urlString, method: HttpMethods.Put,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: formData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -368,7 +421,7 @@ namespace ServiceStack
         public static Task<string> PutToUrlAsync(this string urlString, string formData = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PUT",
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Put,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: formData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -378,7 +431,7 @@ namespace ServiceStack
         {
             string postFormData = formData != null ? QueryStringSerializer.SerializeToString(formData) : null;
 
-            return GetStringFromUrl(urlString, method: "PUT",
+            return GetStringFromUrl(urlString, method: HttpMethods.Put,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: postFormData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -388,7 +441,7 @@ namespace ServiceStack
         {
             string postFormData = formData != null ? QueryStringSerializer.SerializeToString(formData) : null;
 
-            return GetStringFromUrlAsync(urlString, method: "PUT",
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Put,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: postFormData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -396,56 +449,56 @@ namespace ServiceStack
         public static string PutJsonToUrl(this string urlString, string json,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PUT", requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrl(urlString, method: HttpMethods.Put, requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PutJsonToUrlAsync(this string urlString, string json,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PUT", requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Put, requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PutJsonToUrl(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PUT", requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrl(urlString, method: HttpMethods.Put, requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PutJsonToUrlAsync(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PUT", requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Put, requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PutXmlToUrl(this string urlString, string xml,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PUT", requestBody: xml, contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
+            return GetStringFromUrl(urlString, method: HttpMethods.Put, requestBody: xml, contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PutXmlToUrlAsync(this string urlString, string xml,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PUT", requestBody: xml, contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Put, requestBody: xml, contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PutCsvToUrl(this string urlString, string csv,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PUT", requestBody: csv, contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
+            return GetStringFromUrl(urlString, method: HttpMethods.Put, requestBody: csv, contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PutCsvToUrlAsync(this string urlString, string csv,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PUT", requestBody: csv, contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Put, requestBody: csv, contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
@@ -453,7 +506,7 @@ namespace ServiceStack
             string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PATCH",
+            return GetStringFromUrl(urlString, method: HttpMethods.Patch,
                 requestBody: requestBody, contentType: contentType,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -462,7 +515,7 @@ namespace ServiceStack
             string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PATCH",
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Patch,
                 requestBody: requestBody, contentType: contentType,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -470,7 +523,7 @@ namespace ServiceStack
         public static string PatchToUrl(this string urlString, string formData = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PATCH",
+            return GetStringFromUrl(urlString, method: HttpMethods.Patch,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: formData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -478,7 +531,7 @@ namespace ServiceStack
         public static Task<string> PatchToUrlAsync(this string urlString, string formData = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PATCH",
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Patch,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: formData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -488,7 +541,7 @@ namespace ServiceStack
         {
             string postFormData = formData != null ? QueryStringSerializer.SerializeToString(formData) : null;
 
-            return GetStringFromUrl(urlString, method: "PATCH",
+            return GetStringFromUrl(urlString, method: HttpMethods.Patch,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: postFormData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -498,7 +551,7 @@ namespace ServiceStack
         {
             string postFormData = formData != null ? QueryStringSerializer.SerializeToString(formData) : null;
 
-            return GetStringFromUrlAsync(urlString, method: "PATCH",
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Patch,
                 contentType: MimeTypes.FormUrlEncoded, requestBody: postFormData,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -506,65 +559,65 @@ namespace ServiceStack
         public static string PatchJsonToUrl(this string urlString, string json,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PATCH", requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrl(urlString, method: HttpMethods.Patch, requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PatchJsonToUrlAsync(this string urlString, string json,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PATCH", requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Patch, requestBody: json, contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PatchJsonToUrl(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PATCH", requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrl(urlString, method: HttpMethods.Patch, requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> PatchJsonToUrlAsync(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "PATCH", requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Patch, requestBody: data.ToJson(), contentType: MimeTypes.Json, accept: MimeTypes.Json,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string DeleteFromUrl(this string urlString, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "DELETE", accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrl(urlString, method: HttpMethods.Delete, accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> DeleteFromUrlAsync(this string urlString, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "DELETE", accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Delete, accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string OptionsFromUrl(this string urlString, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "OPTIONS", accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrl(urlString, method: HttpMethods.Options, accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> OptionsFromUrlAsync(this string urlString, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "OPTIONS", accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Options, accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string HeadFromUrl(this string urlString, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "HEAD", accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrl(urlString, method: HttpMethods.Head, accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static Task<string> HeadFromUrlAsync(this string urlString, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrlAsync(urlString, method: "HEAD", accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
+            return GetStringFromUrlAsync(urlString, method: HttpMethods.Head, accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
@@ -575,15 +628,15 @@ namespace ServiceStack
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
         /// <param name="accept">The value of the Accept HTTP header. The default value is "*/*".</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request.
-        /// The default value is <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
         /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
-        public static string GetStringFromUrl(this string urlString, string method = null,
+        public static string GetStringFromUrl(this string urlString, string method = HttpMethods.Get,
             string requestBody = null, string contentType = null, string accept = "*/*", Encoding encoding = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
@@ -595,13 +648,6 @@ namespace ServiceStack
 
             webReq.Accept = accept;
 
-            requestFilter?.Invoke(webReq);
-
-            if (ResultsFilter != null)
-            {
-                return ResultsFilter.GetString(webReq, requestBody);
-            }
-
             if (requestBody != null)
             {
                 using (var reqStream = PclExport.Instance.GetRequestStream(webReq))
@@ -610,6 +656,7 @@ namespace ServiceStack
                     writer.Write(requestBody);
                 }
             }
+            requestFilter?.Invoke(webReq);
             using (var webRes = PclExport.Instance.GetResponse(webReq))
             {
                 responseFilter?.Invoke((HttpWebResponse)webRes);
@@ -625,66 +672,17 @@ namespace ServiceStack
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
         /// <param name="accept">The value of the Accept HTTP header. The default value is "*/*".</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request.
-        /// The default value is <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
+        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request, 
+        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
-        public static Task<string> GetStringFromUrlAsync(this string urlString, string method = null,
+        public static Task<string> GetStringFromUrlAsync(this string urlString, string method = HttpMethods.Get,
             string requestBody = null, string contentType = null, string accept = "*/*", Encoding encoding = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return Task.Factory.StartNew(
-                () => GetStringFromUrl(urlString, method, requestBody, contentType, accept, encoding, requestFilter, responseFilter));
-            //var webReq = PclExport.Instance.CreateWebRequest(urlString);
-            //if (!method.IsNullOrEmpty())
-            //    webReq.Method = method;
-            //if (!contentType.IsNullOrEmpty())
-            //    webReq.ContentType = contentType;
-
-            //webReq.Accept = accept;
-
-            //requestFilter?.Invoke(webReq);
-
-            //if (ResultsFilter != null)
-            //{
-            //    var result = ResultsFilter.GetString(webReq, requestBody);
-            //    var tcsResult = new TaskCompletionSource<string>();
-            //    tcsResult.SetResult(result);
-            //    return tcsResult.Task;
-            //}
-
-            //if (requestBody != null)
-            //{
-            //    using (var reqStream = PclExport.Instance.GetRequestStream(webReq))
-            //    using (var writer = new StreamWriter(reqStream, encoding ?? PclExport.Instance.GetUseEncoding(false)))
-            //    {
-            //        writer.Write(requestBody);
-            //    }
-            //}
-
-            //var taskWebRes = webReq.GetResponseAsync();
-            //var tcs = new TaskCompletionSource<string>();
-
-            //taskWebRes.ContinueWith(task =>
-            //{
-            //    if (task.Exception != null)
-            //    {
-            //        tcs.SetException(task.Exception);
-            //        return;
-            //    }
-            //    if (task.IsCanceled)
-            //    {
-            //        tcs.SetCanceled();
-            //        return;
-            //    }
-            //    using (var webRes = task.Result)
-            //    {
-            //        responseFilter?.Invoke((HttpWebResponse)webRes);
-            //        tcs.SetResult(webRes.ReadToEnd(encoding ?? PclExport.Instance.GetUseEncoding(false)));
-            //    }
-            //});
-            //return tcs.Task;
+            return Task.Factory.StartNew(() => GetStringFromUrl(urlString, method, requestBody, contentType, accept,
+                encoding, requestFilter, responseFilter));            
         }
 
         public static byte[] GetBytesFromUrl(this string urlString, string accept = "*/*",
@@ -702,7 +700,7 @@ namespace ServiceStack
         public static byte[] PostBytesToUrl(this string urlString, byte[] requestBody = null, string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return SendBytesToUrl(urlString, method: "POST",
+            return SendBytesToUrl(urlString, method: HttpMethods.Post,
                 contentType: contentType, requestBody: requestBody,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -710,7 +708,7 @@ namespace ServiceStack
         public static Task<byte[]> PostBytesToUrlAsync(this string urlString, byte[] requestBody = null, string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return SendBytesToUrlAsync(urlString, method: "POST",
+            return SendBytesToUrlAsync(urlString, method: HttpMethods.Post,
                 contentType: contentType, requestBody: requestBody,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -718,7 +716,7 @@ namespace ServiceStack
         public static byte[] PutBytesToUrl(this string urlString, byte[] requestBody = null, string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return SendBytesToUrl(urlString, method: "PUT",
+            return SendBytesToUrl(urlString, method: HttpMethods.Put,
                 contentType: contentType, requestBody: requestBody,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -726,7 +724,7 @@ namespace ServiceStack
         public static Task<byte[]> PutBytesToUrlAsync(this string urlString, byte[] requestBody = null, string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return SendBytesToUrlAsync(urlString, method: "PUT",
+            return SendBytesToUrlAsync(urlString, method: HttpMethods.Put,
                 contentType: contentType, requestBody: requestBody,
                 accept: accept, requestFilter: requestFilter, responseFilter: responseFilter);
         }
@@ -736,20 +734,12 @@ namespace ServiceStack
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             var webReq = PclExport.Instance.CreateWebRequest(urlString);
-            if (method != null)
+            if (!method.IsNullOrEmpty())          
                 webReq.Method = method;
-
-            if (contentType != null)
+            if (!contentType.IsNullOrEmpty())
                 webReq.ContentType = contentType;
 
             webReq.Accept = accept;
-
-            requestFilter?.Invoke(webReq);
-
-            if (ResultsFilter != null)
-            {
-                return ResultsFilter.GetBytes(webReq, requestBody);
-            }
 
             if (requestBody != null)
             {
@@ -758,7 +748,7 @@ namespace ServiceStack
                     req.Write(requestBody, 0, requestBody.Length);
                 }
             }
-
+            requestFilter?.Invoke(webReq);
             using (var webRes = PclExport.Instance.GetResponse(webReq))
             {
                 responseFilter?.Invoke((HttpWebResponse)webRes);
@@ -774,58 +764,8 @@ namespace ServiceStack
             byte[] requestBody = null, string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            var webReq = PclExport.Instance.CreateWebRequest(urlString);
-            if (method != null)
-                webReq.Method = method;
-            if (contentType != null)
-                webReq.ContentType = contentType;
-
-            webReq.Accept = accept;
-
-            requestFilter?.Invoke(webReq);
-
-            if (ResultsFilter != null)
-            {
-                var result = ResultsFilter.GetBytes(webReq, requestBody);
-                var tcsResult = new TaskCompletionSource<byte[]>();
-                tcsResult.SetResult(result);
-                return tcsResult.Task;
-            }
-
-            if (requestBody != null)
-            {
-                using (var req = PclExport.Instance.GetRequestStream(webReq))
-                {
-                    req.Write(requestBody, 0, requestBody.Length);
-                }
-            }
-
-            var taskWebRes = webReq.GetResponseAsync();
-            var tcs = new TaskCompletionSource<byte[]>();
-
-            taskWebRes.ContinueWith(task =>
-            {
-                if (task.Exception != null)
-                {
-                    tcs.SetException(task.Exception);
-                    return;
-                }
-                if (task.IsCanceled)
-                {
-                    tcs.SetCanceled();
-                    return;
-                }
-
-                var webRes = task.Result;
-                responseFilter?.Invoke((HttpWebResponse)webRes);
-
-                using (var stream = webRes.GetResponseStream())
-                {
-                    tcs.SetResult(stream.ReadFully());
-                }
-            });
-
-            return tcs.Task;
+            return Task.Factory.StartNew(() => SendBytesToUrl(urlString, method, requestBody, contentType, accept,
+                requestFilter, responseFilter));
         }
 
         public static bool IsAny300(this Exception ex)
@@ -938,7 +878,7 @@ namespace ServiceStack
         /// Reads all characters from the current position to the end of the data stream from the Internet response, with the specified character encoding.
         /// </summary>
         /// <param name="response">The response from an Uniform Resource Identifier (URI).</param>
-        /// <param name="encoding">The character encoding to use. The default value is <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
+        /// <param name="encoding">The character encoding to use, if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <returns>The rest of the data stream from the Internet response as a string, from the current position to the end. If
         /// the current position is at the end of the stream, returns an empty string.</returns>
         public static string ReadToEnd(this WebResponse response, Encoding encoding = null)
@@ -955,7 +895,7 @@ namespace ServiceStack
         /// with the specified character encoding.
         /// </summary>
         /// <param name="response">The response from an Uniform Resource Identifier (URI).</param>
-        /// <param name="encoding">The character encoding to use. The default value is <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
+        /// <param name="encoding">The character encoding to use, if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <returns>An System.Collections.Generic.IEnumerable`1 that contains System.String elements from the Internet response.</returns>
         public static IEnumerable<string> ReadLines(this WebResponse response, Encoding encoding = null)
         {
@@ -978,7 +918,7 @@ namespace ServiceStack
         /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.</exception>
-        public static HttpWebResponse GetWebResponse(this string urlString)
+        public static HttpWebResponse GetWebResponse(string urlString)
         {
             try
             {
@@ -999,7 +939,7 @@ namespace ServiceStack
         /// </summary>
         /// <param name="urlString">A URI string that identifies the Internet resource.</param>
         /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
-        public static Task<HttpWebResponse> GetWebResponseAsync(this string urlString)
+        public static Task<HttpWebResponse> GetWebResponseAsync(string urlString)
         {
             return Task.Factory.StartNew(p => GetWebResponse(p as string), urlString);
         }
@@ -1013,35 +953,19 @@ namespace ServiceStack
             return tcs.Task;
         }
 
-        public static Task<HttpWebResponse> GetResponseAsync(this HttpWebRequest request)
+        public static void UploadFile(this HttpWebRequest webRequest, Stream fileStream, string fileName)
         {
-            var tcs = new TaskCompletionSource<HttpWebResponse>();
+            if (fileName == null)
+                throw new ArgumentNullException(nameof(fileName));
+            var mimeType = MimeTypes.GetMimeType(fileName);
+            if (mimeType == null)
+                throw new ArgumentException("Mime-type not found for file: " + fileName);
 
-            try
-            {
-                request.BeginGetResponse(iar =>
-                {
-                    try
-                    {
-                        var response = (HttpWebResponse)request.EndGetResponse(iar);
-                        tcs.SetResult(response);
-                    }
-                    catch (Exception exc)
-                    {
-                        tcs.SetException(exc);
-                    }
-                }, null);
-            }
-            catch (Exception exc)
-            {
-                tcs.SetException(exc);
-            }
-
-            return tcs.Task;
+            UploadFile(webRequest, fileStream, fileName, mimeType);
         }
 
         public static void UploadFile(this HttpWebRequest webRequest, Stream fileStream, string fileName, string mimeType,
-            string accept = null, Action<HttpWebRequest> requestFilter = null, string method = "POST")
+            string accept = null, Action<HttpWebRequest> requestFilter = null, string method = HttpMethods.Post)
         {
             var httpReq = webRequest;
             httpReq.Method = method;
@@ -1063,16 +987,16 @@ namespace ServiceStack
             var header = string.Format(headerTemplate, fileName, mimeType);
 
             var headerbytes = header.ToAsciiBytes();
-
             var contentLength = fileStream.Length + headerbytes.Length + boundarybytes.Length;
+
+#if NET45 || NET40
+            httpReq.AllowAutoRedirect = false;
+            httpReq.ContentLength = contentLength;
+            httpReq.KeepAlive = false;
+#else
             httpReq.Headers[HttpRequestHeader.ContentLength] = contentLength.ToString();
             httpReq.Headers[HttpRequestHeader.KeepAlive] = "false";
-
-            if (ResultsFilter != null)
-            {
-                ResultsFilter.UploadStream(httpReq, fileStream, fileName);
-                return;
-            }
+#endif
 
             using (var outputStream = PclExport.Instance.GetRequestStream(httpReq))
             {
@@ -1086,42 +1010,31 @@ namespace ServiceStack
             }
         }
 
-        public static void UploadFile(this HttpWebRequest webRequest, Stream fileStream, string fileName)
-        {
-            if (fileName == null)
-                throw new ArgumentNullException(nameof(fileName));
-            var mimeType = MimeTypes.GetMimeType(fileName);
-            if (mimeType == null)
-                throw new ArgumentException("Mime-type not found for file: " + fileName);
-
-            UploadFile(webRequest, fileStream, fileName, mimeType);
-        }
-
         public static string PostXmlToUrl(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "POST", requestBody: data.ToXml(), contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
+            return GetStringFromUrl(urlString, method: HttpMethods.Post, requestBody: data.ToXml(), contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PostCsvToUrl(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "POST", requestBody: data.ToCsv(), contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
+            return GetStringFromUrl(urlString, method: HttpMethods.Post, requestBody: data.ToCsv(), contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PutXmlToUrl(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PUT", requestBody: data.ToXml(), contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
+            return GetStringFromUrl(urlString, method: HttpMethods.Put, requestBody: data.ToXml(), contentType: MimeTypes.Xml, accept: MimeTypes.Xml,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PutCsvToUrl(this string urlString, object data,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
-            return GetStringFromUrl(urlString, method: "PUT", requestBody: data.ToCsv(), contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
+            return GetStringFromUrl(urlString, method: HttpMethods.Put, requestBody: data.ToCsv(), contentType: MimeTypes.Csv, accept: MimeTypes.Csv,
                 requestFilter: requestFilter, responseFilter: responseFilter);
         }
     }
@@ -1135,58 +1048,6 @@ namespace ServiceStack
     public interface IHasStatusDescription
     {
         string StatusDescription { get; }
-    }
-
-    public interface IHttpResultsFilter : IDisposable
-    {
-        string GetString(HttpWebRequest webReq, string reqBody);
-        byte[] GetBytes(HttpWebRequest webReq, byte[] reqBody);
-        void UploadStream(HttpWebRequest webRequest, Stream fileStream, string fileName);
-    }
-
-    public class HttpResultsFilter : IHttpResultsFilter
-    {
-        private readonly IHttpResultsFilter previousFilter;
-
-        public string StringResult { get; set; }
-        public byte[] BytesResult { get; set; }
-
-        public Func<HttpWebRequest, string, string> StringResultFn { get; set; }
-        public Func<HttpWebRequest, byte[], byte[]> BytesResultFn { get; set; }
-        public Action<HttpWebRequest, Stream, string> UploadFileFn { get; set; }
-
-        public HttpResultsFilter(string stringResult = null, byte[] bytesResult = null)
-        {
-            StringResult = stringResult;
-            BytesResult = bytesResult;
-
-            previousFilter = HttpUtils.ResultsFilter;
-            HttpUtils.ResultsFilter = this;
-        }
-
-        public void Dispose()
-        {
-            HttpUtils.ResultsFilter = previousFilter;
-        }
-
-        public string GetString(HttpWebRequest webReq, string reqBody)
-        {
-            return StringResultFn != null
-                ? StringResultFn(webReq, reqBody)
-                : StringResult;
-        }
-
-        public byte[] GetBytes(HttpWebRequest webReq, byte[] reqBody)
-        {
-            return BytesResultFn != null
-                ? BytesResultFn(webReq, reqBody)
-                : BytesResult;
-        }
-
-        public void UploadStream(HttpWebRequest webRequest, Stream fileStream, string fileName)
-        {
-            UploadFileFn?.Invoke(webRequest, fileStream, fileName);
-        }
     }
 }
 

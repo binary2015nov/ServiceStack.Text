@@ -58,10 +58,8 @@ namespace ServiceStack.Text.Tests
             {
                 JsonSerializer.SerializeToStream((object)null, ms);
                 TypeSerializer.SerializeToStream((object)null, ms);
-                XmlSerializer.SerializeToStream((object)null, ms);
             }
         }
-
     }
 }
 

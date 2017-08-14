@@ -26,7 +26,7 @@ namespace ServiceStack.Text.Tests.UseCases
             var orgName = "ServiceStack";
 
             var orgRepos = "https://api.github.com/orgs/{0}/repos".Fmt(orgName)
-                .GetJsonFromUrl(httpReq => httpReq.UserAgent = "ServiceStack.Text")
+                .GetJsonFromUrl(requestFilter: httpReq => httpReq.UserAgent = "ServiceStack.Text")
                 .FromJson<List<GithubRepository>>();
 
             "Writing {0} Github Repositories:".Print(orgName);

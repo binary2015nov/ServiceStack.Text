@@ -246,7 +246,7 @@ namespace ServiceStack.Text
         public static string Dump(this Delegate fn)
         {
             var method = fn.GetType().GetMethod("Invoke");
-            var sb = StringBuilderCache.Allocate();
+            var sb = new StringBuilder();
             foreach (var param in method.GetParameters())
             {
                 if (sb.Length > 0)
@@ -256,8 +256,7 @@ namespace ServiceStack.Text
             }
 
             var methodName = fn.Method().Name;
-            var info = "{0} {1}({2})".Fmt(method.ReturnType.Name, methodName, 
-                StringBuilderCache.Retrieve(sb));
+            var info = "{0} {1}({2})".Fmt(method.ReturnType.Name, methodName, sb.ToString());
             return info;
         }
 

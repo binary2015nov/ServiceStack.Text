@@ -20,7 +20,7 @@ namespace ServiceStack.Text.Jsv
             if (DeserializerCache.TryGetValue(type, out parseFn)) return (T)parseFn(value);
 
             var genericType = typeof(T).MakeGenericType(type);
-            var mi = genericType.GetMethodInfo("DeserializeFromString", new[] { typeof(string) });
+            var mi = genericType.GetMethodInfo("Deserialize", new[] { typeof(string) });
             parseFn = (ParseStringDelegate)mi.MakeDelegate(typeof(ParseStringDelegate));
 
             Dictionary<Type, ParseStringDelegate> snapshot, newCache;

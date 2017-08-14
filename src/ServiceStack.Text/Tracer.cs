@@ -2,12 +2,12 @@ using System;
 
 namespace ServiceStack
 {
-    public abstract class Tracer
+    abstract class Tracer
     {
-        public static ITracer Default = new NullTracer();       
+        public static ITracer Default = new NullTracer();
     }
 
-    public class NullTracer : ITracer
+    class NullTracer : ITracer
     {
         public void WriteDebug(string error) { }
 
@@ -25,7 +25,7 @@ namespace ServiceStack
 
     }
 
-    public class ConsoleTracer : ITracer
+    class ConsoleTracer : ITracer
     {
         public void WriteDebug(string error)
         {
@@ -63,7 +63,7 @@ namespace ServiceStack
         }
     }
 
-    public static class TracerExceptions
+    static class TracerExceptions
     {
         public static T Trace<T>(this T ex) where T : Exception
         {

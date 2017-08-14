@@ -8,167 +8,185 @@ namespace ServiceStack.Text.Tests
     [TestFixture]
     public class XmlSerializerTests
     {
-        static XmlSerializerTests()
+        [OneTimeSetUp]
+        public void TextFixtureSetup()
         {
             NorthwindData.LoadData(false);
-        }
-
-        public void Serialize<T>(T data)
-        {
-            //TODO: implement serializer and test properly
-            var xml = XmlSerializer.SerializeToString(data);
-            Console.WriteLine(xml);
         }
 
         [Test]
         public void Can_Serialize_Movie()
         {
-            Serialize(MoviesData.Movies[0]);
+            var xmlString = XmlSerializer.Serialize(MoviesData.Movies[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void Can_Serialize_Movies()
         {
-            Serialize(MoviesData.Movies);
+            var xmlString = XmlSerializer.Serialize(MoviesData.Movies);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void Can_Serialize_MovieResponse_Dto()
         {
-            Serialize(new MovieResponse { Movie = MoviesData.Movies[0] });
+            var xmlString = XmlSerializer.Serialize(new MovieResponse {Movie = MoviesData.Movies[0]});
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Category()
         {
-            Serialize(NorthwindData.Categories[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Categories[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Categories()
         {
-            Serialize(NorthwindData.Categories);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Categories);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Customer()
         {
-            Serialize(NorthwindData.Customers[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Customers[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Customers()
         {
-            Serialize(NorthwindData.Customers);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Customers);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Employee()
         {
-            Serialize(NorthwindData.Employees[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Employees[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Employees()
         {
-            Serialize(NorthwindData.Employees);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Employees);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_EmployeeTerritory()
         {
-            Serialize(NorthwindData.EmployeeTerritories[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.EmployeeTerritories[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_EmployeeTerritories()
         {
-            Serialize(NorthwindData.EmployeeTerritories);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.EmployeeTerritories);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_OrderDetail()
         {
-            Serialize(NorthwindData.OrderDetails[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.OrderDetails[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_OrderDetails()
         {
-            Serialize(NorthwindData.OrderDetails);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.OrderDetails);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Order()
         {
-            Serialize(NorthwindData.Orders[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Orders[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Orders()
         {
-            Serialize(NorthwindData.Orders);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Orders);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Product()
         {
-            Serialize(NorthwindData.Products[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Products[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Products()
         {
-            Serialize(NorthwindData.Products);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Products);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Region()
         {
-            Serialize(NorthwindData.Regions[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Regions[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Regions()
         {
-            Serialize(NorthwindData.Regions);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Regions);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Shipper()
         {
-            Serialize(NorthwindData.Shippers[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Shippers[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Shippers()
         {
-            Serialize(NorthwindData.Shippers);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Shippers);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Supplier()
         {
-            Serialize(NorthwindData.Suppliers[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Suppliers[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Suppliers()
         {
-            Serialize(NorthwindData.Suppliers);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Suppliers);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Territory()
         {
-            Serialize(NorthwindData.Territories[0]);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Territories[0]);
+            Console.WriteLine(xmlString);
         }
 
         [Test]
         public void serialize_Territories()
         {
-            Serialize(NorthwindData.Territories);
+            var xmlString = XmlSerializer.Serialize(NorthwindData.Territories);
+            Console.WriteLine(xmlString);
         }
-
     }
 }

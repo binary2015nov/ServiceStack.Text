@@ -629,8 +629,8 @@ namespace ServiceStack.Stripe
         {
             try
             {
-                var url = BaseUrl.CombineWith(relativeUrl);
-                var response = url.GetStringFromUrl(method: method, requestBody: body, requestFilter: req =>
+                var urlString = BaseUrl.AppendPath(relativeUrl);
+                var response = HttpUtils.GetStringFromUrl(urlString, method: method, requestBody: body, requestFilter: req =>
                 {
                     InitRequest(req, method, idempotencyKey);
                 });
@@ -660,7 +660,7 @@ namespace ServiceStack.Stripe
             try
             {
                 var url = BaseUrl.CombineWith(relativeUrl);
-                var response = await url.GetStringFromUrlAsync(method: method, requestBody: body, requestFilter: req =>
+                var response = await HttpUtils.GetStringFromUrlAsync(url, method: method, requestBody: body, requestFilter: req =>
                 {
                     InitRequest(req, method, idempotencyKey);
                 });

@@ -40,7 +40,7 @@ namespace ServiceStack
 
         public static T ToOrDefaultValue<T>(this string value)
         {
-            return String.IsNullOrEmpty(value) ? default(T) : TypeSerializer.DeserializeFromString<T>(value);
+            return value.IsNullOrEmpty() ? default(T) : TypeSerializer.DeserializeFromString<T>(value);
         }
 
         public static object To(this string value, Type type)
@@ -127,36 +127,32 @@ namespace ServiceStack
                         .Replace(TypeSerializer.DoubleQuoteString, JsWriter.QuoteString);
         }
 
-        public static string UrlEncode(this string text, bool upperCase=false)
+        /// <summary>
+        ///   Converts a uri component to its escaped representation using the specified upperCase.
+        /// </summary>
+        /// <param name="uriComponent">The uri component to escape.</param>
+        /// <param name="upperCase">true to perform an uppercase escaping, other then false. The default value is false.</param>
+        /// <returns>A System.String that contains the escaped representation of uriComponent.</returns>       
+        public static string UrlEncode(this string uriComponent, bool upperCase = false)
         {
-            if (String.IsNullOrEmpty(text)) return text;
+            if (uriComponent.IsNullOrEmpty())
+                return string.Empty;
 
-            var sb = StringBuilderCache.Allocate();
-            var fmt = upperCase ? "X2" : "x2";
-
-            foreach (var charCode in Encoding.UTF8.GetBytes(text))
+            var sb = new StringBuilder();
+            var format = upperCase ? "X2" : "x2";
+            foreach (var charCode in Encoding.UTF8.GetBytes(uriComponent))
             {
-
-                if (
-                    charCode >= 65 && charCode <= 90        // A-Z
-                    || charCode >= 97 && charCode <= 122    // a-z
-                    || charCode >= 48 && charCode <= 57     // 0-9
-                    || charCode >= 44 && charCode <= 46     // ,-.
-                    )
-                {
+                if (charCode >= 65 && charCode <= 90 || charCode >= 97 && charCode <= 122 || charCode >= 48 && charCode <= 57 
+                    || charCode >= 44 && charCode <= 46)             // A-Z a-z 0-9 ,-.
                     sb.Append((char)charCode);
-                }
-                else if(charCode == 32)
-                {
+                
+                else if(charCode == 32)               
                     sb.Append('+');
-                }
+                
                 else
-                {
-                    sb.Append('%' + charCode.ToString(fmt));
-                }
+                    sb.Append('%' + ((int)charCode).ToString(format));                
             }
-
-            return StringBuilderCache.Retrieve(sb);
+            return sb.ToString();
         }
 
         public static string UrlDecode(this string text)
@@ -227,12 +223,17 @@ namespace ServiceStack
             return string.Format(url, encodedUrlComponents);
         }
 
+        /// <summary>
+        /// Replaces the letter of the specified string with the letter 13 letters after it in the alphabet.
+        /// </summary>
+        /// <param name="value"> A string to replace.</param>
+        /// <returns>a Rot13 string.</returns>
         public static string ToRot13(this string value)
         {
-            var array = value.ToCharArray();
-            for (var i = 0; i < array.Length; i++)
+            var charArray = value.ToCharArray();
+            for (var i = 0; i < charArray.Length; i++)
             {
-                var number = (int)array[i];
+                var number = (int)charArray[i];
 
                 if (number >= 'a' && number <= 'z')
                     number += (number > 'm') ? -13 : 13;
@@ -240,52 +241,63 @@ namespace ServiceStack
                 else if (number >= 'A' && number <= 'Z')
                     number += (number > 'M') ? -13 : 13;
 
-                array[i] = (char)number;
+                charArray[i] = (char)number;
             }
-            return new string(array);
+            return charArray.ToString();
         }
 
         public static string WithTrailingSlash(this string path)
-        {
-            if (String.IsNullOrEmpty(path))
-                throw new ArgumentNullException("path");
-
-            if (path[path.Length - 1] != '/')
+        {           
+            if (path.IsNullOrEmpty() || path[path.Length - 1] != '/')
             {
                 return path + "/";
             }
             return path;
         }
 
-        public static string AppendPath(this string uri, params string[] uriComponents)
+        /// <summary>
+        ///  Appends a copy of the specified uriComponent without character escaping to the base URI.
+        /// </summary>
+        /// <param name="baseUriString">The base System.Uri, represented as a System.String.</param>
+        /// <param name="uriComponent">The uri component to add to the base System.Uri.</param>
+        /// <returns>A string representation for a System.Uri instance.</returns>
+        public static string AppendPath(this string baseUriString, string uriComponent)
         {
-            return AppendUrlPaths(uri, uriComponents);
+            return AppendPaths(baseUriString, new[] { uriComponent }, false);
         }
 
-        public static string AppendUrlPaths(this string uri, params string[] uriComponents)
+        /// <summary>
+        ///  Appends the uri component elements with character escaping in a specified System.String array to the base URI.
+        /// </summary>
+        /// <param name="baseUriString">The base System.Uri, represented as a System.String.</param>
+        /// <param name="uriComponents">An string array that contains the uri component elements.</param>
+        /// <returns>A string representation for a System.Uri instance.</returns>
+        public static string AppendPaths(this string baseUriString, params string[] uriComponents)
         {
-            var sb = StringBuilderCache.Allocate();
-            sb.Append(uri.WithTrailingSlash());
-            var i = 0;
-            foreach (var uriComponent in uriComponents)
-            {
-                if (i++ > 0) sb.Append('/');
-                sb.Append(uriComponent.UrlEncode());
-            }
-            return StringBuilderCache.Retrieve(sb);
+            return AppendPaths(baseUriString, uriComponents, true);
         }
 
-        public static string AppendUrlPathsRaw(this string uri, params string[] uriComponents)
+        /// <summary>
+        ///  Appends the uri component elements in a specified System.String array to the base URI, with explicit control of character escaping.
+        /// </summary>
+        /// <param name="baseUriString">The base System.Uri, represented as a System.String.</param>
+        /// <param name="uriComponents">An string array that contains the uri component elements.</param>
+        /// <param name="escape">true if uri component is escaped; otherwise, false.</param>
+        /// <returns>A string representation for a System.Uri instance.</returns>
+        public static string AppendPaths(this string baseUriString, string[] uriComponents, bool escape)
         {
-            var sb = StringBuilderCache.Allocate();
-            sb.Append(uri.WithTrailingSlash());
-            var i = 0;
-            foreach (var uriComponent in uriComponents)
+            var sb = new StringBuilder(baseUriString, 128);
+            if (sb.Length == 0 || sb[sb.Length - 1] != '/')
+                sb.Append('/');
+            if (uriComponents == null || uriComponents.Length == 0)
+                return sb.ToString();
+
+            foreach (var urlCom in uriComponents)
             {
-                if (i++ > 0) sb.Append('/');
-                sb.Append(uriComponent);
+                if (sb[sb.Length - 1] != '/') sb.Append('/');
+                sb.Append(escape ? urlCom.UrlEncode() : urlCom.TrimStart('/'));
             }
-            return StringBuilderCache.Retrieve(sb);
+            return sb.ToString();
         }
 
         public static string FromUtf8Bytes(this byte[] bytes)
@@ -554,32 +566,19 @@ namespace ServiceStack
             return string.Format(text, args);
         }
 
-        public static string Fmt(this string text, params object[] args)
-        {
-            return string.Format(text, args);
-        }
-
         /// <summary>
-        /// Replaces one or more format items in a specified string with the string representation of a specified object.
+        /// Replaces the format item in a specified string with the string representation of a corresponding object in a specified array.
         /// </summary>
         /// <param name="format">A composite format string.</param>
-        /// <param name="arg0">The object to format.</param>
-        /// <returns>A copy of format in which any format items are replaced by the string representation of arg0.</returns>
-        /// <exception cref="System.ArgumentNullException">format is null.</exception>
-        /// <exception cref="System.FormatException">The format item in format is invalid.-or- The index of a format item is not zero.</exception>        
-        public static string Fmt(this string format, object arg0)
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        /// <returns> A copy of format in which the format items have been replaced by the string representation 
+        /// of the corresponding objects in args.</returns>
+        /// <exception cref="System.ArgumentNullException">format or args is null.</exception>
+        /// <exception cref="System.FormatException">format is invalid.-or- The index of a format item is less than zero, or greater
+        /// than or equal to the length of the args array.</exception>
+        public static string Fmt(this string format, params object[] args)
         {
-            return string.Format(format, arg0);
-        }
-
-        public static string Fmt(this string text, object arg1, object arg2)
-        {
-            return string.Format(text, arg1, arg2);
-        }
-
-        public static string Fmt(this string text, object arg1, object arg2, object arg3)
-        {
-            return string.Format(text, arg1, arg2, arg3);
+            return string.Format(format, args);
         }
 
         public static bool StartsWithIgnoreCase(this string text, string startsWith)
@@ -873,11 +872,25 @@ namespace ServiceStack
         /// <summary>
         /// Indicates whether the specified string is null or an System.String.Empty string.
         /// </summary>
-        /// <param name="value">The string to test.</param>
+        /// <param name="value">The string to be tested.</param>
         /// <returns>true if the value parameter is null or an empty string (""); otherwise, false.</returns>
         public static bool IsNullOrEmpty(this string value)
         {
             return string.IsNullOrEmpty(value);
+        }
+
+        /// <summary>
+        ///  Removes all leading occurrences of a set of characters specified in an array from the current System.String object.
+        /// </summary>
+        /// <param name="value">The string to be trimed.</param>
+        /// <param name="trimChars">An array of Unicode characters to remove, or null.</param>
+        /// <returns>The string that remains after all occurrences of characters in the trimChars parameter are removed from the start of the current string.
+        /// If trimChars is null or an empty array, white-space characters are removed instead.</returns>
+        public static string TrimStart(this string value, params char[] trimChars)
+        {
+            if (value.IsNullOrEmpty())
+                return string.Empty;
+            return value.TrimStart(trimChars);
         }
 
         public static bool EqualsIgnoreCase(this string value, string other)
@@ -1150,8 +1163,8 @@ namespace ServiceStack
 
         public static string TrimPrefixes(this string fromString, params string[] prefixes)
         {
-            if (string.IsNullOrEmpty(fromString))
-                return fromString;
+            if (fromString.IsNullOrEmpty())
+                return string.Empty;
 
             foreach (var prefix in prefixes)
             {
@@ -1243,24 +1256,27 @@ namespace ServiceStack
 
         public static string ToXml<T>(this T obj)
         {
-            return XmlSerializer.SerializeToString(obj);
+            return XmlSerializer.Serialize(obj);
         }
 
         public static T FromXml<T>(this string json)
         {
-            return XmlSerializer.DeserializeFromString<T>(json);
+            return XmlSerializer.Deserialize<T>(json);
         }
 #endif
 
         /// <summary>
         /// Prints a formatted message.
         /// </summary>
-        /// <param name="format">A composite format string (see Remarks) that contains text intermixed with zero or more format items,
+        /// <param name="format">A composite format string (see Remarks) that contains format intermixed with zero or more format items,
         /// which correspond to objects in the args array.</param>
         /// <param name="args">An object array that contains zero or more objects to format.</param>
         public static void Print(this string format, params object[] args)
         {
-            PclExport.Instance.WriteLine(format, args);    
+            if (args.Length == 0)
+                PclExport.Instance.WriteLine(format);         
+            else           
+                PclExport.Instance.WriteLine(format, args);           
         }
     }
 }

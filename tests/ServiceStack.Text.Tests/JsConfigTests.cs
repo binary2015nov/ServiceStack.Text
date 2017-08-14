@@ -164,7 +164,7 @@ namespace ServiceStack.Text.Tests
 
         private void AssertObjectJson(string traceFormat, string json)
         {
-            Trace.WriteLine(string.Format(traceFormat, json));
+            Console.WriteLine(string.Format(traceFormat, json));
 
             Assert.True(json.Contains("\"root_id\":100,"), AssertMessageFormat.Fmt("root_id"));
             Assert.True(json.Contains("\"display_name\":\"Test object\""), AssertMessageFormat.Fmt("display_name"));
