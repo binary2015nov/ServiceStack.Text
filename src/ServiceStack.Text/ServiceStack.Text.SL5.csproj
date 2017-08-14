@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>Silverlight</TargetFrameworks>
+    <TargetFramework>sl5</TargetFramework>
     <AssemblyName>ServiceStack.Text</AssemblyName>
     <PackageId>ServiceStack.Text</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
@@ -21,7 +22,7 @@
   </ItemGroup>
 
   <!-- SL5 SDK https://www.microsoft.com/en-us/download/confirmation.aspx?id=28359 -->
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'Silverlight' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'sl5' ">
     <DefineConstants>$(DefineConstants);SL5;NO_DYNAMIC</DefineConstants>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
@@ -30,15 +31,15 @@
     <SilverlightRuntimeVersion>5.1.50905.0</SilverlightRuntimeVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'Silverlight' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'sl5' ">
     <OutputPath>bin\SL5Debug</OutputPath>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' and '$(TargetFramework)' == 'Silverlight' ">
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' and '$(TargetFramework)' == 'sl5' ">
     <OutputPath>bin\SL5</OutputPath>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'Silverlight' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'sl5' ">
     <Reference Include="System" />
     <Reference Include="System.IO" />
     <Reference Include="System.IO.Compression" />
