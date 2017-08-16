@@ -60,19 +60,19 @@ namespace ServiceStack
             var chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
             var len = source.Length;
             if (len == 0)
-                throw new Exception(string.Format("Parameter: '{0}' is not valid integer (in base {1}).", source, from));
+                throw new Exception("Parameter: '{0}' is not valid integer (in base {1}).".Fmt(source, from));
             var minus = source[0] == '-' ? "-" : "";
             var src = minus == "" ? source : source.Substring(1);
             len = src.Length;
             if (len == 0)
-                throw new Exception(string.Format("Parameter: '{0}' is not valid integer (in base {1}).", source, from));
+                throw new Exception("Parameter: '{0}' is not valid integer (in base {1}).".Fmt(source, from));
 
             var d = 0;
             for (int i = 0; i < len; i++) // Convert to decimal
             {
                 int c = chars.IndexOf(src[i]);
                 if (c >= from)
-                    throw new Exception(string.Format("Parameter: '{0}' is not valid integer (in base {1}).", source, from));
+                    throw new Exception("Parameter: '{0}' is not valid integer (in base {1}).".Fmt(source, from));
                 d = d * from + c;
             }
             if (to == 10 || d == 0)
@@ -573,12 +573,11 @@ namespace ServiceStack
         /// <param name="args">An object array that contains zero or more objects to format.</param>
         /// <returns> A copy of format in which the format items have been replaced by the string representation 
         /// of the corresponding objects in args.</returns>
-        /// <exception cref="System.ArgumentNullException">format or args is null.</exception>
         /// <exception cref="System.FormatException">format is invalid.-or- The index of a format item is less than zero, or greater
         /// than or equal to the length of the args array.</exception>
         public static string Fmt(this string format, params object[] args)
         {
-            return string.Format(format, args);
+            return string.Format(format ?? string.Empty, args);
         }
 
         public static bool StartsWithIgnoreCase(this string text, string startsWith)

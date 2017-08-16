@@ -7,26 +7,26 @@ namespace ServiceStack.Text.Tests
         [Test]
         public void Does_combine_paths()
         {
-            Assert.That("/a".CombineWith("b"), Is.EqualTo("/a/b"));
-            Assert.That("a".CombineWith("b"), Is.EqualTo("a/b"));
-            Assert.That("/a/b".CombineWith("c"), Is.EqualTo("/a/b/c"));
-            Assert.That("a/b".CombineWith("c"), Is.EqualTo("a/b/c"));
-            Assert.That("/a/b".CombineWith("c/d"), Is.EqualTo("/a/b/c/d"));
-            Assert.That("/a/b".CombineWith("c", "d"), Is.EqualTo("/a/b/c/d"));
+            Assert.That("/a".AppendPath("b"), Is.EqualTo("/a/b"));
+            Assert.That("a".AppendPath("b"), Is.EqualTo("a/b"));
+            Assert.That("/a/b".AppendPath("c"), Is.EqualTo("/a/b/c"));
+            Assert.That("a/b".AppendPath("c"), Is.EqualTo("a/b/c"));
+            Assert.That("/a/b".AppendPath("c/d"), Is.EqualTo("/a/b/c/d"));
+            Assert.That("/a/b".AppendPaths("c", "d"), Is.EqualTo("/a/b/c/d"));
 
-            Assert.That("http://example.org/a/b".CombineWith("c", "d"), Is.EqualTo("http://example.org/a/b/c/d"));
+            Assert.That("http://example.org/a/b".AppendPaths("c", "d"), Is.EqualTo("http://example.org/a/b/c/d"));
         }
 
         [Test]
         public void Does_combine_paths_with_trailing_slashes()
         {
-            Assert.That("/a/".CombineWith("b"), Is.EqualTo("/a/b"));
-            Assert.That("/a/".CombineWith("b/"), Is.EqualTo("/a/b/"));
-            Assert.That("a/".CombineWith("/b"), Is.EqualTo("a/b"));
-            Assert.That("/a/b/".CombineWith("/c/"), Is.EqualTo("/a/b/c/"));
-            Assert.That("a/b/".CombineWith("c"), Is.EqualTo("a/b/c"));
-            Assert.That("/a/b/".CombineWith("/c/d"), Is.EqualTo("/a/b/c/d"));
-            Assert.That("/a/b/".CombineWith("/c", "/d"), Is.EqualTo("/a/b/c/d"));
+            Assert.That("/a/".AppendPath("b"), Is.EqualTo("/a/b"));
+            Assert.That("/a/".AppendPath("b/"), Is.EqualTo("/a/b/"));
+            Assert.That("a/".AppendPath("/b"), Is.EqualTo("a/b"));
+            Assert.That("/a/b/".AppendPath("/c/"), Is.EqualTo("/a/b/c/"));
+            Assert.That("a/b/".AppendPath("c"), Is.EqualTo("a/b/c"));
+            Assert.That("/a/b/".AppendPath("/c/d"), Is.EqualTo("/a/b/c/d"));
+            Assert.That("/a/b/".AppendPaths("/c", "/d"), Is.EqualTo("/a/b/c/d"));
 
             Assert.That("http://example.org/a/b/".AppendPaths("/c/", "/d"), Is.EqualTo("http://example.org/a/b/c/d"));
         }
