@@ -256,8 +256,7 @@ namespace ServiceStack.Text
             }
 
             var methodName = fn.Method().Name;
-            var info = "{0} {1}({2})".Fmt(method.ReturnType.Name, methodName, sb.ToString());
-            return info;
+            return "{0} {1}({2})".Fmt(method.ReturnType.Name, methodName, sb.ToString());
         }
 
         public static bool HasCircularReferences(object value)
