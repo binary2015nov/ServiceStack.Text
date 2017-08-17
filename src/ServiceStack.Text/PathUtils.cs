@@ -95,7 +95,7 @@ namespace ServiceStack
         /// <param name="basePath">The base path to combine.</param>
         /// <param name="paths">An string array that contains the path elements to combine.</param>
         /// <returns>The combined paths string.</returns>
-        public static string CombineWith(string basePath, params string[] paths)
+        public static string CombineWith(this string basePath, params string[] paths)
         {
             if (basePath.IsNullOrEmpty())
                 return CombinePaths(paths);
