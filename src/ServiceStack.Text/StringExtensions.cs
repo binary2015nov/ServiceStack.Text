@@ -211,18 +211,6 @@ namespace ServiceStack
             return StringBuilderCache.Retrieve(sb);
         }
 
-        public static string UrlFormat(this string url, params string[] urlComponents)
-        {
-            var encodedUrlComponents = new string[urlComponents.Length];
-            for (var i = 0; i < urlComponents.Length; i++)
-            {
-                var x = urlComponents[i];
-                encodedUrlComponents[i] = x.UrlEncode();
-            }
-
-            return string.Format(url, encodedUrlComponents);
-        }
-
         /// <summary>
         /// Replaces the letter of the specified string with the letter 13 letters after it in the alphabet.
         /// </summary>
@@ -246,8 +234,20 @@ namespace ServiceStack
             return charArray.ToString();
         }
 
+        public static string UrlFormat(this string url, params string[] urlComponents)
+        {
+            var encodedUrlComponents = new string[urlComponents.Length];
+            for (var i = 0; i < urlComponents.Length; i++)
+            {
+                var x = urlComponents[i];
+                encodedUrlComponents[i] = x.UrlEncode();
+            }
+
+            return string.Format(url, encodedUrlComponents);
+        }
+
         public static string WithTrailingSlash(this string path)
-        {           
+        {
             if (path.IsNullOrEmpty() || path[path.Length - 1] != '/')
             {
                 return path + "/";
@@ -298,6 +298,20 @@ namespace ServiceStack
                 sb.Append(escape ? urlCom.UrlEncode() : urlCom.TrimStart('/'));
             }
             return sb.ToString();
+        }
+
+        public static string NormalizeScheme(this string urlString, bool enableHttps)
+        {
+            if (urlString == null || !enableHttps)
+                return urlString;
+
+            if (!urlString.StartsWith("http"))
+                return "https://" + urlString;
+
+            if (urlString.Length >= "https".Length && urlString[4] != 's')
+                return urlString.Insert(4, "s");
+
+            return urlString;
         }
 
         public static string FromUtf8Bytes(this byte[] bytes)
@@ -887,9 +901,7 @@ namespace ServiceStack
         /// If trimChars is null or an empty array, white-space characters are removed instead.</returns>
         public static string TrimStart(this string value, params char[] trimChars)
         {
-            if (value.IsNullOrEmpty())
-                return string.Empty;
-            return value.TrimStart(trimChars);
+            return value.IsNullOrEmpty() ? string.Empty : value.TrimStart(trimChars);
         }
 
         public static bool EqualsIgnoreCase(this string value, string other)
@@ -1160,18 +1172,22 @@ namespace ServiceStack
             return filePart.Glob(filePattern);
         }
 
-        public static string TrimPrefixes(this string fromString, params string[] prefixes)
+        /// <summary>
+        ///  Removes the leading occurrences of the first matched string specified in an array from the current System.String object.
+        /// </summary>
+        /// <param name="value">The string to be trimed.</param>
+        /// <param name="prefixes">An array of strings to match, or null.</param>
+        /// <returns>The string that remains after the first matched string is removed from the start of the current string.</returns>
+        public static string TrimPrefixes(this string value, params string[] prefixes)
         {
-            if (fromString.IsNullOrEmpty())
+            if (value.IsNullOrEmpty())
                 return string.Empty;
 
             foreach (var prefix in prefixes)
             {
-                if (fromString.StartsWith(prefix))
-                    return fromString.Substring(prefix.Length);
+                if (value.StartsWith(prefix)) return value.Substring(prefix.Length);
             }
-
-            return fromString;
+            return value;
         }
 
         public static string FromAsciiBytes(this byte[] bytes)
