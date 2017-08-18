@@ -1346,9 +1346,9 @@ namespace ServiceStack
             return to;
         }
 
-        public static object FromObjectDictionary<T>(this Dictionary<string, object> values)
+        public static T FromObjectDictionary<T>(this Dictionary<string, object> values)
         {
-            return values.FromObjectDictionary(typeof(T));
+            return (T)values.FromObjectDictionary(typeof(T));
         }
 
         private static ObjectDictionaryDefinition CreateObjectDictionaryDefinition(Type type)
