@@ -16,7 +16,7 @@ namespace ServiceStack.Text
 
             var platformName = PclExport.Instance.PlatformName;
 
-            if (platformName != Platforms.WindowsStore)
+            if (platformName != PlatformNames.WindowsStore)
             {
                 IsMono = AssemblyUtils.FindType("Mono.Runtime") != null;
 
@@ -73,7 +73,7 @@ namespace ServiceStack.Text
 
             VersionString = ServiceStackVersion.ToString(CultureInfo.InvariantCulture);
 
-            __releaseDate = new DateTime(2017,08,17);
+            __releaseDate = new DateTime(2017,08,18);
         }
 
         public static string VersionString { get; set; }

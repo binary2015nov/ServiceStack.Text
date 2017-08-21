@@ -74,7 +74,7 @@ namespace ServiceStack
 
         public NetStandardPclExport()
         {
-            this.PlatformName = Platforms.NetStandard;
+            this.PlatformName = PlatformNames.NetStandard;
 #if NETSTANDARD1_3
             this.DirSep = Path.DirectorySeparatorChar;
 #else 

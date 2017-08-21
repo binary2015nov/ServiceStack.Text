@@ -110,8 +110,6 @@ namespace ServiceStack
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
@@ -119,11 +117,11 @@ namespace ServiceStack
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetJsonFromUrl(this string urlString, string method = HttpMethods.Get,
-            string requestBody = null, string contentType = null, Encoding encoding = null,
+            string requestBody = null, string contentType = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             return GetStringFromUrl(urlString, method: method, contentType: contentType, requestBody: requestBody, 
-                accept: MimeTypes.Json, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+                accept: MimeTypes.Json, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
@@ -134,8 +132,6 @@ namespace ServiceStack
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
@@ -144,7 +140,7 @@ namespace ServiceStack
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             return GetStringFromUrlAsync(urlString, method: method, contentType: contentType, requestBody: requestBody, 
-                accept: MimeTypes.Json, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+                accept: MimeTypes.Json, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
@@ -155,8 +151,6 @@ namespace ServiceStack
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
@@ -164,32 +158,30 @@ namespace ServiceStack
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetXmlFromUrl(this string urlString, string method = HttpMethods.Get,
-            string requestBody = null, string contentType = null, Encoding encoding = null,
+            string requestBody = null, string contentType = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             return GetStringFromUrl(urlString, method: method, contentType: contentType, requestBody: requestBody,
-                accept: MimeTypes.Xml, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+                accept: MimeTypes.Xml, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
         /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation
-        /// whose Accept HTTP header is <see cref="MimeTypes.Xml"/> with the optional request and response filter.
+        /// whose Accept HTTP header is <see cref="MimeTypes.Xml"/>.
         /// </summary>
         /// <param name="urlString">A URI string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
         public static Task<string> GetXmlFromUrlAsync(this string urlString, string method = HttpMethods.Get,
-            string requestBody = null, string contentType = null, Encoding encoding = null,
+            string requestBody = null, string contentType = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             return GetStringFromUrlAsync(urlString, method: method, contentType: contentType, requestBody: requestBody,
-                accept: MimeTypes.Xml, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+                accept: MimeTypes.Xml, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
@@ -200,8 +192,6 @@ namespace ServiceStack
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>    
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
@@ -209,11 +199,11 @@ namespace ServiceStack
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetCsvFromUrl(this string urlString, string method = HttpMethods.Get,
-            string requestBody = null, string contentType = null, Encoding encoding = null,
+            string requestBody = null, string contentType = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             return GetStringFromUrl(urlString, method: method, contentType: contentType, requestBody: requestBody,
-                accept: MimeTypes.Csv, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+                accept: MimeTypes.Csv, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
@@ -224,17 +214,15 @@ namespace ServiceStack
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
         public static Task<string> GetCsvFromUrlAsync(this string urlString, string method = HttpMethods.Get,
-            string requestBody = null, string contentType = null, Encoding encoding = null,
+            string requestBody = null, string contentType = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             return GetStringFromUrlAsync(urlString, method: method, contentType: contentType, requestBody: requestBody,
-                accept: MimeTypes.Csv, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+                accept: MimeTypes.Csv, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
@@ -245,8 +233,6 @@ namespace ServiceStack
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
@@ -254,11 +240,11 @@ namespace ServiceStack
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetHtmlFromUrl(this string urlString, string method = HttpMethods.Get, 
-            string requestBody = null, string contentType = null, Encoding encoding = null,
+            string requestBody = null, string contentType = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             return GetStringFromUrl(urlString, method: method, contentType: contentType, requestBody: requestBody, 
-                accept: MimeTypes.Html, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+                accept: MimeTypes.Html, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         /// <summary>
@@ -269,17 +255,15 @@ namespace ServiceStack
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
         public static Task<string> GetHtmlFromUrlAsync(this string urlString, string method = HttpMethods.Get,
-            string requestBody = null, string contentType = null, Encoding encoding = null,
+            string requestBody = null, string contentType = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             return GetStringFromUrlAsync(urlString, method: method, contentType: contentType, requestBody: requestBody,
-                accept: MimeTypes.Html, encoding: encoding, requestFilter: requestFilter, responseFilter: responseFilter);
+                accept: MimeTypes.Html, requestFilter: requestFilter, responseFilter: responseFilter);
         }
 
         public static string PostStringToUrl(this string urlString, string requestBody = null,
@@ -628,8 +612,6 @@ namespace ServiceStack
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
         /// <param name="accept">The value of the Accept HTTP header. The default value is "*/*".</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request,
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
@@ -637,7 +619,7 @@ namespace ServiceStack
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetStringFromUrl(this string urlString, string method = HttpMethods.Get,
-            string requestBody = null, string contentType = null, string accept = "*/*", Encoding encoding = null,
+            string requestBody = null, string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             var webReq = PclExport.Instance.CreateWebRequest(urlString);
@@ -651,7 +633,7 @@ namespace ServiceStack
             if (requestBody != null)
             {
                 using (var reqStream = PclExport.Instance.GetRequestStream(webReq))
-                using (var writer = new StreamWriter(reqStream, encoding ?? PclExport.Instance.GetUseEncoding(false)))
+                using (var writer = new StreamWriter(reqStream))
                 {
                     writer.Write(requestBody);
                 }
@@ -660,7 +642,7 @@ namespace ServiceStack
             using (var webRes = PclExport.Instance.GetResponse(webReq))
             {
                 responseFilter?.Invoke((HttpWebResponse)webRes);
-                return webRes.ReadToEnd(encoding);
+                return webRes.ReadToEnd();
             }
         }
 
@@ -672,17 +654,15 @@ namespace ServiceStack
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
         /// <param name="accept">The value of the Accept HTTP header. The default value is "*/*".</param>
-        /// <param name="encoding">The character encoding to use for reading from the response to the HTTP-specific request, 
-        /// if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
         public static Task<string> GetStringFromUrlAsync(this string urlString, string method = HttpMethods.Get,
-            string requestBody = null, string contentType = null, string accept = "*/*", Encoding encoding = null,
+            string requestBody = null, string contentType = null, string accept = "*/*",
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
         {
             return Task.Factory.StartNew(() => GetStringFromUrl(urlString, method, requestBody, contentType, accept,
-                encoding, requestFilter, responseFilter));            
+                requestFilter, responseFilter));            
         }
 
         public static byte[] GetBytesFromUrl(this string urlString, string accept = "*/*",
@@ -875,32 +855,29 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Reads all characters from the current position to the end of the data stream from the Internet response, with the specified character encoding.
+        /// Reads all characters from the current position to the end of the data stream from the Internet response.
         /// </summary>
         /// <param name="response">The response from an Uniform Resource Identifier (URI).</param>
-        /// <param name="encoding">The character encoding to use, if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <returns>The rest of the data stream from the Internet response as a string, from the current position to the end. If
         /// the current position is at the end of the stream, returns an empty string.</returns>
-        public static string ReadToEnd(this WebResponse response, Encoding encoding = null)
+        public static string ReadToEnd(this WebResponse response)
         {
             using (var stream = response.GetResponseStream())
-            using (var reader = new StreamReader(stream, encoding ?? PclExport.Instance.GetUseEncoding(false)))
+            using (var reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
             }
         }
 
         /// <summary>
-        /// Reads all lines of characters from the current position to the end of the data stream from the Internet response, 
-        /// with the specified character encoding.
+        /// Reads all lines of characters from the current position to the end of the data stream from the Internet response.
         /// </summary>
         /// <param name="response">The response from an Uniform Resource Identifier (URI).</param>
-        /// <param name="encoding">The character encoding to use, if the value is null use <c>PclExport.Instance.GetUseEncoding(false)</c>.</param>
         /// <returns>An System.Collections.Generic.IEnumerable`1 that contains System.String elements from the Internet response.</returns>
-        public static IEnumerable<string> ReadLines(this WebResponse response, Encoding encoding = null)
+        public static IEnumerable<string> ReadLines(this WebResponse response)
         {
             using (var stream = response.GetResponseStream())
-            using (var reader = new StreamReader(stream, encoding ?? PclExport.Instance.GetUseEncoding(false)))
+            using (var reader = new StreamReader(stream))
             {
                 string line;
                 while ((line = reader.ReadLine()) != null)

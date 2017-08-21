@@ -17,7 +17,7 @@ using ServiceStack.Text.Common;
 
 namespace ServiceStack
 {
-    public static class Platforms
+    public static class PlatformNames
     {
         public const string WindowsStore = "WindowsStore";
         public const string Android = "Android";
