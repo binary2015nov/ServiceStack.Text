@@ -29,11 +29,9 @@ namespace ServiceStack
         public static string MapProjectPath(this string relativePath)
         {
             var sep = PclExport.Instance.DirSep;
-#if !NETSTANDARD1_1
-            return PclExport.Instance.MapAbsolutePath(relativePath, $"{sep}..{sep}..");
-#else
-            return PclExport.Instance.MapAbsolutePath(relativePath, $"{sep}..{sep}..{sep}..");
-#endif
+            return Env.HasMultiplePlatformTargets
+                ? PclExport.Instance.MapAbsolutePath(relativePath, $"{sep}..{sep}..{sep}..")
+                : PclExport.Instance.MapAbsolutePath(relativePath, $"{sep}..{sep}..");
         }
 
         /// <summary>

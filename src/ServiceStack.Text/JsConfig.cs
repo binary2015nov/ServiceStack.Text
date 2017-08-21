@@ -335,6 +335,21 @@ namespace ServiceStack.Text
             }
         }
 
+        private static bool? sTryParseIntoBestFit;
+        public static bool TryParseIntoBestFit
+        {
+            get
+            {
+                return (JsConfigScope.Current != null ? JsConfigScope.Current.TryParseIntoBestFit : null)
+                       ?? sTryParseIntoBestFit
+                       ?? false;
+            }
+            set
+            {
+                if (!sTryParseIntoBestFit.HasValue) sTryParseIntoBestFit = value;
+            }
+        }
+
         private static ParseAsType? sParsePrimitiveFloatingPointTypes;
         public static ParseAsType ParsePrimitiveFloatingPointTypes
         {
@@ -961,6 +976,7 @@ namespace ServiceStack.Text
             sModelFactory = ReflectionExtensions.GetConstructorMethodToCache;
             sTryToParsePrimitiveTypeValues = null;
             sTryToParseNumericType = null;
+            sTryParseIntoBestFit = null;
             sConvertObjectTypesIntoStringDictionary = null;
             sExcludeDefaultValues = null;
             sIncludeNullValues = null;
