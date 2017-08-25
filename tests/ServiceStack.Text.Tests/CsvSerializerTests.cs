@@ -22,6 +22,7 @@ namespace ServiceStack.Text.Tests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
+            JsConfig.Reset();
             JsConfig.SkipDateTimeConversion = true;
         }
 
