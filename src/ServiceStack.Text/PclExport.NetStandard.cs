@@ -97,6 +97,7 @@ namespace ServiceStack
 #if NETSTANDARD2_0
             webReq.KeepAlive = false;
             webReq.UserAgent = Env.ServerUserAgent ?? "ServiceStack.Text";
+            webReq.MaximumResponseHeadersLength = 2 << 20;
 # else
             webReq.Headers[HttpRequestHeader.KeepAlive] = "false";
             webReq.Headers[HttpRequestHeader.UserAgent] = Env.ServerUserAgent ?? "ServiceStack.Text";
