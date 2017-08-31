@@ -21,9 +21,6 @@ namespace ServiceStack.Text
             //LicenseUtils.Init();
         }
 
-        // force deterministic initialization of static constructor
-        //public static void InitStatics() { }
-
         public static JsConfigScope BeginScope()
         {
             return new JsConfigScope();
@@ -1036,7 +1033,6 @@ namespace ServiceStack.Text
             {
                 "ServiceStack.RequestLogEntry"
             };
-            PlatformExtensions.ClearRuntimeAttributes();
             ReflectionExtensions.Reset();
             JsState.Reset();
         }

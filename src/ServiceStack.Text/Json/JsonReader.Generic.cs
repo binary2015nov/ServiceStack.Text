@@ -56,8 +56,6 @@ namespace ServiceStack.Text.Json
 
         public static void Refresh()
         {
-            //JsConfig.InitStatics();
-
             if (JsonReader.Instance == null)
                 return;
 
