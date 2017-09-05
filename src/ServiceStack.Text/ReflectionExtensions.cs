@@ -131,6 +131,20 @@ namespace ServiceStack
             return false;
         }
 
+        public static bool IsInheritingFromGenericType(this Type type, Type genericType)
+        {
+            while (type != typeof(object))
+            {
+                Type cur = type.IsGenericType() ? type.GetGenericTypeDefinition() : type;
+                if (genericType == cur)
+                {
+                    return true;
+                }
+                type = type.BaseType();
+            }
+            return false;
+        }
+
         public static bool HasGenericType(this Type type)
         {
             while (type != null)

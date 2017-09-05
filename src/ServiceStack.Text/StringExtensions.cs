@@ -1241,7 +1241,7 @@ namespace ServiceStack
 
         public static string NormalizeNewLines(this string text)
         {
-            return text?.Replace("\r\n", "\n").Trim();
+            return text?.Replace("\r\n", "\n");
         }
 
 #if !LITE
