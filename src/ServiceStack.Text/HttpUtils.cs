@@ -103,17 +103,17 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request, whose 
         /// Accept HTTP header is <see cref="MimeTypes.Json"/>.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
-        /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
+        /// <exception cref="System.FormatException">The URL specified in urlString is not a valid URL.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetJsonFromUrl(this string urlString, string method = HttpMethods.Get,
@@ -125,10 +125,10 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
-        /// Accept HTTP header is <see cref="MimeTypes.Json"/>.
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation,
+        /// whose Accept HTTP header is <see cref="MimeTypes.Json"/>.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
@@ -144,17 +144,17 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request, whose 
         /// Accept HTTP header is <see cref="MimeTypes.Xml"/>.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
-        /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
+        /// <exception cref="System.FormatException">The URL specified in urlString is not a valid URL.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetXmlFromUrl(this string urlString, string method = HttpMethods.Get,
@@ -166,10 +166,10 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation,
         /// whose Accept HTTP header is <see cref="MimeTypes.Xml"/>.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
@@ -185,17 +185,17 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request, whose 
         /// Accept HTTP header is <see cref="MimeTypes.Csv"/>.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>    
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
-        /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
+        /// <exception cref="System.FormatException">The URL specified in urlString is not a valid URL.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetCsvFromUrl(this string urlString, string method = HttpMethods.Get,
@@ -207,10 +207,10 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
-        /// Accept HTTP header is <see cref="MimeTypes.Csv"/>.
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation,
+        /// whose Accept HTTP header is <see cref="MimeTypes.Csv"/>.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
@@ -226,17 +226,17 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request, whose 
         /// Accept HTTP header is <see cref="MimeTypes.Html"/>.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
-        /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
+        /// <exception cref="System.FormatException">The URL specified in urlString is not a valid URL.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetHtmlFromUrl(this string urlString, string method = HttpMethods.Get, 
@@ -248,16 +248,16 @@ namespace ServiceStack
         }
 
         /// <summary>
-        /// Gets the string representation response from the Internet resource to an HTTP-specific request whose 
-        /// Accept HTTP header is <see cref="MimeTypes.Html"/>.
+        /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation,
+        /// whose Accept HTTP header is <see cref="MimeTypes.Html"/>.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
-        /// <returns>The string representation response to the HTTP-specific request.</returns>
+        /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
         public static Task<string> GetHtmlFromUrlAsync(this string urlString, string method = HttpMethods.Get,
             string requestBody = null, string contentType = null,
             Action<HttpWebRequest> requestFilter = null, Action<HttpWebResponse> responseFilter = null)
@@ -607,7 +607,7 @@ namespace ServiceStack
         /// <summary>
         /// Gets the string representation response from the Internet resource to an HTTP-specific request using the specified request options.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
@@ -615,7 +615,7 @@ namespace ServiceStack
         /// <param name="requestFilter">The method to filter the HTTP-specific request.</param>
         /// <param name="responseFilter">The method to filter the response to the HTTP-specific request.</param>
         /// <returns>The string representation response to the HTTP-specific request.</returns>
-        /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
+        /// <exception cref="System.FormatException">The URL specified in urlString is not a valid URL.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
         /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static string GetStringFromUrl(this string urlString, string method = HttpMethods.Get,
@@ -649,7 +649,7 @@ namespace ServiceStack
         /// <summary>
         /// Gets the string representation response from the Internet resource to an HTTP-specific request as an asynchronous operation using the specified request options. 
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <param name="method">The request method to use to contact the Internet resource. The default value is GET.</param>
         /// <param name="requestBody">The optional request body associated with the Http-specific request.</param>
         /// <param name="contentType">The value of the Content-type HTTP header. The default value is null.</param>
@@ -858,7 +858,7 @@ namespace ServiceStack
         /// Reads all characters from the current position to the end of the data stream from the Internet response.
         /// </summary>
         /// <param name="response">The response from an Uniform Resource Identifier (URI).</param>
-        /// <returns>The rest of the data stream from the Internet response as a string, from the current position to the end. If
+        /// <returns>The rest of the data stream from the Internet response as a string. If
         /// the current position is at the end of the stream, returns an empty string.</returns>
         public static string ReadToEnd(this WebResponse response)
         {
@@ -890,11 +890,11 @@ namespace ServiceStack
         /// <summary>
         /// Gets a response from the Internet resource to an HTTP-specific request.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <returns>A <see cref="System.Net.HttpWebResponse"/> containing the response to the Internet request.</returns>
-        /// <exception cref="System.FormatException">The URI specified in urlString is not a valid URI.</exception>
+        /// <exception cref="System.FormatException">The URL specified in urlString is not a valid URL.</exception>
         /// <exception cref="System.Net.WebException">System.Net.HttpWebRequest.Abort was previously called.-or- The time-out period
-        /// for the request expired.</exception>
+        /// for the request expired.-or- An error occurred while processing the request.</exception>
         public static HttpWebResponse GetWebResponse(this string urlString)
         {
             try
@@ -914,11 +914,11 @@ namespace ServiceStack
         /// <summary>
         /// Gets a response from the Internet resource to an HTTP-specific request as an asynchronous operation.
         /// </summary>
-        /// <param name="urlString">A URI string that identifies the Internet resource.</param>
+        /// <param name="urlString">A URL string that identifies the Internet resource.</param>
         /// <returns>Returns System.Threading.Tasks`1. The task object representing the asynchronous operation.</returns>
         public static Task<HttpWebResponse> GetWebResponseAsync(string urlString)
         {
-            return Task.Factory.StartNew(p => GetWebResponse(p as string), urlString);
+            return Task.Factory.StartNew(() => urlString.GetWebResponse());
         }
 
         public static Task<TBase> ConvertTo<TDerived, TBase>(this Task<TDerived> task) where TDerived : TBase

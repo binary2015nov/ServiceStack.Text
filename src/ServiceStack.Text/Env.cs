@@ -36,7 +36,7 @@ namespace ServiceStack.Text
                     IsLinux = osType?.IndexOf("Linux", StringComparison.OrdinalIgnoreCase) >= 0;
 #endif
                 }
-                catch (Exception ignore) {}
+                catch (Exception) {}
 
                 //Throws unhandled exception if not called from the main thread
                 //IsWinRT = AssemblyUtils.FindType("Windows.ApplicationModel") != null;
