@@ -12,9 +12,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using ServiceStack.Text;
@@ -155,23 +157,23 @@ namespace ServiceStack
             return sb.ToString();
         }
 
-        public static string UrlDecode(this string text)
+        public static string UrlDecode(this string urlString)
         {
-            if (String.IsNullOrEmpty(text)) return null;
+            if (String.IsNullOrEmpty(urlString)) return null;
 
             var bytes = new List<byte>();
 
-            var textLength = text.Length;
+            var textLength = urlString.Length;
             for (var i = 0; i < textLength; i++)
             {
-                var c = text[i];
+                var c = urlString[i];
                 if (c == '+')
                 {
                     bytes.Add(32);
                 }
                 else if (c == '%')
                 {
-                    var hexNo = Convert.ToByte(text.Substring(i + 1, 2), 16);
+                    var hexNo = Convert.ToByte(urlString.Substring(i + 1, 2), 16);
                     bytes.Add(hexNo);
                     i += 2;
                 }
@@ -282,7 +284,7 @@ namespace ServiceStack
         /// </summary>
         /// <param name="baseUriString">The base System.Uri, represented as a System.String.</param>
         /// <param name="uriComponents">An string array that contains the uri component elements.</param>
-        /// <param name="escape">true if uri component is escaped; otherwise, false.</param>
+        /// <param name="escape">true if escape the uri components; otherwise, false.</param>
         /// <returns>A string representation for a System.Uri instance.</returns>
         public static string AppendPaths(this string baseUriString, string[] uriComponents, bool escape)
         {
@@ -873,13 +875,12 @@ namespace ServiceStack
             return ucWords[0].ToInvariantUpper() + ucWords.Substring(1);
         }
 
-        public static string ToHttps(this string url)
+        public static string ToHttps(this string urlString)
         {
-            if (url == null)
-            {
-                throw new ArgumentNullException("url");
-            }
-            return HttpRegex.Replace(url.Trim(), "https://");
+            if (urlString == null)
+                throw new ArgumentNullException(nameof(urlString));
+            
+            return HttpRegex.Replace(urlString.Trim(), "https://");
         }
 
         /// <summary>
@@ -887,6 +888,8 @@ namespace ServiceStack
         /// </summary>
         /// <param name="value">The string to be tested.</param>
         /// <returns>true if the value parameter is null or an empty string (""); otherwise, false.</returns>
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNullOrEmpty(this string value)
         {
             return string.IsNullOrEmpty(value);
@@ -899,6 +902,8 @@ namespace ServiceStack
         /// <param name="trimChars">An array of Unicode characters to remove, or null.</param>
         /// <returns>The string that remains after all occurrences of characters in the trimChars parameter are removed from the start of the current string.
         /// If trimChars is null or an empty array, white-space characters are removed instead.</returns>
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string TrimStart(this string value, params char[] trimChars)
         {
             return value.IsNullOrEmpty() ? string.Empty : value.TrimStart(trimChars);
@@ -906,7 +911,7 @@ namespace ServiceStack
 
         public static bool EqualsIgnoreCase(this string value, string other)
         {
-            return String.Equals(value, other, StringComparison.CurrentCultureIgnoreCase);
+            return string.Equals(value, other, StringComparison.CurrentCultureIgnoreCase);
         }
 
         public static string ReplaceFirst(this string haystack, string needle, string replacement)
