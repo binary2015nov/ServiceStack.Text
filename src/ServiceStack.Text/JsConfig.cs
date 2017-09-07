@@ -625,10 +625,7 @@ namespace ServiceStack.Text
                     ?? sEmitCamelCaseNames
                     ?? false;
             }
-            set
-            {
-                if (!sEmitCamelCaseNames.HasValue) sEmitCamelCaseNames = value;
-            }
+            set { sEmitCamelCaseNames = value; }
         }
 
         /// <summary>
@@ -1033,7 +1030,6 @@ namespace ServiceStack.Text
             {
                 "ServiceStack.RequestLogEntry"
             };
-            ReflectionExtensions.Reset();
             JsState.Reset();
         }
 

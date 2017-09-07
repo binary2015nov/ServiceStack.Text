@@ -293,7 +293,7 @@ namespace ServiceStack.Text.Tests
                 },
             };
 
-            Assert.That(rows.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI\n2,ANATR").Or.EqualTo("CustomerId,Id\nALFKI,1\nANATR,2"));
+            Assert.That(rows.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI\n2,ANATR\n").Or.EqualTo("CustomerId,Id\nALFKI,1\nANATR,2\n"));
         }
 
         [Test]
@@ -313,7 +313,7 @@ namespace ServiceStack.Text.Tests
                 },
             };
 
-            Assert.That(rows.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI\n2,ANATR").Or.EqualTo("CustomerId,Id\nALFKI,1\nANATR,2"));
+            Assert.That(rows.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI\n2,ANATR\n").Or.EqualTo("CustomerId,Id\nALFKI,1\nANATR,2\n"));
         }
 
         [Test]
@@ -325,7 +325,7 @@ namespace ServiceStack.Text.Tests
                 { "CustomerId", "ALFKI" },
             };
 
-            Assert.That(row.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI").Or.EqualTo("CustomerId,Id\nALFKI,1"));
+            Assert.That(row.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI\n").Or.EqualTo("CustomerId,Id\nALFKI,1\n"));
 
             var kvps = new[]
             {
@@ -333,7 +333,7 @@ namespace ServiceStack.Text.Tests
                 new KeyValuePair<string, object>("CustomerId", "ALFKI"),
             };
 
-            Assert.That(kvps.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI").Or.EqualTo("CustomerId,Id\nALFKI,1"));
+            Assert.That(kvps.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI\n").Or.EqualTo("CustomerId,Id\nALFKI,1\n"));
         }
 
         [Test]
@@ -345,7 +345,7 @@ namespace ServiceStack.Text.Tests
                 { "CustomerId", "ALFKI" },
             };
 
-            Assert.That(row.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI").Or.EqualTo("CustomerId,Id\nALFKI,1"));
+            Assert.That(row.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI\n").Or.EqualTo("CustomerId,Id\nALFKI,1\n"));
 
             var kvps = new[]
             {
@@ -353,7 +353,7 @@ namespace ServiceStack.Text.Tests
                 new KeyValuePair<string, string>("CustomerId", "ALFKI"),
             };
 
-            Assert.That(kvps.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI").Or.EqualTo("CustomerId,Id\nALFKI,1"));
+            Assert.That(kvps.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,ALFKI\n").Or.EqualTo("CustomerId,Id\nALFKI,1\n"));
         }
 
         [Test]

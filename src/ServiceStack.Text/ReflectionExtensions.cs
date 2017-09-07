@@ -734,7 +734,7 @@ namespace ServiceStack
             "JsonIgnoreAttribute"
         };
 
-        internal static void Reset()
+        public static void Reset()
         {
             IgnoreAttributesNamed = new[] {
                 "IgnoreDataMemberAttribute",
