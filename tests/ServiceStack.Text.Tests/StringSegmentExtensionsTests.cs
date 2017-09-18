@@ -108,8 +108,8 @@ namespace ServiceStack.Text.Tests
         {
             var dirSep = DirSep;
             var filePath = $"path{dirSep}to{dirSep}file".ToStringSegment();
-            Assert.That(filePath.ParentDirectory(), Is.EqualTo("path{0}to".FormatWith(dirSep)));
-            Assert.That(filePath.ParentDirectory().ParentDirectory(), Is.EqualTo("path".FormatWith(dirSep)));
+            Assert.That(filePath.ParentDirectory(), Is.EqualTo("path{0}to".Fmt(dirSep)));
+            Assert.That(filePath.ParentDirectory().ParentDirectory(), Is.EqualTo("path".Fmt(dirSep)));
             Assert.That(filePath.ParentDirectory().ParentDirectory().ParentDirectory(), Is.EqualTo(TypeConstants.EmptyStringSegment));
 
             var filePathWithExt = $"path{dirSep}to{dirSep}file/".ToStringSegment();

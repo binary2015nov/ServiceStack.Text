@@ -157,23 +157,23 @@ namespace ServiceStack
             return sb.ToString();
         }
 
-        public static string UrlDecode(this string urlString)
+        public static string UrlDecode(this string uriComponent)
         {
-            if (String.IsNullOrEmpty(urlString)) return null;
+            if (uriComponent.IsNullOrEmpty())
+                return null;
 
             var bytes = new List<byte>();
 
-            var textLength = urlString.Length;
-            for (var i = 0; i < textLength; i++)
+            for (var i = 0; i < uriComponent.Length; i++)
             {
-                var c = urlString[i];
+                var c = uriComponent[i];
                 if (c == '+')
                 {
                     bytes.Add(32);
                 }
                 else if (c == '%')
                 {
-                    var hexNo = Convert.ToByte(urlString.Substring(i + 1, 2), 16);
+                    var hexNo = Convert.ToByte(uriComponent.Substring(i + 1, 2), 16);
                     bytes.Add(hexNo);
                     i += 2;
                 }
@@ -189,10 +189,13 @@ namespace ServiceStack
 
         public static string HexUnescape(this string text, params char[] anyCharOf)
         {
-            if (String.IsNullOrEmpty(text)) return null;
-            if (anyCharOf == null || anyCharOf.Length == 0) return text;
+            if (text.IsNullOrEmpty())
+                return null;
 
-            var sb = StringBuilderCache.Allocate();
+            if (anyCharOf == null || anyCharOf.Length == 0)
+                return text;
+
+            var sb = new StringBuilder();
 
             var textLength = text.Length;
             for (var i = 0; i < textLength; i++)
@@ -210,7 +213,7 @@ namespace ServiceStack
                 }
             }
 
-            return StringBuilderCache.Retrieve(sb);
+            return sb.ToString();
         }
 
         /// <summary>
@@ -236,24 +239,21 @@ namespace ServiceStack
             return charArray.ToString();
         }
 
-        public static string UrlFormat(this string url, params string[] urlComponents)
+        public static string UrlFormat(this string urlString, params string[] urlComponents)
         {
             var encodedUrlComponents = new string[urlComponents.Length];
             for (var i = 0; i < urlComponents.Length; i++)
             {
-                var x = urlComponents[i];
-                encodedUrlComponents[i] = x.UrlEncode();
+                encodedUrlComponents[i] = urlComponents[i].UrlEncode();
             }
-
-            return string.Format(url, encodedUrlComponents);
+            return string.Format(urlString, encodedUrlComponents);
         }
 
         public static string WithTrailingSlash(this string path)
         {
-            if (path.IsNullOrEmpty() || path[path.Length - 1] != '/')
-            {
+            if (path.IsNullOrEmpty() || path[path.Length - 1] != '/')           
                 return path + "/";
-            }
+            
             return path;
         }
 
@@ -318,8 +318,7 @@ namespace ServiceStack
 
         public static string FromUtf8Bytes(this byte[] bytes)
         {
-            return bytes == null ? null
-                : Encoding.UTF8.GetString(bytes, 0, bytes.Length);
+            return bytes != null ? Encoding.UTF8.GetString(bytes, 0, bytes.Length) : null;
         }
 
         public static byte[] ToUtf8Bytes(this string value)
@@ -577,11 +576,6 @@ namespace ServiceStack
             return CsvSerializer.DeserializeFromString<T>(csv);
         }
 
-        public static string FormatWith(this string text, params object[] args)
-        {
-            return string.Format(text, args);
-        }
-
         /// <summary>
         /// Replaces the format item in a specified string with the string representation of a corresponding object in a specified array.
         /// </summary>
@@ -591,6 +585,8 @@ namespace ServiceStack
         /// of the corresponding objects in args.</returns>
         /// <exception cref="System.FormatException">format is invalid.-or- The index of a format item is less than zero, or greater
         /// than or equal to the length of the args array.</exception>
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string Fmt(this string format, params object[] args)
         {
             return string.Format(format ?? string.Empty, args);
@@ -877,10 +873,7 @@ namespace ServiceStack
 
         public static string ToHttps(this string urlString)
         {
-            if (urlString == null)
-                throw new ArgumentNullException(nameof(urlString));
-            
-            return HttpRegex.Replace(urlString.Trim(), "https://");
+            return urlString.NormalizeScheme(true);
         }
 
         /// <summary>

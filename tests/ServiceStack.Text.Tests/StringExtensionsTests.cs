@@ -107,14 +107,14 @@ namespace ServiceStack.Text.Tests
         public void Does_get_ParentDirectory()
         {
             var dirSep = DirSep;
-            var filePath = "path{0}to{0}file".FormatWith(dirSep);
-            Assert.That(filePath.ParentDirectory(), Is.EqualTo("path{0}to".FormatWith(dirSep)));
-            Assert.That(filePath.ParentDirectory().ParentDirectory(), Is.EqualTo("path".FormatWith(dirSep)));
+            var filePath = "path{0}to{0}file".Fmt(dirSep);
+            Assert.That(filePath.ParentDirectory(), Is.EqualTo("path{0}to".Fmt(dirSep)));
+            Assert.That(filePath.ParentDirectory().ParentDirectory(), Is.EqualTo("path".Fmt(dirSep)));
             Assert.That(filePath.ParentDirectory().ParentDirectory().ParentDirectory(), Is.Null);
 
-            var filePathWithExt = "path{0}to{0}file/".FormatWith(dirSep);
-            Assert.That(filePathWithExt.ParentDirectory(), Is.EqualTo("path{0}to".FormatWith(dirSep)));
-            Assert.That(filePathWithExt.ParentDirectory().ParentDirectory(), Is.EqualTo("path".FormatWith(dirSep)));
+            var filePathWithExt = "path{0}to{0}file/".Fmt(dirSep);
+            Assert.That(filePathWithExt.ParentDirectory(), Is.EqualTo("path{0}to".Fmt(dirSep)));
+            Assert.That(filePathWithExt.ParentDirectory().ParentDirectory(), Is.EqualTo("path".Fmt(dirSep)));
             Assert.That(filePathWithExt.ParentDirectory().ParentDirectory().ParentDirectory(), Is.Null);
         }
 
@@ -122,14 +122,14 @@ namespace ServiceStack.Text.Tests
         public void Does_get_ParentDirectory_of_AltDirectorySeperator()
         {
             var dirSep = AltDirSep;
-            var filePath = "path{0}to{0}file".FormatWith(dirSep);
-            Assert.That(filePath.ParentDirectory(), Is.EqualTo("path{0}to".FormatWith(dirSep)));
-            Assert.That(filePath.ParentDirectory().ParentDirectory(), Is.EqualTo("path".FormatWith(dirSep)));
+            var filePath = "path{0}to{0}file".Fmt(dirSep);
+            Assert.That(filePath.ParentDirectory(), Is.EqualTo("path{0}to".Fmt(dirSep)));
+            Assert.That(filePath.ParentDirectory().ParentDirectory(), Is.EqualTo("path".Fmt(dirSep)));
             Assert.That(filePath.ParentDirectory().ParentDirectory().ParentDirectory(), Is.Null);
 
-            var filePathWithExt = "path{0}to{0}file{0}".FormatWith(dirSep);
-            Assert.That(filePathWithExt.ParentDirectory(), Is.EqualTo("path{0}to".FormatWith(dirSep)));
-            Assert.That(filePathWithExt.ParentDirectory().ParentDirectory(), Is.EqualTo("path".FormatWith(dirSep)));
+            var filePathWithExt = "path{0}to{0}file{0}".Fmt(dirSep);
+            Assert.That(filePathWithExt.ParentDirectory(), Is.EqualTo("path{0}to".Fmt(dirSep)));
+            Assert.That(filePathWithExt.ParentDirectory().ParentDirectory(), Is.EqualTo("path".Fmt(dirSep)));
             Assert.That(filePathWithExt.ParentDirectory().ParentDirectory().ParentDirectory(), Is.Null);
         }
 

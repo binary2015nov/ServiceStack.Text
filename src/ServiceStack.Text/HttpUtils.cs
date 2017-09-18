@@ -1348,7 +1348,7 @@ namespace ServiceStack
 
     public static class HttpMethods
     {
-        static readonly string[] allVerbs = new[] {
+        public static readonly HashSet<string> AllVerbs = new HashSet<string> {
             "OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT", // RFC 2616
             "PROPFIND", "PROPPATCH", "MKCOL", "COPY", "MOVE", "LOCK", "UNLOCK",    // RFC 2518
             "VERSION-CONTROL", "REPORT", "CHECKOUT", "CHECKIN", "UNCHECKOUT",
@@ -1361,12 +1361,10 @@ namespace ServiceStack
             "POLL",  "SUBSCRIBE", "UNSUBSCRIBE" //MS Exchange WebDav: http://msdn.microsoft.com/en-us/library/aa142917.aspx
         };
 
-        public static HashSet<string> AllVerbs = new HashSet<string>(allVerbs);
-
         public static bool HasVerb(string httpVerb)
         {
 #if NETFX_CORE
-            return allVerbs.Any(p => p.Equals(httpVerb.ToUpper()));
+            return AllVerbs.Any(p => p.Equals(httpVerb.ToUpper()));
 #else
             return AllVerbs.Contains(httpVerb.ToUpper());
 #endif

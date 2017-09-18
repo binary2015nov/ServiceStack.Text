@@ -16,7 +16,7 @@ namespace ServiceStack
     public class LicenseException : Exception
     {
         public LicenseException(string message) : base(message) { }
-        public LicenseException(string message, Exception innerException) : base(message, innerException) {}
+        public LicenseException(string message, Exception innerException) : base(message, innerException) { }
     }
 
     public enum LicenseType
@@ -120,21 +120,21 @@ namespace ServiceStack
 
         private const string ContactDetails = " Please see servicestack.net or contact team@servicestack.net for more details.";
 
-        static LicenseUtils()
-        {
+        //static LicenseUtils()
+        //{
             //PclExport.Instance.RegisterLicenseFromConfig();
-        }
+        //}
 
         public static class ErrorMessages
         {
-            private const string UpgradeInstructions = " Please see https://servicestack.net to upgrade to a commercial license or visit https://github.com/ServiceStackV3/ServiceStackV3 to revert back to the free ServiceStack v3.";
-            internal const string ExceededRedisTypes = "The free-quota limit on '{0} Redis Types' has been reached." + UpgradeInstructions;
-            internal const string ExceededRedisRequests = "The free-quota limit on '{0} Redis requests per hour' has been reached." + UpgradeInstructions;
-            internal const string ExceededOrmLiteTables = "The free-quota limit on '{0} OrmLite Tables' has been reached." + UpgradeInstructions;
-            internal const string ExceededAwsTables = "The free-quota limit on '{0} AWS Tables' has been reached." + UpgradeInstructions;
-            internal const string ExceededServiceStackOperations = "The free-quota limit on '{0} ServiceStack Operations' has been reached." + UpgradeInstructions;
-            internal const string ExceededAdminUi = "The Admin UI is a commerical-only premium feature." + UpgradeInstructions;
-            internal const string ExceededPremiumFeature = "Unauthorized use of a commerical-only premium feature." + UpgradeInstructions;
+            public const string UpgradeInstructions = " Please see https://servicestack.net to upgrade to a commercial license or visit https://github.com/ServiceStackV3/ServiceStackV3 to revert back to the free ServiceStack v3.";
+            public const string ExceededRedisTypes = "The free-quota limit on '{0} Redis Types' has been reached." + UpgradeInstructions;
+            public const string ExceededRedisRequests = "The free-quota limit on '{0} Redis requests per hour' has been reached." + UpgradeInstructions;
+            public const string ExceededOrmLiteTables = "The free-quota limit on '{0} OrmLite Tables' has been reached." + UpgradeInstructions;
+            public const string ExceededAwsTables = "The free-quota limit on '{0} AWS Tables' has been reached." + UpgradeInstructions;
+            public const string ExceededServiceStackOperations = "The free-quota limit on '{0} ServiceStack Operations' has been reached." + UpgradeInstructions;
+            public const string ExceededAdminUi = "The Admin UI is a commerical-only premium feature." + UpgradeInstructions;
+            public const string ExceededPremiumFeature = "Unauthorized use of a commerical-only premium feature." + UpgradeInstructions;
             public const string UnauthorizedAccessRequest = "Unauthorized access request of a licensed feature.";
         }
 
@@ -356,8 +356,9 @@ namespace ServiceStack
                 case LicenseType.RedisBusiness:
                 case LicenseType.RedisSite:
                     return LicenseFeature.RedisSku;
+                default:
+                    throw new LicenseException("Unknown License Type: " + key.Type).Trace();
             }
-            throw new ArgumentException("Unknown License Type: " + key.Type).Trace();
         }
 
         public static LicenseKey ToLicenseKey(this string licenseKeyText)

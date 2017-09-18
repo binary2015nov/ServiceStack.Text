@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Web;
 using NUnit.Framework;
+using ServiceStack.Host.Handlers;
 #if !NETCORE_SUPPORT
 using ServiceStack.Host;
 using ServiceStack.Testing;

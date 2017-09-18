@@ -65,7 +65,8 @@ namespace ServiceStack
 
     static class TracerExceptions
     {
-        public static T Trace<T>(this T ex) where T : Exception
+        public static TException Trace<TException>(this TException ex) 
+            where TException : Exception
         {
             Tracer.Default.WriteError(ex);
             return ex;
