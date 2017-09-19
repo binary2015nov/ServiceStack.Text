@@ -12,7 +12,7 @@ namespace ServiceStack
 
         public XboxPclExport()
         {
-            this.PlatformName = "XBOX";
+            this.PlatformName = PlatformNames.XBox;
         }
 
         public static PclExport Configure()

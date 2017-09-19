@@ -26,6 +26,7 @@ namespace ServiceStack
         public const string Silverlight5 = "Silverlight5";
         public const string WindowsPhone = "WindowsPhone";
         public const string NetStandard = "NETStandard";
+        public const string XBox = "XBOX";
     }
 
     public abstract class PclExport

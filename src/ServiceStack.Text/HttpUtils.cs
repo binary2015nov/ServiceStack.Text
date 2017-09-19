@@ -1361,6 +1361,14 @@ namespace ServiceStack
             "POLL",  "SUBSCRIBE", "UNSUBSCRIBE" //MS Exchange WebDav: http://msdn.microsoft.com/en-us/library/aa142917.aspx
         };
 
+        public const string Get = "GET";
+        public const string Put = "PUT";
+        public const string Post = "POST";
+        public const string Delete = "DELETE";
+        public const string Options = "OPTIONS";
+        public const string Head = "HEAD";
+        public const string Patch = "PATCH";
+
         public static bool HasVerb(string httpVerb)
         {
 #if NETFX_CORE
@@ -1370,13 +1378,19 @@ namespace ServiceStack
 #endif
         }
 
-        public const string Get = "GET";
-        public const string Put = "PUT";
-        public const string Post = "POST";
-        public const string Delete = "DELETE";
-        public const string Options = "OPTIONS";
-        public const string Head = "HEAD";
-        public const string Patch = "PATCH";
+        public static bool HasRequestBody(this string httpMethod)
+        {
+            switch (httpMethod)
+            {
+                case HttpMethods.Get:
+                case HttpMethods.Delete:
+                case HttpMethods.Head:
+                case HttpMethods.Options:
+                    return false;
+            }
+
+            return true;
+        }
     }
 
     public static class CompressionTypes

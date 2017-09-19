@@ -30,41 +30,16 @@
     <SilverlightRuntimeVersion>5.1.50905.0</SilverlightRuntimeVersion>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' and '$(TargetFramework)' == 'sl5' ">
-    <OutputPath>bin\SL5Debug</OutputPath>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' and '$(TargetFramework)' == 'sl5' ">
-    <OutputPath>bin\SL5</OutputPath>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateSerializationAssemblies>On</GenerateSerializationAssemblies>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'sl5' ">
     <Reference Include="System" />
-    <Reference Include="System.IO" />
-    <Reference Include="System.IO.Compression" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Linq" />
-    <Reference Include="System.Linq.Expressions" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Requests" />
-    <Reference Include="System.Net.Primitives" />
-    <Reference Include="System.Globalization" />
-    <Reference Include="System.Runtime" />
-    <Reference Include="System.Runtime.Extensions" />
     <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Runtime.Serialization.Primitives" />
-    <Reference Include="System.Runtime.Serialization.Xml" />
-    <Reference Include="System.Runtime.InteropServices" />
-    <Reference Include="System.Reflection" />
-    <Reference Include="System.Reflection.Extensions" />
-    <Reference Include="System.Threading" />
-    <Reference Include="System.Threading.Tasks" />
-    <Reference Include="System.Collections" />
-    <Reference Include="System.Collections.Concurrent" />
-    <Reference Include="System.Text.Encoding" />
-    <Reference Include="System.Text.RegularExpressions" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.ReaderWriter" />
     <Reference Include="System.Windows" />
   </ItemGroup>
 

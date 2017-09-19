@@ -9,163 +9,163 @@ using ServiceStack.Text.Common;
 
 namespace ServiceStack.Text.Jsv
 {
-    internal static class JsvWriter
-    {
-        public static readonly JsWriter<JsvTypeSerializer> Instance = new JsWriter<JsvTypeSerializer>();
+	internal static class JsvWriter
+	{
+		public static readonly JsWriter<JsvTypeSerializer> Instance = new JsWriter<JsvTypeSerializer>();
 
-        private static Dictionary<Type, WriteObjectDelegate> WriteFnCache = new Dictionary<Type, WriteObjectDelegate>();
+		private static Dictionary<Type, WriteObjectDelegate> WriteFnCache = new Dictionary<Type, WriteObjectDelegate>();
 
-        internal static void RemoveCacheFn(Type forType)
-        {
-            Dictionary<Type, WriteObjectDelegate> snapshot, newCache;
-            do
-            {
-                snapshot = WriteFnCache;
-                newCache = new Dictionary<Type, WriteObjectDelegate>(WriteFnCache);
-                newCache.Remove(forType);
+		internal static void RemoveCacheFn(Type forType)
+		{
+			Dictionary<Type, WriteObjectDelegate> snapshot, newCache;
+			do
+			{
+				snapshot = WriteFnCache;
+				newCache = new Dictionary<Type, WriteObjectDelegate>(WriteFnCache);
+				newCache.Remove(forType);
 
-            } while (!ReferenceEquals(
-                Interlocked.CompareExchange(ref WriteFnCache, newCache, snapshot), snapshot));
-        }
+			} while (!ReferenceEquals(
+				Interlocked.CompareExchange(ref WriteFnCache, newCache, snapshot), snapshot));
+		}
 
-        public static WriteObjectDelegate GetWriteFn(Type type)
-        {
-            try
-            {
-                WriteObjectDelegate writeFn;
-                if (WriteFnCache.TryGetValue(type, out writeFn)) return writeFn;
+		public static WriteObjectDelegate GetWriteFn(Type type)
+		{
+			try
+			{
+				WriteObjectDelegate writeFn;
+				if (WriteFnCache.TryGetValue(type, out writeFn)) return writeFn;
 
-                var genericType = typeof(JsvWriter<>).MakeGenericType(type);
-                var mi = genericType.GetStaticMethod("WriteFn");
-                var writeFactoryFn = (Func<WriteObjectDelegate>)mi.MakeDelegate(typeof(Func<WriteObjectDelegate>));
+				var genericType = typeof(JsvWriter<>).MakeGenericType(type);
+				var mi = genericType.GetStaticMethod("WriteFn");
+				var writeFactoryFn = (Func<WriteObjectDelegate>)mi.MakeDelegate(typeof(Func<WriteObjectDelegate>));
 
-                writeFn = writeFactoryFn();
+				writeFn = writeFactoryFn();
 
-                Dictionary<Type, WriteObjectDelegate> snapshot, newCache;
-                do
-                {
-                    snapshot = WriteFnCache;
-                    newCache = new Dictionary<Type, WriteObjectDelegate>(WriteFnCache);
-                    newCache[type] = writeFn;
+				Dictionary<Type, WriteObjectDelegate> snapshot, newCache;
+				do
+				{
+					snapshot = WriteFnCache;
+					newCache = new Dictionary<Type, WriteObjectDelegate>(WriteFnCache);
+					newCache[type] = writeFn;
 
-                } while (!ReferenceEquals(
-                    Interlocked.CompareExchange(ref WriteFnCache, newCache, snapshot), snapshot));
+				} while (!ReferenceEquals(
+					Interlocked.CompareExchange(ref WriteFnCache, newCache, snapshot), snapshot));
 
-                return writeFn;
-            }
-            catch (Exception ex)
-            {
-                Tracer.Default.WriteError(ex);
-                throw;
-            }
-        }
+				return writeFn;
+			}
+			catch (Exception ex)
+			{
+				Tracer.Default.WriteError(ex);
+				throw;
+			}
+		}
 
-        public static void WriteLateBoundObject(TextWriter writer, object value)
-        {
-            if (value == null)
-                return;
+		public static void WriteLateBoundObject(TextWriter writer, object value)
+		{
+			if (value == null)
+				return;
 
-            try
-            {
-                if (++JsState.Depth > JsConfig.MaxDepth)
-                {
-                    Tracer.Default.WriteError("Exceeded MaxDepth limit of {0} attempting to serialize {1}"
-                        .Fmt(JsConfig.MaxDepth, value.GetType().Name));
-                    return;
-                }
+			try
+			{
+				if (++JsState.Depth > JsConfig.MaxDepth)
+				{
+					Tracer.Default.WriteError("Exceeded MaxDepth limit of {0} attempting to serialize {1}"
+						.Fmt(JsConfig.MaxDepth, value.GetType().Name));
+					return;
+				}
 
-                var type = value.GetType();
-                var writeFn = type == typeof(object)
-                    ? WriteType<object, JsvTypeSerializer>.WriteObjectType
-                    : GetWriteFn(type);
+				var type = value.GetType();
+				var writeFn = type == typeof(object)
+					? WriteType<object, JsvTypeSerializer>.WriteObjectType
+					: GetWriteFn(type);
 
-                var prevState = JsState.IsWritingDynamic;
-                JsState.IsWritingDynamic = true;
-                writeFn(writer, value);
-                JsState.IsWritingDynamic = prevState;
-            }
-            finally
-            {
-                JsState.Depth--;
-            }
-        }
+				var prevState = JsState.IsWritingDynamic;
+				JsState.IsWritingDynamic = true;
+				writeFn(writer, value);
+				JsState.IsWritingDynamic = prevState;
+			}
+			finally
+			{
+				JsState.Depth--;
+			}
+		}
 
-        public static WriteObjectDelegate GetValueTypeToStringMethod(Type type)
-        {
-            return Instance.GetValueTypeToStringMethod(type);
-        }
-    }
+		public static WriteObjectDelegate GetValueTypeToStringMethod(Type type)
+		{
+			return Instance.GetValueTypeToStringMethod(type);
+		}
+	}
 
-    /// <summary>
-    /// Implement the serializer using a more static approach
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public static class JsvWriter<T>
-    {
-        private static WriteObjectDelegate CacheFn;
+	/// <summary>
+	/// Implement the serializer using a more static approach
+	/// </summary>
+	/// <typeparam name="T"></typeparam>
+	public static class JsvWriter<T>
+	{
+		private static WriteObjectDelegate CacheFn;
 
-        public static void Reset()
-        {
-            JsvWriter.RemoveCacheFn(typeof(T));
-            Refresh();
-        }
+		public static void Reset()
+		{
+			JsvWriter.RemoveCacheFn(typeof(T));
+			Refresh();
+		}
 
-        public static void Refresh()
-        {
-            if (JsvWriter.Instance == null)
-                return;
+		public static void Refresh()
+		{
+			if (JsvWriter.Instance == null)
+				return;
 
-            CacheFn = typeof(T) == typeof(object)
-                ? JsvWriter.WriteLateBoundObject
-                : JsvWriter.Instance.GetWriteFn<T>();
-        }
+			CacheFn = typeof(T) == typeof(object)
+				? JsvWriter.WriteLateBoundObject
+				: JsvWriter.Instance.GetWriteFn<T>();
+		}
 
-        public static WriteObjectDelegate WriteFn()
-        {
-            return CacheFn ?? WriteObject;
-        }
+		public static WriteObjectDelegate WriteFn()
+		{
+			return CacheFn ?? WriteObject;
+		}
 
-        static JsvWriter()
-        {
-            CacheFn = typeof(T) == typeof(object)
-                ? JsvWriter.WriteLateBoundObject
-                : JsvWriter.Instance.GetWriteFn<T>();
-        }
+		static JsvWriter()
+		{
+			CacheFn = typeof(T) == typeof(object)
+				? JsvWriter.WriteLateBoundObject
+				: JsvWriter.Instance.GetWriteFn<T>();
+		}
 
-        public static void WriteObject(TextWriter writer, object value)
-        {
+		public static void WriteObject(TextWriter writer, object value)
+		{
 #if __IOS__
 			if (writer == null) return;
 #endif
-            TypeConfig<T>.Init();
+			TypeConfig<T>.Init();
 
-            try
-            {
-                if (++JsState.Depth > JsConfig.MaxDepth)
-                {
-                    Tracer.Default.WriteError("Exceeded MaxDepth limit of {0} attempting to serialize {1}"
-                        .Fmt(JsConfig.MaxDepth, value.GetType().Name));
-                    return;
-                }
+			try
+			{
+				if (++JsState.Depth > JsConfig.MaxDepth)
+				{
+					Tracer.Default.WriteError("Exceeded MaxDepth limit of {0} attempting to serialize {1}"
+						.Fmt(JsConfig.MaxDepth, value.GetType().Name));
+					return;
+				}
 
-                CacheFn(writer, value);
-            }
-            finally
-            {
-                JsState.Depth--;
-            }
-        }
+				CacheFn(writer, value);
+			}
+			finally
+			{
+				JsState.Depth--;
+			}
+		}
 
-        public static void WriteRootObject(TextWriter writer, object value)
-        {
+		public static void WriteRootObject(TextWriter writer, object value)
+		{
 #if __IOS__
 			if (writer == null) return;
 #endif
-            TypeConfig<T>.Init();
+			TypeConfig<T>.Init();
 
-            JsState.Depth = 0;
-            CacheFn(writer, value);
-        }
+			JsState.Depth = 0;
+			CacheFn(writer, value);
+		}
 
-    }
+	}
 }

@@ -110,7 +110,7 @@ namespace ServiceStack.Text
         public static T Deserialize<T>(Stream stream, XmlReaderSettings settings = null)
         {
             var type = typeof(T);
-            return (T) Deserialize(stream, type, settings);
+            return (T)Deserialize(stream, type, settings);
         }
 
         /// <summary>
