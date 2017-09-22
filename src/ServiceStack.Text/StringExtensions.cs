@@ -246,7 +246,7 @@ namespace ServiceStack
             {
                 encodedUrlComponents[i] = urlComponents[i].UrlEncode();
             }
-            return string.Format(urlString, encodedUrlComponents);
+            return urlString.Fmt(encodedUrlComponents);
         }
 
         public static string WithTrailingSlash(this string path)
