@@ -119,22 +119,21 @@ namespace ServiceStack.Text
 
         public static DateTime GetAssemblyLastModified(Assembly assembly)
         {
-#if NETSTANDARD1_1
-            throw new NotSupportedException();
-#else
             try
             {
-
+#if NETSTANDARD1_1
+                return default(DateTime);
+#else
                 if (assembly.Location != null)
                     return new FileInfo(assembly.Location).LastWriteTime;
 
                 return default(DateTime);
+#endif
             }
             catch (Exception)
             {
                 return default(DateTime);
             }
-#endif
         }
 
         static readonly Regex versionRegEx = new Regex(", Version=[^\\]]+", PclExport.Instance.RegexOptions);
