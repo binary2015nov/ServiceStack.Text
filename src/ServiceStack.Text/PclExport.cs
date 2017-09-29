@@ -278,7 +278,7 @@ namespace ServiceStack
         public virtual bool IsDebugBuild(Assembly assembly)
         {
             return assembly.AllAttributes()
-                .Any(x => x.GetType().Name == "DebuggableAttribute");
+                .Any(x => x.GetType() == typeof(System.Diagnostics.DebuggableAttribute));
         }
 
         public virtual string MapAbsolutePath(string relativePath, string appendPartialPathModifier)
