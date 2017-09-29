@@ -8,8 +8,7 @@ using NUnit.Framework;
 namespace ServiceStack.Text.Tests
 {
     [TestFixture]
-    public class EnumerableTests
-        : TestBase
+    public class EnumerableTests : TestBase
     {
         [Test]
         public void Can_serialize_array_list_of_mixed_types()

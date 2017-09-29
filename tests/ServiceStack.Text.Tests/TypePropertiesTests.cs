@@ -25,8 +25,7 @@ namespace ServiceStack.Text.Tests
 
     public class TypePropertiesTests
     {
-        static RefTypeProps CreateTypedTuple() =>
-            new RefTypeProps { S = "foo", I = 1, L = 2, D = 3.3 };
+        static RefTypeProps CreateTypedTuple() => new RefTypeProps { S = "foo", I = 1, L = 2, D = 3.3 };
 
         [Test]
         public void Can_cache_ValueTuple_field_accessors()

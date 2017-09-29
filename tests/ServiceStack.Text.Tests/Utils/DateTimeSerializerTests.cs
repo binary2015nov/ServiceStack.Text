@@ -7,8 +7,7 @@ using ServiceStack.Text.Common;
 namespace ServiceStack.Text.Tests.Utils
 {
     [TestFixture]
-    public class DateTimeSerializerTests
-        : TestBase
+    public class DateTimeSerializerTests : TestBase
     {
         public void PrintFormats(DateTime dateTime)
         {
