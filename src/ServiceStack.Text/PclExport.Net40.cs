@@ -1,4 +1,4 @@
-﻿#if !(XBOX || SL5 || NETFX_CORE || WP || PCL || NETSTANDARD1_1)
+﻿#if !(XBOX || SL5 || NETFX_CORE || WP || PCL || NETSTANDARD2_0)
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -22,7 +22,7 @@ using ServiceStack.Text.Common;
 using ServiceStack.Text.Json;
 using ServiceStack.Text.Support;
 
-#if !__IOS__
+#if !__IOS__ && !NETSTANDARD2_0
 using System.Reflection.Emit;
 using FastMember = ServiceStack.Text.FastMember;
 #endif
@@ -35,147 +35,148 @@ using Preserve = MonoTouch.Foundation.PreserveAttribute;
 
 namespace ServiceStack
 {
-	public class Net40PclExport : PclExport
-	{
-		public static Net40PclExport Provider = new Net40PclExport();
+    public class Net40PclExport : PclExport
+    {
+        public static Net40PclExport Provider = new Net40PclExport();
 
-		public Net40PclExport()
-		{
-			this.SupportsEmit = SupportsExpression = true;
-			this.DirSep = Path.DirectorySeparatorChar;
-			this.AltDirSep = Path.DirectorySeparatorChar == '/' ? '\\' : '/';
-			this.RegexOptions = RegexOptions.Compiled;
+        public Net40PclExport()
+        {
+            this.SupportsEmit = SupportsExpression = true;
+            this.DirSep = Path.DirectorySeparatorChar;
+            this.AltDirSep = Path.DirectorySeparatorChar == '/' ? '\\' : '/';
+            this.RegexOptions = RegexOptions.Compiled;
 #if DNXCORE50
-			this.InvariantComparison = CultureInfo.InvariantCulture.CompareInfo.GetStringComparer();
-			this.InvariantComparisonIgnoreCase = CultureInfo.InvariantCultureIgnoreCase.CompareInfo.GetStringComparer();
+            this.InvariantComparison = CultureInfo.InvariantCulture.CompareInfo.GetStringComparer();
+            this.InvariantComparisonIgnoreCase = CultureInfo.InvariantCultureIgnoreCase.CompareInfo.GetStringComparer();
 #else
-			this.InvariantComparison = StringComparison.InvariantCulture;
-			this.InvariantComparisonIgnoreCase = StringComparison.InvariantCultureIgnoreCase;
+            this.InvariantComparison = StringComparison.InvariantCulture;
+            this.InvariantComparisonIgnoreCase = StringComparison.InvariantCultureIgnoreCase;
 #endif
-			this.InvariantComparer = StringComparer.InvariantCulture;
-			this.InvariantComparerIgnoreCase = StringComparer.InvariantCultureIgnoreCase;
+            this.InvariantComparer = StringComparer.InvariantCulture;
+            this.InvariantComparerIgnoreCase = StringComparer.InvariantCultureIgnoreCase;
 
-			this.PlatformName = Environment.OSVersion.Platform.ToString();
-		}
+            this.PlatformName = Environment.OSVersion.Platform.ToString();
+        }
 
-		public static PclExport Configure()
-		{
-			Configure(Provider);
-			return Provider;
-		}
+        public static PclExport Configure()
+        {
+            Configure(Provider);
+            return Provider;
+        }
 
-		public override string ReadAllText(string filePath)
-		{
-			return File.ReadAllText(filePath);
-		}
+        public override string ReadAllText(string filePath)
+        {
+            return File.ReadAllText(filePath);
+        }
 
-		public override string ToTitleCase(string value)
-		{
-			return TextInfo.ToTitleCase(value).Replace("_", String.Empty);
-		}
+        public override string ToTitleCase(string value)
+        {
+            return TextInfo.ToTitleCase(value).Replace("_", String.Empty);
+        }
 
-		public override string ToInvariantUpper(char value)
-		{
-			return value.ToString(CultureInfo.InvariantCulture).ToUpper();
-		}
+        public override string ToInvariantUpper(char value)
+        {
+            return value.ToString(CultureInfo.InvariantCulture).ToUpper();
+        }
 
-		public override bool IsAnonymousType(Type type)
-		{
-			return type.HasAttribute<CompilerGeneratedAttribute>()
-				   && type.IsGeneric() && type.Name.Contains("AnonymousType")
-				   && (type.Name.StartsWith("<>", StringComparison.Ordinal) || type.Name.StartsWith("VB$", StringComparison.Ordinal))
-				   && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
-		}
+        public override bool IsAnonymousType(Type type)
+        {
+            return type.HasAttribute<CompilerGeneratedAttribute>()
+                   && type.IsGeneric() && type.Name.Contains("AnonymousType")
+                   && (type.Name.StartsWith("<>", StringComparison.Ordinal) || type.Name.StartsWith("VB$", StringComparison.Ordinal))
+                   && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
+        }
 
-		public override bool FileExists(string filePath)
-		{
-			return File.Exists(filePath);
-		}
+        public override bool FileExists(string filePath)
+        {
+            return File.Exists(filePath);
+        }
 
-		public override bool DirectoryExists(string dirPath)
-		{
-			return Directory.Exists(dirPath);
-		}
+        public override bool DirectoryExists(string dirPath)
+        {
+            return Directory.Exists(dirPath);
+        }
 
-		public override void CreateDirectory(string dirPath)
-		{
-			Directory.CreateDirectory(dirPath);
-		}
+        public override void CreateDirectory(string dirPath)
+        {
+            Directory.CreateDirectory(dirPath);
+        }
 
-		public override string[] GetFileNames(string dirPath, string searchPattern = null)
-		{
-			if (!Directory.Exists(dirPath))
-				return TypeConstants.EmptyStringArray;
+        public override string[] GetFileNames(string dirPath, string searchPattern = null)
+        {
+            if (!Directory.Exists(dirPath))
+                return TypeConstants.EmptyStringArray;
 
-			return searchPattern != null
-				? Directory.GetFiles(dirPath, searchPattern)
-				: Directory.GetFiles(dirPath);
-		}
+            return searchPattern != null
+                ? Directory.GetFiles(dirPath, searchPattern)
+                : Directory.GetFiles(dirPath);
+        }
 
-		public override string[] GetDirectoryNames(string dirPath, string searchPattern = null)
-		{
-			if (!Directory.Exists(dirPath))
-				return TypeConstants.EmptyStringArray;
+        public override string[] GetDirectoryNames(string dirPath, string searchPattern = null)
+        {
+            if (!Directory.Exists(dirPath))
+                return TypeConstants.EmptyStringArray;
 
-			return searchPattern != null
-				? Directory.GetDirectories(dirPath, searchPattern)
-				: Directory.GetDirectories(dirPath);
-		}
+            return searchPattern != null
+                ? Directory.GetDirectories(dirPath, searchPattern)
+                : Directory.GetDirectories(dirPath);
+        }
 
-		public const string AppSettingsKey = "servicestack:license";
-		public const string EnvironmentKey = "SERVICESTACK_LICENSE";
+        public const string AppSettingsKey = "servicestack:license";
+        public const string EnvironmentKey = "SERVICESTACK_LICENSE";
 
-		public override void RegisterLicenseFromConfig()
-		{
+        public override void RegisterLicenseFromConfig()
+        {
 #if ANDROID
 #elif __IOS__
 #elif __MAC__
+#elif NETSTANDARD2_0
 #else
-			string licenceKeyText;
-			try
-			{
-				//Automatically register license key stored in <appSettings/>
-				licenceKeyText = System.Configuration.ConfigurationManager.AppSettings[AppSettingsKey];
-				if (!string.IsNullOrEmpty(licenceKeyText))
-				{
-					LicenseUtils.RegisterLicense(licenceKeyText);
-					return;
-				}
-			}
-			catch (Exception ex)
-			{
-				licenceKeyText = Environment.GetEnvironmentVariable(EnvironmentKey)?.Trim();
-				if (string.IsNullOrEmpty(licenceKeyText))
-					throw;
-				try
-				{
-					LicenseUtils.RegisterLicense(licenceKeyText);
-				}
-				catch
-				{
-					throw ex;
-				}
-			}
+            string licenceKeyText;
+            try
+            {
+                //Automatically register license key stored in <appSettings/>
+                licenceKeyText = System.Configuration.ConfigurationManager.AppSettings[AppSettingsKey];
+                if (!string.IsNullOrEmpty(licenceKeyText))
+                {
+                    LicenseUtils.RegisterLicense(licenceKeyText);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                licenceKeyText = Environment.GetEnvironmentVariable(EnvironmentKey)?.Trim();
+                if (string.IsNullOrEmpty(licenceKeyText))
+                    throw;
+                try
+                {
+                    LicenseUtils.RegisterLicense(licenceKeyText);
+                }
+                catch
+                {
+                    throw ex;
+                }
+            }
 
-			//or SERVICESTACK_LICENSE Environment variable
-			licenceKeyText = Environment.GetEnvironmentVariable(EnvironmentKey)?.Trim();
-			if (!string.IsNullOrEmpty(licenceKeyText))
-			{
-				LicenseUtils.RegisterLicense(licenceKeyText);
-			}
+            //or SERVICESTACK_LICENSE Environment variable
+            licenceKeyText = Environment.GetEnvironmentVariable(EnvironmentKey)?.Trim();
+            if (!string.IsNullOrEmpty(licenceKeyText))
+            {
+                LicenseUtils.RegisterLicense(licenceKeyText);
+            }
 #endif
-		}
+        }
 
-		public override string GetEnvironmentVariable(string name)
-		{
-			return Environment.GetEnvironmentVariable(name);
-		}
+        public override string GetEnvironmentVariable(string name)
+        {
+            return Environment.GetEnvironmentVariable(name);
+        }
 
-		/// <Summary>
-		/// Writes a message followed by a line terminator, to the Console output stream.
-		/// </Summay>
-		/// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
-		public override void WriteLine(string message)
+        /// <Summary>
+        /// Writes a message followed by a line terminator, to the Console output stream.
+        /// </Summay>
+        /// <exception cref="System.IO.IOException">An I/O error occurred.</exception>
+        public override void WriteLine(string message)
 		{
 			Console.WriteLine(message);
 		}
@@ -1101,477 +1102,468 @@ namespace ServiceStack
 		//ReflectionExtensions
 		const string DataContract = "DataContractAttribute";
 
-		static readonly ConcurrentDictionary<Type, FastMember.TypeAccessor> typeAccessorMap
-			= new ConcurrentDictionary<Type, FastMember.TypeAccessor>();
+        public static DataContractAttribute GetWeakDataContract(this Type type)
+        {
+            var attr = type.AllAttributes().FirstOrDefault(x => x.GetType().Name == DataContract);
+            if (attr != null)
+            {
+                var attrType = attr.GetType();
 
-		public static DataContractAttribute GetWeakDataContract(this Type type)
-		{
-			var attr = type.AllAttributes().FirstOrDefault(x => x.GetType().Name == DataContract);
-			if (attr != null)
-			{
-				var attrType = attr.GetType();
+                var accessor = TypeProperties.Get(attr.GetType());
 
-				FastMember.TypeAccessor accessor;
-				if (!typeAccessorMap.TryGetValue(attrType, out accessor))
-					typeAccessorMap[attrType] = accessor = FastMember.TypeAccessor.Create(attr.GetType());
+                return new DataContractAttribute
+                {
+                    Name = (string)accessor.GetPublicGetter("Name")(attr),
+                    Namespace = (string)accessor.GetPublicGetter("Namespace")(attr),
+                };
+            }
+            return null;
+        }
 
-				return new DataContractAttribute
-				{
-					Name = (string)accessor[attr, "Name"],
-					Namespace = (string)accessor[attr, "Namespace"],
-				};
-			}
-			return null;
-		}
+        public static DataMemberAttribute GetWeakDataMember(this PropertyInfo pi)
+        {
+            var attr = pi.AllAttributes().FirstOrDefault(x => x.GetType().Name == ReflectionExtensions.DataMember);
+            if (attr != null)
+            {
+                var attrType = attr.GetType();
 
-		public static DataMemberAttribute GetWeakDataMember(this PropertyInfo pi)
-		{
-			var attr = pi.AllAttributes().FirstOrDefault(x => x.GetType().Name == ReflectionExtensions.DataMember);
-			if (attr != null)
-			{
-				var attrType = attr.GetType();
+                var accessor = TypeProperties.Get(attr.GetType());
 
-				FastMember.TypeAccessor accessor;
-				if (!typeAccessorMap.TryGetValue(attrType, out accessor))
-					typeAccessorMap[attrType] = accessor = FastMember.TypeAccessor.Create(attr.GetType());
+                var newAttr = new DataMemberAttribute
+                {
+                    Name = (string)accessor.GetPublicGetter("Name")(attr),
+                    EmitDefaultValue = (bool)accessor.GetPublicGetter("EmitDefaultValue")(attr),
+                    IsRequired = (bool)accessor.GetPublicGetter("IsRequired")(attr),
+                };
 
-				var newAttr = new DataMemberAttribute
-				{
-					Name = (string)accessor[attr, "Name"],
-					EmitDefaultValue = (bool)accessor[attr, "EmitDefaultValue"],
-					IsRequired = (bool)accessor[attr, "IsRequired"],
-				};
+                var order = (int)accessor.GetPublicGetter("Order")(attr);
+                if (order >= 0)
+                    newAttr.Order = order; //Throws Exception if set to -1
 
-				var order = (int)accessor[attr, "Order"];
-				if (order >= 0)
-					newAttr.Order = order; //Throws Exception if set to -1
+                return newAttr;
+            }
+            return null;
+        }
 
-				return newAttr;
-			}
-			return null;
-		}
+        public static DataMemberAttribute GetWeakDataMember(this FieldInfo pi)
+        {
+            var attr = pi.AllAttributes().FirstOrDefault(x => x.GetType().Name == ReflectionExtensions.DataMember);
+            if (attr != null)
+            {
+                var attrType = attr.GetType();
 
-		public static DataMemberAttribute GetWeakDataMember(this FieldInfo pi)
-		{
-			var attr = pi.AllAttributes().FirstOrDefault(x => x.GetType().Name == ReflectionExtensions.DataMember);
-			if (attr != null)
-			{
-				var attrType = attr.GetType();
+                var accessor = TypeProperties.Get(attr.GetType());
 
-				FastMember.TypeAccessor accessor;
-				if (!typeAccessorMap.TryGetValue(attrType, out accessor))
-					typeAccessorMap[attrType] = accessor = FastMember.TypeAccessor.Create(attr.GetType());
+                var newAttr = new DataMemberAttribute
+                {
+                    Name = (string)accessor.GetPublicGetter("Name")(attr),
+                    EmitDefaultValue = (bool)accessor.GetPublicGetter("EmitDefaultValue")(attr),
+                    IsRequired = (bool)accessor.GetPublicGetter("IsRequired")(attr),
+                };
 
-				var newAttr = new DataMemberAttribute
-				{
-					Name = (string)accessor[attr, "Name"],
-					EmitDefaultValue = (bool)accessor[attr, "EmitDefaultValue"],
-					IsRequired = (bool)accessor[attr, "IsRequired"],
-				};
+                var order = (int)accessor.GetPublicGetter("Order")(attr);
+                if (order >= 0)
+                    newAttr.Order = order; //Throws Exception if set to -1
 
-				var order = (int)accessor[attr, "Order"];
-				if (order >= 0)
-					newAttr.Order = order; //Throws Exception if set to -1
-
-				return newAttr;
-			}
-			return null;
-		}
+                return newAttr;
+            }
+            return null;
+        }
 #endif
-	}
+    }
 }
 
-#if !__IOS__
+#if !__IOS__ && !NETSTANDARD2_0
 
 //Not using it here, but @marcgravell's stuff is too good not to include
 // http://code.google.com/p/fast-member/ Apache License 2.0
 namespace ServiceStack.Text.FastMember
 {
-	/// <summary>
-	/// Represents an individual object, allowing access to members by-name
-	/// </summary>
-	public abstract class ObjectAccessor
-	{
-		/// <summary>
-		/// Get or Set the value of a named member for the underlying object
-		/// </summary>
-		public abstract object this[string name] { get; set; }
-		/// <summary>
-		/// The object represented by this instance
-		/// </summary>
-		public abstract object Target { get; }
-		/// <summary>
-		/// Use the target types definition of equality
-		/// </summary>
-		public override bool Equals(object obj)
-		{
-			return Target.Equals(obj);
-		}
-		/// <summary>
-		/// Obtain the hash of the target object
-		/// </summary>
-		public override int GetHashCode()
-		{
-			return Target.GetHashCode();
-		}
-		/// <summary>
-		/// Use the target's definition of a string representation
-		/// </summary>
-		public override string ToString()
-		{
-			return Target.ToString();
-		}
+    /// <summary>
+    /// Represents an individual object, allowing access to members by-name
+    /// </summary>
+    public abstract class ObjectAccessor
+    {
+        /// <summary>
+        /// Get or Set the value of a named member for the underlying object
+        /// </summary>
+        public abstract object this[string name] { get; set; }
+        /// <summary>
+        /// The object represented by this instance
+        /// </summary>
+        public abstract object Target { get; }
+        /// <summary>
+        /// Use the target types definition of equality
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            return Target.Equals(obj);
+        }
+        /// <summary>
+        /// Obtain the hash of the target object
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return Target.GetHashCode();
+        }
+        /// <summary>
+        /// Use the target's definition of a string representation
+        /// </summary>
+        public override string ToString()
+        {
+            return Target.ToString();
+        }
 
-		/// <summary>
-		/// Wraps an individual object, allowing by-name access to that instance
-		/// </summary>
-		public static ObjectAccessor Create(object target)
-		{
-			if (target == null) throw new ArgumentNullException("target");
-			//IDynamicMetaObjectProvider dlr = target as IDynamicMetaObjectProvider;
-			//if (dlr != null) return new DynamicWrapper(dlr); // use the DLR
-			return new TypeAccessorWrapper(target, TypeAccessor.Create(target.GetType()));
-		}
+        /// <summary>
+        /// Wraps an individual object, allowing by-name access to that instance
+        /// </summary>
+        public static ObjectAccessor Create(object target)
+        {
+            if (target == null) throw new ArgumentNullException("target");
+            //IDynamicMetaObjectProvider dlr = target as IDynamicMetaObjectProvider;
+            //if (dlr != null) return new DynamicWrapper(dlr); // use the DLR
+            return new TypeAccessorWrapper(target, TypeAccessor.Create(target.GetType()));
+        }
 
-		sealed class TypeAccessorWrapper : ObjectAccessor
-		{
-			private readonly object target;
-			private readonly TypeAccessor accessor;
-			public TypeAccessorWrapper(object target, TypeAccessor accessor)
-			{
-				this.target = target;
-				this.accessor = accessor;
-			}
-			public override object this[string name]
-			{
-				get { return accessor[target, name.ToUpperInvariant()]; }
-				set { accessor[target, name.ToUpperInvariant()] = value; }
-			}
-			public override object Target
-			{
-				get { return target; }
-			}
-		}
+        sealed class TypeAccessorWrapper : ObjectAccessor
+        {
+            private readonly object target;
+            private readonly TypeAccessor accessor;
+            public TypeAccessorWrapper(object target, TypeAccessor accessor)
+            {
+                this.target = target;
+                this.accessor = accessor;
+            }
+            public override object this[string name]
+            {
+                get { return accessor[target, name.ToUpperInvariant()]; }
+                set { accessor[target, name.ToUpperInvariant()] = value; }
+            }
+            public override object Target
+            {
+                get { return target; }
+            }
+        }
 
-		//sealed class DynamicWrapper : ObjectAccessor
-		//{
-		//    private readonly IDynamicMetaObjectProvider target;
-		//    public override object Target
-		//    {
-		//        get { return target; }
-		//    }
-		//    public DynamicWrapper(IDynamicMetaObjectProvider target)
-		//    {
-		//        this.target = target;
-		//    }
-		//    public override object this[string name]
-		//    {
-		//        get { return CallSiteCache.GetValue(name, target); }
-		//        set { CallSiteCache.SetValue(name, target, value); }
-		//    }
-		//}
-	}
+        //sealed class DynamicWrapper : ObjectAccessor
+        //{
+        //    private readonly IDynamicMetaObjectProvider target;
+        //    public override object Target
+        //    {
+        //        get { return target; }
+        //    }
+        //    public DynamicWrapper(IDynamicMetaObjectProvider target)
+        //    {
+        //        this.target = target;
+        //    }
+        //    public override object this[string name]
+        //    {
+        //        get { return CallSiteCache.GetValue(name, target); }
+        //        set { CallSiteCache.SetValue(name, target, value); }
+        //    }
+        //}
+    }
 
-	/// <summary>
-	/// Provides by-name member-access to objects of a given type
-	/// </summary>
-	public abstract class TypeAccessor
-	{
-		// hash-table has better read-without-locking semantics than dictionary
-		private static readonly Hashtable typeLookyp = new Hashtable();
+    /// <summary>
+    /// Provides by-name member-access to objects of a given type
+    /// </summary>
+    public abstract class TypeAccessor
+    {
+        // hash-table has better read-without-locking semantics than dictionary
+        private static readonly Hashtable typeLookyp = new Hashtable();
 
-		/// <summary>
-		/// Does this type support new instances via a parameterless constructor?
-		/// </summary>
-		public virtual bool CreateNewSupported => false;
+        /// <summary>
+        /// Does this type support new instances via a parameterless constructor?
+        /// </summary>
+        public virtual bool CreateNewSupported => false;
 
-		/// <summary>
-		/// Create a new instance of this type
-		/// </summary>
-		public virtual object CreateNew() { throw new NotSupportedException(); }
+        /// <summary>
+        /// Create a new instance of this type
+        /// </summary>
+        public virtual object CreateNew() { throw new NotSupportedException(); }
 
-		/// <summary>
-		/// Provides a type-specific accessor, allowing by-name access for all objects of that type
-		/// </summary>
-		/// <remarks>The accessor is cached internally; a pre-existing accessor may be returned</remarks>
-		public static TypeAccessor Create(Type type)
-		{
-			if (type == null) throw new ArgumentNullException(nameof(type));
-			var obj = (TypeAccessor)typeLookyp[type];
-			if (obj != null) return obj;
+        /// <summary>
+        /// Provides a type-specific accessor, allowing by-name access for all objects of that type
+        /// </summary>
+        /// <remarks>The accessor is cached internally; a pre-existing accessor may be returned</remarks>
+        public static TypeAccessor Create(Type type)
+        {
+            if (type == null) throw new ArgumentNullException(nameof(type));
+            var obj = (TypeAccessor)typeLookyp[type];
+            if (obj != null) return obj;
 
-			lock (typeLookyp)
-			{
-				// double-check
-				obj = (TypeAccessor)typeLookyp[type];
-				if (obj != null) return obj;
+            lock (typeLookyp)
+            {
+                // double-check
+                obj = (TypeAccessor)typeLookyp[type];
+                if (obj != null) return obj;
 
-				obj = CreateNew(type);
+                obj = CreateNew(type);
 
-				typeLookyp[type] = obj;
-				return obj;
-			}
-		}
+                typeLookyp[type] = obj;
+                return obj;
+            }
+        }
 
-		//sealed class DynamicAccessor : TypeAccessor
-		//{
-		//    public static readonly DynamicAccessor Singleton = new DynamicAccessor();
-		//    private DynamicAccessor(){}
-		//    public override object this[object target, string name]
-		//    {
-		//        get { return CallSiteCache.GetValue(name, target); }
-		//        set { CallSiteCache.SetValue(name, target, value); }
-		//    }
-		//}
+        //sealed class DynamicAccessor : TypeAccessor
+        //{
+        //    public static readonly DynamicAccessor Singleton = new DynamicAccessor();
+        //    private DynamicAccessor(){}
+        //    public override object this[object target, string name]
+        //    {
+        //        get { return CallSiteCache.GetValue(name, target); }
+        //        set { CallSiteCache.SetValue(name, target, value); }
+        //    }
+        //}
 
-		private static AssemblyBuilder assembly;
-		private static ModuleBuilder module;
-		private static int counter;
+        private static AssemblyBuilder assembly;
+        private static ModuleBuilder module;
+        private static int counter;
 
-		private static void WriteGetter(ILGenerator il, Type type, PropertyInfo[] props, FieldInfo[] fields, bool isStatic)
-		{
-			LocalBuilder loc = type.IsValueType ? il.DeclareLocal(type) : null;
-			OpCode propName = isStatic ? OpCodes.Ldarg_1 : OpCodes.Ldarg_2, target = isStatic ? OpCodes.Ldarg_0 : OpCodes.Ldarg_1;
-			foreach (PropertyInfo prop in props)
-			{
-				if (prop.GetIndexParameters().Length != 0 || !prop.CanRead) continue;
-				var getFn = prop.GetGetMethod();
-				if (getFn == null) continue; //Mono
+        private static void WriteGetter(ILGenerator il, Type type, PropertyInfo[] props, FieldInfo[] fields, bool isStatic)
+        {
+            LocalBuilder loc = type.IsValueType ? il.DeclareLocal(type) : null;
+            OpCode propName = isStatic ? OpCodes.Ldarg_1 : OpCodes.Ldarg_2, target = isStatic ? OpCodes.Ldarg_0 : OpCodes.Ldarg_1;
+            foreach (PropertyInfo prop in props)
+            {
+                if (prop.GetIndexParameters().Length != 0 || !prop.CanRead) continue;
+                var getFn = prop.GetGetMethod();
+                if (getFn == null) continue; //Mono
 
-				Label next = il.DefineLabel();
-				il.Emit(propName);
-				il.Emit(OpCodes.Ldstr, prop.Name);
-				il.EmitCall(OpCodes.Call, strinqEquals, null);
-				il.Emit(OpCodes.Brfalse_S, next);
-				// match:
-				il.Emit(target);
-				Cast(il, type, loc);
-				il.EmitCall(type.IsValueType ? OpCodes.Call : OpCodes.Callvirt, getFn, null);
-				if (prop.PropertyType.IsValueType)
-				{
-					il.Emit(OpCodes.Box, prop.PropertyType);
-				}
-				il.Emit(OpCodes.Ret);
-				// not match:
-				il.MarkLabel(next);
-			}
-			foreach (FieldInfo field in fields)
-			{
-				Label next = il.DefineLabel();
-				il.Emit(propName);
-				il.Emit(OpCodes.Ldstr, field.Name);
-				il.EmitCall(OpCodes.Call, strinqEquals, null);
-				il.Emit(OpCodes.Brfalse_S, next);
-				// match:
-				il.Emit(target);
-				Cast(il, type, loc);
-				il.Emit(OpCodes.Ldfld, field);
-				if (field.FieldType.IsValueType)
-				{
-					il.Emit(OpCodes.Box, field.FieldType);
-				}
-				il.Emit(OpCodes.Ret);
-				// not match:
-				il.MarkLabel(next);
-			}
-			il.Emit(OpCodes.Ldstr, "name");
-			il.Emit(OpCodes.Newobj, typeof(ArgumentOutOfRangeException).GetConstructor(new Type[] { typeof(string) }));
-			il.Emit(OpCodes.Throw);
-		}
-		private static void WriteSetter(ILGenerator il, Type type, PropertyInfo[] props, FieldInfo[] fields, bool isStatic)
-		{
-			if (type.IsValueType)
-			{
-				il.Emit(OpCodes.Ldstr, "Write is not supported for structs");
-				il.Emit(OpCodes.Newobj, typeof(NotSupportedException).GetConstructor(new Type[] { typeof(string) }));
-				il.Emit(OpCodes.Throw);
-			}
-			else
-			{
-				OpCode propName = isStatic ? OpCodes.Ldarg_1 : OpCodes.Ldarg_2,
-					   target = isStatic ? OpCodes.Ldarg_0 : OpCodes.Ldarg_1,
-					   value = isStatic ? OpCodes.Ldarg_2 : OpCodes.Ldarg_3;
-				LocalBuilder loc = type.IsValueType ? il.DeclareLocal(type) : null;
-				foreach (PropertyInfo prop in props)
-				{
-					if (prop.GetIndexParameters().Length != 0 || !prop.CanWrite) continue;
-					var setFn = prop.GetSetMethod();
-					if (setFn == null) continue; //Mono
+                Label next = il.DefineLabel();
+                il.Emit(propName);
+                il.Emit(OpCodes.Ldstr, prop.Name);
+                il.EmitCall(OpCodes.Call, strinqEquals, null);
+                il.Emit(OpCodes.Brfalse_S, next);
+                // match:
+                il.Emit(target);
+                Cast(il, type, loc);
+                il.EmitCall(type.IsValueType ? OpCodes.Call : OpCodes.Callvirt, getFn, null);
+                if (prop.PropertyType.IsValueType)
+                {
+                    il.Emit(OpCodes.Box, prop.PropertyType);
+                }
+                il.Emit(OpCodes.Ret);
+                // not match:
+                il.MarkLabel(next);
+            }
+            foreach (FieldInfo field in fields)
+            {
+                Label next = il.DefineLabel();
+                il.Emit(propName);
+                il.Emit(OpCodes.Ldstr, field.Name);
+                il.EmitCall(OpCodes.Call, strinqEquals, null);
+                il.Emit(OpCodes.Brfalse_S, next);
+                // match:
+                il.Emit(target);
+                Cast(il, type, loc);
+                il.Emit(OpCodes.Ldfld, field);
+                if (field.FieldType.IsValueType)
+                {
+                    il.Emit(OpCodes.Box, field.FieldType);
+                }
+                il.Emit(OpCodes.Ret);
+                // not match:
+                il.MarkLabel(next);
+            }
+            il.Emit(OpCodes.Ldstr, "name");
+            il.Emit(OpCodes.Newobj, typeof(ArgumentOutOfRangeException).GetConstructor(new Type[] { typeof(string) }));
+            il.Emit(OpCodes.Throw);
+        }
+        private static void WriteSetter(ILGenerator il, Type type, PropertyInfo[] props, FieldInfo[] fields, bool isStatic)
+        {
+            if (type.IsValueType)
+            {
+                il.Emit(OpCodes.Ldstr, "Write is not supported for structs");
+                il.Emit(OpCodes.Newobj, typeof(NotSupportedException).GetConstructor(new Type[] { typeof(string) }));
+                il.Emit(OpCodes.Throw);
+            }
+            else
+            {
+                OpCode propName = isStatic ? OpCodes.Ldarg_1 : OpCodes.Ldarg_2,
+                       target = isStatic ? OpCodes.Ldarg_0 : OpCodes.Ldarg_1,
+                       value = isStatic ? OpCodes.Ldarg_2 : OpCodes.Ldarg_3;
+                LocalBuilder loc = type.IsValueType ? il.DeclareLocal(type) : null;
+                foreach (PropertyInfo prop in props)
+                {
+                    if (prop.GetIndexParameters().Length != 0 || !prop.CanWrite) continue;
+                    var setFn = prop.GetSetMethod();
+                    if (setFn == null) continue; //Mono
 
-					Label next = il.DefineLabel();
-					il.Emit(propName);
-					il.Emit(OpCodes.Ldstr, prop.Name);
-					il.EmitCall(OpCodes.Call, strinqEquals, null);
-					il.Emit(OpCodes.Brfalse_S, next);
-					// match:
-					il.Emit(target);
-					Cast(il, type, loc);
-					il.Emit(value);
-					Cast(il, prop.PropertyType, null);
-					il.EmitCall(type.IsValueType ? OpCodes.Call : OpCodes.Callvirt, setFn, null);
-					il.Emit(OpCodes.Ret);
-					// not match:
-					il.MarkLabel(next);
-				}
-				foreach (FieldInfo field in fields)
-				{
-					Label next = il.DefineLabel();
-					il.Emit(propName);
-					il.Emit(OpCodes.Ldstr, field.Name);
-					il.EmitCall(OpCodes.Call, strinqEquals, null);
-					il.Emit(OpCodes.Brfalse_S, next);
-					// match:
-					il.Emit(target);
-					Cast(il, type, loc);
-					il.Emit(value);
-					Cast(il, field.FieldType, null);
-					il.Emit(OpCodes.Stfld, field);
-					il.Emit(OpCodes.Ret);
-					// not match:
-					il.MarkLabel(next);
-				}
-				il.Emit(OpCodes.Ldstr, "name");
-				il.Emit(OpCodes.Newobj, typeof(ArgumentOutOfRangeException).GetConstructor(new Type[] { typeof(string) }));
-				il.Emit(OpCodes.Throw);
-			}
-		}
-		private static readonly MethodInfo strinqEquals = typeof(string).GetMethod("op_Equality", new Type[] { typeof(string), typeof(string) });
+                    Label next = il.DefineLabel();
+                    il.Emit(propName);
+                    il.Emit(OpCodes.Ldstr, prop.Name);
+                    il.EmitCall(OpCodes.Call, strinqEquals, null);
+                    il.Emit(OpCodes.Brfalse_S, next);
+                    // match:
+                    il.Emit(target);
+                    Cast(il, type, loc);
+                    il.Emit(value);
+                    Cast(il, prop.PropertyType, null);
+                    il.EmitCall(type.IsValueType ? OpCodes.Call : OpCodes.Callvirt, setFn, null);
+                    il.Emit(OpCodes.Ret);
+                    // not match:
+                    il.MarkLabel(next);
+                }
+                foreach (FieldInfo field in fields)
+                {
+                    Label next = il.DefineLabel();
+                    il.Emit(propName);
+                    il.Emit(OpCodes.Ldstr, field.Name);
+                    il.EmitCall(OpCodes.Call, strinqEquals, null);
+                    il.Emit(OpCodes.Brfalse_S, next);
+                    // match:
+                    il.Emit(target);
+                    Cast(il, type, loc);
+                    il.Emit(value);
+                    Cast(il, field.FieldType, null);
+                    il.Emit(OpCodes.Stfld, field);
+                    il.Emit(OpCodes.Ret);
+                    // not match:
+                    il.MarkLabel(next);
+                }
+                il.Emit(OpCodes.Ldstr, "name");
+                il.Emit(OpCodes.Newobj, typeof(ArgumentOutOfRangeException).GetConstructor(new Type[] { typeof(string) }));
+                il.Emit(OpCodes.Throw);
+            }
+        }
+        private static readonly MethodInfo strinqEquals = typeof(string).GetMethod("op_Equality", new Type[] { typeof(string), typeof(string) });
 
-		sealed class DelegateAccessor : TypeAccessor
-		{
-			private readonly Func<object, string, object> getter;
-			private readonly Action<object, string, object> setter;
-			private readonly Func<object> ctor;
-			public DelegateAccessor(Func<object, string, object> getter, Action<object, string, object> setter, Func<object> ctor)
-			{
-				this.getter = getter;
-				this.setter = setter;
-				this.ctor = ctor;
-			}
-			public override bool CreateNewSupported => ctor != null;
+        sealed class DelegateAccessor : TypeAccessor
+        {
+            private readonly Func<object, string, object> getter;
+            private readonly Action<object, string, object> setter;
+            private readonly Func<object> ctor;
+            public DelegateAccessor(Func<object, string, object> getter, Action<object, string, object> setter, Func<object> ctor)
+            {
+                this.getter = getter;
+                this.setter = setter;
+                this.ctor = ctor;
+            }
+            public override bool CreateNewSupported => ctor != null;
 
-			public override object CreateNew()
-			{
-				return ctor != null ? ctor() : base.CreateNew();
-			}
-			public override object this[object target, string name]
-			{
-				get => getter(target, name);
-				set => setter(target, name, value);
-			}
-		}
+            public override object CreateNew()
+            {
+                return ctor != null ? ctor() : base.CreateNew();
+            }
+            public override object this[object target, string name]
+            {
+                get => getter(target, name);
+                set => setter(target, name, value);
+            }
+        }
 
-		private static bool IsFullyPublic(Type type)
-		{
-			while (type.IsNestedPublic) type = type.DeclaringType;
-			return type.IsPublic;
-		}
+        private static bool IsFullyPublic(Type type)
+        {
+            while (type.IsNestedPublic) type = type.DeclaringType;
+            return type.IsPublic;
+        }
 
-		static TypeAccessor CreateNew(Type type)
-		{
-			//if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(type))
-			//{
-			//    return DynamicAccessor.Singleton;
-			//}
+        static TypeAccessor CreateNew(Type type)
+        {
+            //if (typeof(IDynamicMetaObjectProvider).IsAssignableFrom(type))
+            //{
+            //    return DynamicAccessor.Singleton;
+            //}
 
-			var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-			var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
-			ConstructorInfo ctor = null;
-			if (type.IsClass && !type.IsAbstract)
-			{
-				ctor = type.GetConstructor(Type.EmptyTypes);
-			}
-			ILGenerator il;
-			if (!IsFullyPublic(type))
-			{
-				DynamicMethod dynGetter = new DynamicMethod(type.FullName + "_get", typeof(object), new Type[] { typeof(object), typeof(string) }, type, true),
-							  dynSetter = new DynamicMethod(type.FullName + "_set", null, new Type[] { typeof(object), typeof(string), typeof(object) }, type, true);
-				WriteGetter(dynGetter.GetILGenerator(), type, props, fields, true);
-				WriteSetter(dynSetter.GetILGenerator(), type, props, fields, true);
-				DynamicMethod dynCtor = null;
-				if (ctor != null)
-				{
-					dynCtor = new DynamicMethod(type.FullName + "_ctor", typeof(object), Type.EmptyTypes, type, true);
-					il = dynCtor.GetILGenerator();
-					il.Emit(OpCodes.Newobj, ctor);
-					il.Emit(OpCodes.Ret);
-				}
-				return new DelegateAccessor(
-					(Func<object, string, object>)dynGetter.CreateDelegate(typeof(Func<object, string, object>)),
-					(Action<object, string, object>)dynSetter.CreateDelegate(typeof(Action<object, string, object>)),
-					dynCtor == null ? null : (Func<object>)dynCtor.CreateDelegate(typeof(Func<object>)));
-			}
+            var props = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.Instance);
+            ConstructorInfo ctor = null;
+            if (type.IsClass && !type.IsAbstract)
+            {
+                ctor = type.GetConstructor(Type.EmptyTypes);
+            }
+            ILGenerator il;
+            if (!IsFullyPublic(type))
+            {
+                DynamicMethod dynGetter = new DynamicMethod(type.FullName + "_get", typeof(object), new Type[] { typeof(object), typeof(string) }, type, true),
+                              dynSetter = new DynamicMethod(type.FullName + "_set", null, new Type[] { typeof(object), typeof(string), typeof(object) }, type, true);
+                WriteGetter(dynGetter.GetILGenerator(), type, props, fields, true);
+                WriteSetter(dynSetter.GetILGenerator(), type, props, fields, true);
+                DynamicMethod dynCtor = null;
+                if (ctor != null)
+                {
+                    dynCtor = new DynamicMethod(type.FullName + "_ctor", typeof(object), Type.EmptyTypes, type, true);
+                    il = dynCtor.GetILGenerator();
+                    il.Emit(OpCodes.Newobj, ctor);
+                    il.Emit(OpCodes.Ret);
+                }
+                return new DelegateAccessor(
+                    (Func<object, string, object>)dynGetter.CreateDelegate(typeof(Func<object, string, object>)),
+                    (Action<object, string, object>)dynSetter.CreateDelegate(typeof(Action<object, string, object>)),
+                    dynCtor == null ? null : (Func<object>)dynCtor.CreateDelegate(typeof(Func<object>)));
+            }
 
-			// note this region is synchronized; only one is being created at a time so we don't need to stress about the builders
-			if (assembly == null)
-			{
-				AssemblyName name = new AssemblyName("FastMember_dynamic");
-				assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run);
-				module = assembly.DefineDynamicModule(name.Name);
-			}
-			TypeBuilder tb = module.DefineType("FastMember_dynamic." + type.Name + "_" + Interlocked.Increment(ref counter),
-				(typeof(TypeAccessor).Attributes | TypeAttributes.Sealed) & ~TypeAttributes.Abstract, typeof(TypeAccessor));
+            // note this region is synchronized; only one is being created at a time so we don't need to stress about the builders
+            if (assembly == null)
+            {
+                AssemblyName name = new AssemblyName("FastMember_dynamic");
+                assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run);
+                module = assembly.DefineDynamicModule(name.Name);
+            }
+            TypeBuilder tb = module.DefineType("FastMember_dynamic." + type.Name + "_" + Interlocked.Increment(ref counter),
+                (typeof(TypeAccessor).Attributes | TypeAttributes.Sealed) & ~TypeAttributes.Abstract, typeof(TypeAccessor));
 
-			tb.DefineDefaultConstructor(MethodAttributes.Public);
-			PropertyInfo indexer = typeof(TypeAccessor).GetProperty("Item");
-			MethodInfo baseGetter = indexer.GetGetMethod(), baseSetter = indexer.GetSetMethod();
-			MethodBuilder body = tb.DefineMethod(baseGetter.Name, baseGetter.Attributes & ~MethodAttributes.Abstract, typeof(object), new Type[] { typeof(object), typeof(string) });
-			il = body.GetILGenerator();
-			WriteGetter(il, type, props, fields, false);
-			tb.DefineMethodOverride(body, baseGetter);
+            tb.DefineDefaultConstructor(MethodAttributes.Public);
+            PropertyInfo indexer = typeof(TypeAccessor).GetProperty("Item");
+            MethodInfo baseGetter = indexer.GetGetMethod(), baseSetter = indexer.GetSetMethod();
+            MethodBuilder body = tb.DefineMethod(baseGetter.Name, baseGetter.Attributes & ~MethodAttributes.Abstract, typeof(object), new Type[] { typeof(object), typeof(string) });
+            il = body.GetILGenerator();
+            WriteGetter(il, type, props, fields, false);
+            tb.DefineMethodOverride(body, baseGetter);
 
-			body = tb.DefineMethod(baseSetter.Name, baseSetter.Attributes & ~MethodAttributes.Abstract, null, new Type[] { typeof(object), typeof(string), typeof(object) });
-			il = body.GetILGenerator();
-			WriteSetter(il, type, props, fields, false);
-			tb.DefineMethodOverride(body, baseSetter);
+            body = tb.DefineMethod(baseSetter.Name, baseSetter.Attributes & ~MethodAttributes.Abstract, null, new Type[] { typeof(object), typeof(string), typeof(object) });
+            il = body.GetILGenerator();
+            WriteSetter(il, type, props, fields, false);
+            tb.DefineMethodOverride(body, baseSetter);
 
-			if (ctor != null)
-			{
-				MethodInfo baseMethod = typeof(TypeAccessor).GetProperty("CreateNewSupported").GetGetMethod();
-				body = tb.DefineMethod(baseMethod.Name, baseMethod.Attributes, typeof(bool), Type.EmptyTypes);
-				il = body.GetILGenerator();
-				il.Emit(OpCodes.Ldc_I4_1);
-				il.Emit(OpCodes.Ret);
-				tb.DefineMethodOverride(body, baseMethod);
+            if (ctor != null)
+            {
+                MethodInfo baseMethod = typeof(TypeAccessor).GetProperty("CreateNewSupported").GetGetMethod();
+                body = tb.DefineMethod(baseMethod.Name, baseMethod.Attributes, typeof(bool), Type.EmptyTypes);
+                il = body.GetILGenerator();
+                il.Emit(OpCodes.Ldc_I4_1);
+                il.Emit(OpCodes.Ret);
+                tb.DefineMethodOverride(body, baseMethod);
 
-				baseMethod = typeof(TypeAccessor).GetMethod("CreateNew");
-				body = tb.DefineMethod(baseMethod.Name, baseMethod.Attributes, typeof(object), Type.EmptyTypes);
-				il = body.GetILGenerator();
-				il.Emit(OpCodes.Newobj, ctor);
-				il.Emit(OpCodes.Ret);
-				tb.DefineMethodOverride(body, baseMethod);
-			}
+                baseMethod = typeof(TypeAccessor).GetMethod("CreateNew");
+                body = tb.DefineMethod(baseMethod.Name, baseMethod.Attributes, typeof(object), Type.EmptyTypes);
+                il = body.GetILGenerator();
+                il.Emit(OpCodes.Newobj, ctor);
+                il.Emit(OpCodes.Ret);
+                tb.DefineMethodOverride(body, baseMethod);
+            }
 
-			return (TypeAccessor)Activator.CreateInstance(tb.CreateType());
-		}
+            return (TypeAccessor)Activator.CreateInstance(tb.CreateType());
+        }
 
-		private static void Cast(ILGenerator il, Type type, LocalBuilder addr)
-		{
-			if (type == typeof(object)) { }
-			else if (type.IsValueType)
-			{
-				il.Emit(OpCodes.Unbox_Any, type);
-				if (addr != null)
-				{
-					il.Emit(OpCodes.Stloc, addr);
-					il.Emit(OpCodes.Ldloca_S, addr);
-				}
-			}
-			else
-			{
-				il.Emit(OpCodes.Castclass, type);
-			}
-		}
+        private static void Cast(ILGenerator il, Type type, LocalBuilder addr)
+        {
+            if (type == typeof(object)) { }
+            else if (type.IsValueType)
+            {
+                il.Emit(OpCodes.Unbox_Any, type);
+                if (addr != null)
+                {
+                    il.Emit(OpCodes.Stloc, addr);
+                    il.Emit(OpCodes.Ldloca_S, addr);
+                }
+            }
+            else
+            {
+                il.Emit(OpCodes.Castclass, type);
+            }
+        }
 
-		/// <summary>
-		/// Get or set the value of a named member on the target instance
-		/// </summary>
-		public abstract object this[object target, string name]
-		{
-			get;
-			set;
-		}
-	}
+        /// <summary>
+        /// Get or set the value of a named member on the target instance
+        /// </summary>
+        public abstract object this[object target, string name]
+        {
+            get;
+            set;
+        }
+    }
 }
 #endif
 

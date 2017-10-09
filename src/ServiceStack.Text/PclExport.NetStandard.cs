@@ -1,7 +1,7 @@
 //Copyright (c) ServiceStack, Inc. All Rights Reserved.
 //License: https://raw.github.com/ServiceStack/ServiceStack/master/license.txt
 
-#if NETSTANDARD1_1
+#if NETSTANDARD2_0
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,11 +15,9 @@ using System.Reflection.Emit;
 using System.Runtime.InteropServices;
 using System.Net;
 
-#if NETSTANDARD1_3
 using System.Collections.Specialized;
 using System.Linq.Expressions;
 using Microsoft.Extensions.Primitives;
-#endif
 
 namespace ServiceStack
 {
@@ -75,7 +73,7 @@ namespace ServiceStack
         public NetStandardPclExport()
         {
             this.PlatformName = PlatformNames.NetStandard;
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
             this.DirSep = Path.DirectorySeparatorChar;
 #else 
             this.DirSep = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? '\\' : '/';
@@ -108,7 +106,7 @@ namespace ServiceStack
         public override string ReadAllText(string filePath)
         {
             //NET Standard 1.1 does not supported Stream Reader with string constructor
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
             using (StreamReader rdr = File.OpenText(filePath))
             {
                 return rdr.ReadToEnd();
@@ -118,7 +116,7 @@ namespace ServiceStack
 #endif
         }
 
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
         public override bool FileExists(string filePath)
         {
             return File.Exists(filePath);
@@ -212,7 +210,7 @@ namespace ServiceStack
 
         public override string GetEnvironmentVariable(string name)
         {
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
             return Environment.GetEnvironmentVariable(name);
 #else
             return null;
@@ -221,7 +219,7 @@ namespace ServiceStack
 
         public override void WriteLine(string line)
         {
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
             Console.WriteLine(line);
 #else
             System.Diagnostics.Debug.WriteLine(line);
@@ -230,14 +228,14 @@ namespace ServiceStack
 
         public override void WriteLine(string format, params object[] args)
         {
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
             Console.WriteLine(format, args);
 #else
             System.Diagnostics.Debug.WriteLine(format, args);
 #endif
         }
 
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
 
         public override void AddHeader(WebRequest webReq, string name, string value)
         {
@@ -258,7 +256,7 @@ namespace ServiceStack
             return codeBase;
         }
 
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
         public override string GetAssemblyPath(Type source)
         {
             var codeBase = GetAssemblyCodeBase(source.GetTypeInfo().Assembly);
@@ -295,7 +293,7 @@ namespace ServiceStack
         public override GetMemberDelegate CreateGetter(PropertyInfo propertyInfo)
         {
             return
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
                 SupportsEmit ? PropertyInvoker.GetEmit(propertyInfo) :
 #endif
                 SupportsExpression
@@ -306,7 +304,7 @@ namespace ServiceStack
         public override GetMemberDelegate<T> CreateGetter<T>(PropertyInfo propertyInfo)
         {
             return
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
                 SupportsEmit ? PropertyInvoker.GetEmit<T>(propertyInfo) :
 #endif
                 SupportsExpression
@@ -317,7 +315,7 @@ namespace ServiceStack
         public override SetMemberDelegate CreateSetter(PropertyInfo propertyInfo)
         {
             return
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
                 SupportsEmit ? PropertyInvoker.SetEmit(propertyInfo) :
 #endif
                 SupportsExpression
@@ -335,7 +333,7 @@ namespace ServiceStack
         public override GetMemberDelegate CreateGetter(FieldInfo fieldInfo)
         {
             return
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
                 SupportsEmit ? FieldInvoker.GetEmit(fieldInfo) :
 #endif
                 SupportsExpression
@@ -346,7 +344,7 @@ namespace ServiceStack
         public override GetMemberDelegate<T> CreateGetter<T>(FieldInfo fieldInfo)
         {
             return
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
                 SupportsEmit ? FieldInvoker.GetEmit<T>(fieldInfo) :
 #endif
                 SupportsExpression
@@ -357,7 +355,7 @@ namespace ServiceStack
         public override SetMemberDelegate CreateSetter(FieldInfo fieldInfo)
         {
             return
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
                 SupportsEmit ? FieldInvoker.SetEmit(fieldInfo) :
 #endif
                 SupportsExpression
@@ -390,7 +388,7 @@ namespace ServiceStack
         //    return TimeZoneInfo.ConvertTimeToUtc(dateTime);
         //}
 
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
         public override ParseStringDelegate GetSpecializedCollectionParseMethod<TSerializer>(Type type)
         {
             if (type == typeof(StringCollection))
@@ -470,7 +468,7 @@ namespace ServiceStack
             SetKeepAliveDelegate?.Invoke(httpReq, value);
         }
         
-#if NETSTANDARD1_3
+#if NETSTANDARD2_0
         public override string GetStackTrace()
         {
             return Environment.StackTrace;

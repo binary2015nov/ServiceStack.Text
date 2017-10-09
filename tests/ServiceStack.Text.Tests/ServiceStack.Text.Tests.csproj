@@ -85,11 +85,6 @@
     <PackageReference Include="System.Reflection.Extensions" Version="4.*" />
     <PackageReference Include="System.ComponentModel.TypeConverter" Version="4.*" />
 
-    <Reference Include="..\..\lib\netstandard1.1\ServiceStack.Interfaces.dll" />
-    <Reference Include="..\..\lib\netstandard1.6\ServiceStack.Client.dll" />
-    <Reference Include="..\..\lib\netstandard1.3\ServiceStack.Common.dll" />
-    <Reference Include="..\..\lib\netstandard1.6\ServiceStack.dll" />    
-    <Reference Include="..\..\lib\netstandard1.3\Northwind.Common.dll" />
     <Reference Include="..\..\lib\netstandard2.0\ServiceStack.Interfaces.dll" />
     <Reference Include="..\..\lib\netstandard2.0\ServiceStack.Client.dll" />
     <Reference Include="..\..\lib\netstandard2.0\ServiceStack.Common.dll" />
