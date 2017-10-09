@@ -48,7 +48,9 @@ namespace ServiceStack.Text
         /// <returns></returns>
         public static T DeserializeFromString<T>(string value)
         {
-            if (string.IsNullOrEmpty(value)) return default(T);
+            if (value.IsNullOrEmpty())
+                return default(T);
+
             return (T)JsvReader<T>.Parse(value);
         }
 
@@ -77,7 +79,9 @@ namespace ServiceStack.Text
         
         public static string SerializeToString<T>(T value)
         {
-            if (value == null || value is Delegate) return null;
+            if (value == null || value is Delegate)
+                return null;
+
             if (typeof(T) == typeof(object))
             {
                 return SerializeToString(value, value.GetType());

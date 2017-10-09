@@ -121,7 +121,7 @@ namespace ServiceStack.Text
         {
             try
             {
-#if NETSTANDARD1_1
+#if NETSTANDARD1_1 || PCL
                 return default(DateTime);
 #else
                 if (assembly.Location != null)
