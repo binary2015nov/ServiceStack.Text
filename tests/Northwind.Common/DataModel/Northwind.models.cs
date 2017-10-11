@@ -5,8 +5,7 @@ using ServiceStack.Model;
 namespace Northwind.Common.DataModel
 {
     [Alias("Employees")]
-    public class Employee
-        : IHasIntId, IEquatable<Employee>
+    public class Employee : IHasIntId, IEquatable<Employee>
     {
         [AutoIncrement]
         [Alias("EmployeeID")]
