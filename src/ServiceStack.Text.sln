@@ -8,7 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{F7FB50ED
 		..\build\appsettings.license.txt = ..\build\appsettings.license.txt
 		..\build\build-core.proj = ..\build\build-core.proj
 		..\build\build-core.sh = ..\build\build-core.sh
-		..\build\build-sn.proj = ..\build\build-sn.proj
 		..\build\build.bat = ..\build\build.bat
 		..\build\build.proj = ..\build\build.proj
 		..\build\build.tasks = ..\build\build.tasks
@@ -18,6 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{F7FB50ED
 		..\NuGet.Core\ServiceStack.Text.Core\servicestack.text.core.nuspec = ..\NuGet.Core\ServiceStack.Text.Core\servicestack.text.core.nuspec
 		..\NuGet\ServiceStack.Text\servicestack.text.nuspec = ..\NuGet\ServiceStack.Text\servicestack.text.nuspec
 		..\NuGet.Signed\ServiceStack.Text.Signed\servicestack.text.signed.nuspec = ..\NuGet.Signed\ServiceStack.Text.Signed\servicestack.text.signed.nuspec
+		..\build\build-core.proj = ..\build\build-core.proj
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceStack.Text", "ServiceStack.Text\ServiceStack.Text.csproj", "{579B3FDB-CDAD-44E1-8417-885C38E49A0E}"
