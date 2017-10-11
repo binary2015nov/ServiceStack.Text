@@ -13,12 +13,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="ServiceStack.Client">
-      <HintPath>..\..\lib\net45\ServiceStack.Client.dll</HintPath>
-    </Reference>
-    <Reference Include="ServiceStack.Common">
-      <HintPath>..\..\lib\net45\ServiceStack.Common.dll</HintPath>
-    </Reference>
     <PackageReference Include="NUnit" Version="3.8.1" />
     <Reference Include="..\..\lib\net45\ServiceStack.Interfaces.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.Client.dll" />
