@@ -302,18 +302,20 @@ namespace ServiceStack
             return sb.ToString();
         }
 
-        public static string NormalizeScheme(this string urlString, bool enableHttps)
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string NormalizeScheme(this string urlString, bool useHttps)
         {
-            if (urlString == null || !enableHttps)
-                return urlString;
+            var scheme = useHttps ? "https://" : "http://";
+            if (urlString.IsNullOrEmpty())
+                return scheme;
 
-            if (!urlString.StartsWith("http"))
-                return "https://" + urlString;
-
-            if (urlString.Length >= "https".Length && urlString[4] != 's')
-                return urlString.Insert(4, "s");
-
-            return urlString;
+            var trimedUrlString = urlString.Trim();
+           
+            return scheme + (
+                !trimedUrlString.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !trimedUrlString.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+                ? trimedUrlString
+                : trimedUrlString.Substring(trimedUrlString.IndexOf("://") + 3));             
         }
 
         public static string FromUtf8Bytes(this byte[] bytes)
@@ -871,6 +873,8 @@ namespace ServiceStack
             return ucWords[0].ToInvariantUpper() + ucWords.Substring(1);
         }
 
+        [DebuggerStepThrough]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string ToHttps(this string urlString)
         {
             return urlString.NormalizeScheme(true);
@@ -982,7 +986,7 @@ namespace ServiceStack
 
         public static string ToNullIfEmpty(this string text)
         {
-            return string.IsNullOrEmpty(text) ? null : text;
+            return text.IsNullOrEmpty() ? null : text;
         }
         
         private static readonly char[] SystemTypeChars = { '<', '>', '+' };
