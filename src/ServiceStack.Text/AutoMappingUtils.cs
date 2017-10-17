@@ -117,8 +117,7 @@ namespace ServiceStack
 
         private static object ChangeValueType(object from, Type type)
         {
-            var strValue = from as string;
-            if (strValue != null)
+            if (from is string strValue)
                 return TypeSerializer.DeserializeFromString(strValue, type);
 
             if (type == typeof(string))
@@ -129,11 +128,7 @@ namespace ServiceStack
 
         public static object ChangeTo(this string strValue, Type type)
         {
-            if (type.IsValueType() && !type.IsEnum()
-#if !(PCL || NETSTANDARD1_1)
-                && type.HasInterface(typeof(IConvertible))
-#endif
-                )
+            if (type.IsValueType() && !type.IsEnum() && type.HasInterface(typeof(IConvertible)))
             {
                 try
                 {

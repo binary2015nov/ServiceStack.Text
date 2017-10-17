@@ -29,95 +29,12 @@ namespace ServiceStack
 	public delegate EmptyCtorDelegate EmptyCtorFactoryDelegate(Type type);
 	public delegate object EmptyCtorDelegate();
 
-#if (NETFX_CORE || PCL || NETSTANDARD1_1)
-
-	public enum TypeCode
-	{
-		Empty = 0,
-		Object = 1,
-		DBNull = 2,
-		Boolean = 3,
-		Char = 4,
-		SByte = 5,
-		Byte = 6,
-		Int16 = 7,
-		UInt16 = 8,
-		Int32 = 9,
-		UInt32 = 10,
-		Int64 = 11,
-		UInt64 = 12,
-		Single = 13,
-		Double = 14,
-		Decimal = 15,
-		DateTime = 16,
-		String = 18,
-	}
-#endif
-
-	public static class ReflectionExtensions
-	{
-#if (NETFX_CORE || PCL || NETSTANDARD1_1)
-		private static readonly Dictionary<Type, TypeCode> _typeCodeTable =
-		new Dictionary<Type, TypeCode>
-		{
-			{ typeof(Boolean), TypeCode.Boolean },
-			{ typeof(Char), TypeCode.Char },
-			{ typeof(Byte), TypeCode.Byte },
-			{ typeof(Int16), TypeCode.Int16 },
-			{ typeof(Int32), TypeCode.Int32 },
-			{ typeof(Int64), TypeCode.Int64 },
-			{ typeof(SByte), TypeCode.SByte },
-			{ typeof(UInt16), TypeCode.UInt16 },
-			{ typeof(UInt32), TypeCode.UInt32 },
-			{ typeof(UInt64), TypeCode.UInt64 },
-			{ typeof(Single), TypeCode.Single },
-			{ typeof(Double), TypeCode.Double },
-			{ typeof(DateTime), TypeCode.DateTime },
-			{ typeof(Decimal), TypeCode.Decimal },
-			{ typeof(String), TypeCode.String },
-		};
-
-		public static Type[] GetGenericArguments(this Type type)
-		{
-			//http://stackoverflow.com/a/39140220/85785
-			return type.GetTypeInfo().IsGenericTypeDefinition
-				? type.GetTypeInfo().GenericTypeParameters
-				: type.GetTypeInfo().GenericTypeArguments;
-		}
-
-		internal static TypeInfo GetTypeInfo(this Type type)
-		{
-			return ((IReflectableType)type).GetTypeInfo();
-		}
-#endif
-
-#if NETSTANDARD1_1
-		private static readonly Func<Type, object> GetUninitializedObjectDelegate = 
-			(Func<Type, object>) typeof(string).GetTypeInfo().Assembly
-			   .GetType("System.Runtime.Serialization.FormatterServices")
-			   ?.GetMethod("GetUninitializedObject")
-			   ?.CreateDelegate(typeof(Func<Type, object>));
-#endif
-
-		public static TypeCode GetTypeCode(this Type type)
-		{
-#if (NETFX_CORE || PCL || NETSTANDARD1_1)
-			if (type == null)
-			{
-				return TypeCode.Empty;
-			}
-
-			TypeCode result;
-			if (!_typeCodeTable.TryGetValue(type, out result))
-			{
-				result = TypeCode.Object;
-			}
-
-			return result;
-#else
-			return Type.GetTypeCode(type);
-#endif
-		}
+    public static class ReflectionExtensions
+    {
+        public static TypeCode GetTypeCode(this Type type)
+        {
+            return Type.GetTypeCode(type);
+        }        
 
 		public static bool IsInstanceOf(this Type type, Type thisOrBaseType)
 		{
@@ -499,75 +416,44 @@ namespace ServiceStack
 						typeof(ICollection<>),
 						typeof(IList<>));
 
-					if (genericType != null)
-					{
-						var elementType = genericType.GenericTypeArguments()[0];
-						return GetConstructorMethodToCache(typeof(List<>).MakeGenericType(elementType));
-					}
-				}
-			}
-			else if (type.IsArray)
-			{
-				return () => Array.CreateInstance(type.GetElementType(), 0);
-			}
-			else if (type.IsGenericTypeDefinition())
-			{
-#if NETSTANDARD1_1
-				var genericArgs = type.GetTypeInfo().GenericTypeParameters;
-#else
-				var genericArgs = type.GetGenericArguments();
-#endif
-				var typeArgs = new Type[genericArgs.Length];
-				for (var i = 0; i < genericArgs.Length; i++)
-					typeArgs[i] = typeof(object);
+                    if (genericType != null)
+                    {
+                        var elementType = genericType.GenericTypeArguments()[0];
+                        return GetConstructorMethodToCache(typeof(List<>).MakeGenericType(elementType));
+                    }
+                }
+            }
+            else if (type.IsArray)
+            {
+                return () => Array.CreateInstance(type.GetElementType(), 0);
+            }
+            else if (type.IsGenericTypeDefinition())
+            {
+                var genericArgs = type.GetGenericArguments();
+                var typeArgs = new Type[genericArgs.Length];
+                for (var i = 0; i < genericArgs.Length; i++)
+                    typeArgs[i] = typeof(object);
 
 				var realizedType = type.MakeGenericType(typeArgs);
 
 				return realizedType.CreateInstance;
 			}
 
-			var emptyCtor = type.GetEmptyConstructor();
-			if (emptyCtor != null)
-			{
+            var emptyCtor = type.GetEmptyConstructor();
+            if (emptyCtor != null)
+            {
+                var dm = new System.Reflection.Emit.DynamicMethod("MyCtor", type, Type.EmptyTypes, typeof(ReflectionExtensions).Module, true);
+                var ilgen = dm.GetILGenerator();
+                ilgen.Emit(System.Reflection.Emit.OpCodes.Nop);
+                ilgen.Emit(System.Reflection.Emit.OpCodes.Newobj, emptyCtor);
+                ilgen.Emit(System.Reflection.Emit.OpCodes.Ret);
 
-#if __IOS__ || XBOX || NETFX_CORE
-				return () => Activator.CreateInstance(type);
-#elif WP || PCL || NETSTANDARD1_1
-				System.Linq.Expressions.Expression conversion = Expression.Convert(
-					System.Linq.Expressions.Expression.New(type), typeof(object));
+                return (EmptyCtorDelegate)dm.CreateDelegate(typeof(EmptyCtorDelegate));
+            }
 
-				return System.Linq.Expressions.Expression.Lambda<EmptyCtorDelegate>(conversion).Compile();
-#else
-
-#if SL5 
-				var dm = new System.Reflection.Emit.DynamicMethod("MyCtor", type, Type.EmptyTypes);
-#else
-				var dm = new System.Reflection.Emit.DynamicMethod("MyCtor", type, Type.EmptyTypes, typeof(ReflectionExtensions).Module, true);
-#endif
-				var ilgen = dm.GetILGenerator();
-				ilgen.Emit(System.Reflection.Emit.OpCodes.Nop);
-				ilgen.Emit(System.Reflection.Emit.OpCodes.Newobj, emptyCtor);
-				ilgen.Emit(System.Reflection.Emit.OpCodes.Ret);
-
-				return (EmptyCtorDelegate)dm.CreateDelegate(typeof(EmptyCtorDelegate));
-#endif
-			}
-
-#if (SL5 && !WP) || XBOX
-			return () => Activator.CreateInstance(type);
-#elif NETSTANDARD1_1
-			if (GetUninitializedObjectDelegate != null)
-				return () => GetUninitializedObjectDelegate(type);
-
-			return () => Activator.CreateInstance(type);
-#elif WP || PCL
-			return System.Linq.Expressions.Expression.Lambda<EmptyCtorDelegate>(
-				System.Linq.Expressions.Expression.New(type)).Compile();
-#else
-			//Anonymous types don't have empty constructors
-			return () => FormatterServices.GetUninitializedObject(type);
-#endif
-		}
+            //Anonymous types don't have empty constructors
+            return () => FormatterServices.GetUninitializedObject(type);
+        }
 
 		private static class TypeMeta<T>
 		{
@@ -646,12 +532,8 @@ namespace ServiceStack
 			if (type == null)
 				return null;
 
-#if PCL || NETSTANDARD1_1
-			return type.GetTypeInfo().Module;
-#else
-			return type.Module;
-#endif
-		}
+            return type.Module;
+        }
 
 		public static PropertyInfo[] GetAllProperties(this Type type)
 		{

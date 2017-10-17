@@ -840,12 +840,8 @@ namespace ServiceStack
 
         public static string GetResponseBody(this Exception ex)
         {
-            var webEx = ex as WebException;
-            if (webEx == null || webEx.Response == null
-#if !(SL5 || PCL || NETSTANDARD1_1)
-                || webEx.Status != WebExceptionStatus.ProtocolError
-#endif
-            ) return null;
+            if (!(ex is WebException webEx) || webEx.Response == null || webEx.Status != WebExceptionStatus.ProtocolError) 
+                return null;
 
             var errorResponse = (HttpWebResponse)webEx.Response;
             using (var reader = new StreamReader(errorResponse.GetResponseStream(), PclExport.Instance.GetUseEncoding(false)))
