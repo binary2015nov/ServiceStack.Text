@@ -24,6 +24,7 @@ namespace ServiceStack
             {
                 if (sb.Length > 0)
                     sb.Append(seperator);
+
                 sb.Append(value);
             }
             return StringBuilderCache.Retrieve(sb);

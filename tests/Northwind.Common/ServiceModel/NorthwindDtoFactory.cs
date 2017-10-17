@@ -176,9 +176,9 @@ namespace Northwind.Common.ServiceModel
 			string territoryId, string territoryDescription, int regionId)
 		{
 			return new TerritoryDto {
-    			Id = territoryId,
-    			TerritoryDescription = territoryDescription,
-    			RegionId = regionId,
+				Id = territoryId,
+				TerritoryDescription = territoryDescription,
+				RegionId = regionId,
 			};
 		}
 
@@ -186,9 +186,9 @@ namespace Northwind.Common.ServiceModel
 			int employeeId, string territoryId)
 		{
 			return new EmployeeTerritoryDto {
-            	EmployeeId = employeeId,
-            	TerritoryId = territoryId,
-            };
+				EmployeeId = employeeId,
+				TerritoryId = territoryId,
+			};
 		}
 
 	}
