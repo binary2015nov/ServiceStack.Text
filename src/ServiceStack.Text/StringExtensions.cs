@@ -306,16 +306,19 @@ namespace ServiceStack
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string NormalizeScheme(this string urlString, bool useHttps)
         {
-            var scheme = useHttps ? "https://" : "http://";
-            if (urlString.IsNullOrEmpty())
-                return scheme;
+            if (string.IsNullOrWhiteSpace(urlString))
+                return useHttps ? "https://" : "http://";
 
-            var trimedUrlString = urlString.Trim();
-           
-            return scheme + (
-                !trimedUrlString.StartsWith("http://", StringComparison.OrdinalIgnoreCase) && !trimedUrlString.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
-                ? trimedUrlString
-                : trimedUrlString.Substring(trimedUrlString.IndexOf("://") + 3));             
+            urlString = urlString.Trim();
+            if (!useHttps)
+                return urlString.StartsWith("http://", StringComparison.OrdinalIgnoreCase) || urlString.StartsWith("https://", StringComparison.OrdinalIgnoreCase)
+                    ? urlString 
+                    : "http://" + urlString;
+
+            if (urlString.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                return urlString;
+
+            return "https://" + (urlString.StartsWith("http://", StringComparison.OrdinalIgnoreCase) ? urlString.Substring(7) : urlString);             
         }
 
         public static string FromUtf8Bytes(this byte[] bytes)

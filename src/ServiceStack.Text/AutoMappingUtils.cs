@@ -583,9 +583,9 @@ namespace ServiceStack
         //TODO: replace with InAssignableFrom
         public static bool CanCast(Type toType, Type fromType)
         {
-            if (toType.IsInterface())
+            if (toType.IsInterface)
             {
-                var interfaceList = fromType.Interfaces().ToList();
+                var interfaceList = fromType.GetInterfaces().ToList();
                 if (interfaceList.Contains(toType)) return true;
             }
             else
@@ -596,7 +596,7 @@ namespace ServiceStack
                 {
                     areSameTypes = baseType == toType;
                 }
-                while (!areSameTypes && (baseType = fromType.BaseType()) != null);
+                while (!areSameTypes && (baseType = fromType.BaseType) != null);
 
                 if (areSameTypes) return true;
             }
