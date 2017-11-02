@@ -136,12 +136,10 @@ namespace ServiceStack.Text.Tests
             {
                 NameValueCollection queryString = HttpUtility.ParseQueryString(str);
                 var restPath = new RestPath(typeof(T), "/query", "GET, POST");
-                var restHandler = new RestHandler
-                {
-                    RestPath = restPath
-                };
+                var restHandler = new RestHandler();
                 var httpReq = new MockHttpRequest("query", "GET", "application/json", "query", queryString,
                                                   new MemoryStream(), new NameValueCollection());
+                httpReq.SetRoute(restPath);
                 var request = (T)restHandler.CreateRequestAsync(httpReq, "query").Result;
                 return request;
             }
