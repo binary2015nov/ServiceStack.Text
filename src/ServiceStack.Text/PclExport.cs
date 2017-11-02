@@ -186,11 +186,7 @@ namespace ServiceStack
         /// <returns>A System.Text.Encoding instance.</returns>
         public virtual Encoding GetUseEncoding(bool byteOrderMark)
         {
-#if !PCL
             return new UTF8Encoding(byteOrderMark);
-#else
-            return Encoding.UTF8;
-#endif
         }
 
         /// <summary>
@@ -211,18 +207,13 @@ namespace ServiceStack
 
         public virtual Stream GetRequestStream(WebRequest webReq)
         {
-#if NETSTANDARD1_1 || NETSTANDARD1_6
             var async = webReq.GetRequestStreamAsync();
             async.Wait();
             return async.Result;
-#else
-            throw new NotImplementedException(GetType().Name);
-#endif
         }
 
         public virtual WebResponse GetResponse(WebRequest webReq)
         {
-#if NETSTANDARD1_1 || NETSTANDARD1_6
             try
             {
                 var async = webReq.GetResponseAsync();
@@ -233,9 +224,6 @@ namespace ServiceStack
             {
                 throw ex.UnwrapIfSingleException();
             }
-#else
-            throw new NotImplementedException(GetType().Name);
-#endif
         }
 
         public virtual bool IsDebugBuild(Assembly assembly)
