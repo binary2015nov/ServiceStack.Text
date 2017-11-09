@@ -12,11 +12,10 @@ using ServiceStack.Text.Common;
 namespace ServiceStack.Text.Tests
 {
     [TestFixture]
-#if NETCORE_SUPPORT
-    [Ignore("Fix Northwind.dll")]
-#endif
-    public class StringSerializerTranslationTests
-        : TestBase
+//#if NETCORE_SUPPORT
+//    [Ignore("Fix Northwind.dll")]
+//#endif
+    public class StringSerializerTranslationTests : TestBase
     {
         public StringSerializerTranslationTests()
         {
