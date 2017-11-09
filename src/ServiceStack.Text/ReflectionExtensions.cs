@@ -43,49 +43,35 @@ namespace ServiceStack
 				if (type == thisOrBaseType)
 					return true;
 
-				type = type.BaseType();
-			}
+                type = type.BaseType;
+            }
 
 			return false;
 		}
 
-		public static bool IsInheritingFromGenericType(this Type type, Type genericType)
-		{
-			while (type != typeof(object))
-			{
-				Type cur = type.IsGenericType() ? type.GetGenericTypeDefinition() : type;
-				if (genericType == cur)
-				{
-					return true;
-				}
-				type = type.BaseType();
-			}
-			return false;
-		}
+        public static bool HasGenericType(this Type type)
+        {
+            while (type != null)
+            {
+                if (type.IsGenericType)
+                    return true;
 
-		public static bool HasGenericType(this Type type)
-		{
-			while (type != null)
-			{
-				if (type.IsGeneric())
-					return true;
+                type = type.BaseType;
+            }
+            return false;
+        }
 
-				type = type.BaseType();
-			}
-			return false;
-		}
+        public static Type FirstGenericType(this Type type)
+        {
+            while (type != null)
+            {
+                if (type.IsGenericType)
+                    return type;
 
-		public static Type FirstGenericType(this Type type)
-		{
-			while (type != null)
-			{
-				if (type.IsGeneric())
-					return type;
-
-				type = type.BaseType();
-			}
-			return null;
-		}
+                type = type.BaseType;
+            }
+            return null;
+        }
 
 		public static Type GetTypeWithGenericTypeDefinitionOfAny(this Type type, params Type[] genericTypeDefinitions)
 		{
@@ -109,15 +95,15 @@ namespace ServiceStack
 				|| (type == genericTypeDefinition);
 		}
 
-		public static Type GetTypeWithGenericTypeDefinitionOf(this Type type, Type genericTypeDefinition)
-		{
-			foreach (var t in type.GetTypeInterfaces())
-			{
-				if (t.IsGeneric() && t.GetGenericTypeDefinition() == genericTypeDefinition)
-				{
-					return t;
-				}
-			}
+        public static Type GetTypeWithGenericTypeDefinitionOf(this Type type, Type genericTypeDefinition)
+        {
+            foreach (var t in type.GetInterfaces())
+            {
+                if (t.IsGenericType && t.GetGenericTypeDefinition() == genericTypeDefinition)
+                {
+                    return t;
+                }
+            }
 
 			var genericType = type.FirstGenericType();
 			if (genericType != null && genericType.GetGenericTypeDefinition() == genericTypeDefinition)
@@ -132,24 +118,24 @@ namespace ServiceStack
 		{
 			if (type == interfaceType) return interfaceType;
 
-			foreach (var t in type.GetTypeInterfaces())
-			{
-				if (t == interfaceType)
-					return t;
-			}
+            foreach (var t in type.GetInterfaces())
+            {
+                if (t == interfaceType)
+                    return t;
+            }
 
 			return null;
 		}
 
-		public static bool HasInterface(this Type type, Type interfaceType)
-		{
-			foreach (var t in type.GetTypeInterfaces())
-			{
-				if (t == interfaceType)
-					return true;
-			}
-			return false;
-		}
+        public static bool HasInterface(this Type type, Type interfaceType)
+        {
+            foreach (var t in type.GetInterfaces())
+            {
+                if (t == interfaceType)
+                    return true;
+            }
+            return false;
+        }
 
 		public static bool AllHaveInterfacesOfType(
 			this Type assignableFromType, params Type[] types)
@@ -161,10 +147,10 @@ namespace ServiceStack
 			return true;
 		}
 
-		public static bool IsNullableType(this Type type)
-		{
-			return type.IsGenericType() && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-		}
+        public static bool IsNullableType(this Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
+        }
 
 		public static TypeCode GetUnderlyingTypeCode(this Type type)
 		{
@@ -175,10 +161,10 @@ namespace ServiceStack
 		{
 			if (type == null) return false;
 
-			if (type.IsEnum()) //TypeCode can be TypeCode.Int32
-			{
-				return JsConfig.TreatEnumAsInteger || type.IsEnumFlags();
-			}
+            if (type.IsEnum) //TypeCode can be TypeCode.Int32
+            {
+                return JsConfig.TreatEnumAsInteger || type.IsEnumFlags();
+            }
 
 			switch (GetTypeCode(type))
 			{
@@ -195,19 +181,19 @@ namespace ServiceStack
 				case TypeCode.UInt64:
 					return true;
 
-				case TypeCode.Object:
-					if (type.IsNullableType())
-					{
-						return IsNumericType(Nullable.GetUnderlyingType(type));
-					}
-					if (type.IsEnum())
-					{
-						return JsConfig.TreatEnumAsInteger || type.IsEnumFlags();
-					}
-					return false;
-			}
-			return false;
-		}
+                case TypeCode.Object:
+                    if (type.IsNullableType())
+                    {
+                        return IsNumericType(Nullable.GetUnderlyingType(type));
+                    }
+                    if (type.IsEnum)
+                    {
+                        return JsConfig.TreatEnumAsInteger || type.IsEnumFlags();
+                    }
+                    return false;
+            }
+            return false;
+        }
 
 		public static bool IsIntegerType(this Type type)
 		{
@@ -256,15 +242,15 @@ namespace ServiceStack
 			return false;
 		}
 
-		public static Type GetTypeWithGenericInterfaceOf(this Type type, Type genericInterfaceType)
-		{
-			foreach (var t in type.GetTypeInterfaces())
-			{
-				if (t.IsGeneric() && t.GetGenericTypeDefinition() == genericInterfaceType)
-					return t;
-			}
+        public static Type GetTypeWithGenericInterfaceOf(this Type type, Type genericInterfaceType)
+        {
+            foreach (var t in type.GetInterfaces())
+            {
+                if (t.IsGenericType && t.GetGenericTypeDefinition() == genericInterfaceType)
+                    return t;
+            }
 
-			if (!type.IsGeneric()) return null;
+            if (!type.IsGenericType) return null;
 
 			var genericType = type.FirstGenericType();
 			return genericType.GetGenericTypeDefinition() == genericInterfaceType
@@ -272,11 +258,11 @@ namespace ServiceStack
 					: null;
 		}
 
-		public static bool HasAnyTypeDefinitionsOf(this Type genericType, params Type[] theseGenericTypes)
-		{
-			if (!genericType.IsGeneric()) return false;
+        public static bool HasAnyTypeDefinitionsOf(this Type genericType, params Type[] theseGenericTypes)
+        {
+            if (!genericType.IsGenericType) return false;
 
-			var genericTypeDefinition = genericType.GenericTypeDefinition();
+            var genericTypeDefinition = genericType.GetGenericTypeDefinition();
 
 			foreach (var thisGenericType in theseGenericTypes)
 			{
@@ -296,8 +282,8 @@ namespace ServiceStack
 			var typeBInterface = typeB.GetTypeWithGenericInterfaceOf(assignableFromType);
 			if (typeBInterface == null) return null;
 
-			var typeAGenericArgs = typeAInterface.GetTypeGenericArguments();
-			var typeBGenericArgs = typeBInterface.GetTypeGenericArguments();
+            var typeAGenericArgs = typeAInterface.GetGenericArguments();
+            var typeBGenericArgs = typeBInterface.GetGenericArguments();
 
 			if (typeAGenericArgs.Length != typeBGenericArgs.Length) return null;
 
@@ -321,8 +307,8 @@ namespace ServiceStack
 			var typeBInterface = typeB.GetTypeWithGenericInterfaceOf(assignableFromType);
 			if (typeBInterface == null) return null;
 
-			var typeAGenericArgs = typeAInterface.GetTypeGenericArguments();
-			var typeBGenericArgs = typeBInterface.GetTypeGenericArguments();
+            var typeAGenericArgs = typeAInterface.GetGenericArguments();
+            var typeBGenericArgs = typeBInterface.GetGenericArguments();
 
 			if (typeAGenericArgs.Length != typeBGenericArgs.Length) return null;
 
@@ -337,14 +323,14 @@ namespace ServiceStack
 			return new TypePair(typeAGenericArgs, typeBGenericArgs);
 		}
 
-		public static bool AreAllStringOrValueTypes(params Type[] types)
-		{
-			foreach (var type in types)
-			{
-				if (!(type == typeof(string) || type.IsValueType())) return false;
-			}
-			return true;
-		}
+        public static bool AreAllStringOrValueTypes(params Type[] types)
+        {
+            foreach (var type in types)
+            {
+                if (!(type == typeof(string) || type.IsValueType)) return false;
+            }
+            return true;
+        }
 
 		static Dictionary<Type, EmptyCtorDelegate> ConstructorMethods = new Dictionary<Type, EmptyCtorDelegate>();
 		public static EmptyCtorDelegate GetConstructorMethod(Type type)
@@ -391,25 +377,25 @@ namespace ServiceStack
 			return emptyCtorFn;
 		}
 
-		public static EmptyCtorDelegate GetConstructorMethodToCache(Type type)
-		{
-			if (type == typeof(string))
-			{
-				return () => String.Empty;
-			}
-			else if (type.IsInterface())
-			{
-				if (type.HasGenericType())
-				{
-					var genericType = type.GetTypeWithGenericTypeDefinitionOfAny(
-						typeof(IDictionary<,>));
+        public static EmptyCtorDelegate GetConstructorMethodToCache(Type type)
+        {
+            if (type == typeof(string))
+            {
+                return () => String.Empty;
+            }
+            else if (type.IsInterface)
+            {
+                if (type.HasGenericType())
+                {
+                    var genericType = type.GetTypeWithGenericTypeDefinitionOfAny(
+                        typeof(IDictionary<,>));
 
-					if (genericType != null)
-					{
-						var keyType = genericType.GenericTypeArguments()[0];
-						var valueType = genericType.GenericTypeArguments()[1];
-						return GetConstructorMethodToCache(typeof(Dictionary<,>).MakeGenericType(keyType, valueType));
-					}
+                    if (genericType != null)
+                    {
+                        var keyType = genericType.GetGenericArguments()[0];
+                        var valueType = genericType.GetGenericArguments()[1];
+                        return GetConstructorMethodToCache(typeof(Dictionary<,>).MakeGenericType(keyType, valueType));
+                    }
 
 					genericType = type.GetTypeWithGenericTypeDefinitionOfAny(
 						typeof(IEnumerable<>),
@@ -418,7 +404,7 @@ namespace ServiceStack
 
                     if (genericType != null)
                     {
-                        var elementType = genericType.GenericTypeArguments()[0];
+                        var elementType = genericType.GetGenericArguments()[0];
                         return GetConstructorMethodToCache(typeof(List<>).MakeGenericType(elementType));
                     }
                 }
@@ -427,7 +413,7 @@ namespace ServiceStack
             {
                 return () => Array.CreateInstance(type.GetElementType(), 0);
             }
-            else if (type.IsGenericTypeDefinition())
+            else if (type.IsGenericTypeDefinition)
             {
                 var genericArgs = type.GetGenericArguments();
                 var typeArgs = new Type[genericArgs.Length];
@@ -439,7 +425,7 @@ namespace ServiceStack
 				return realizedType.CreateInstance;
 			}
 
-            var emptyCtor = type.GetEmptyConstructor();
+            var emptyCtor = type.GetConstructor(Type.EmptyTypes);
             if (emptyCtor != null)
             {
                 if (PclExport.Instance.SupportsEmit)
@@ -541,23 +527,23 @@ namespace ServiceStack
             return type.Module;
         }
 
-		public static PropertyInfo[] GetAllProperties(this Type type)
-		{
-			if (type.IsInterface())
-			{
-				var propertyInfos = new List<PropertyInfo>();
+        public static PropertyInfo[] GetAllProperties(this Type type)
+        {
+            if (type.IsInterface)
+            {
+                var propertyInfos = new List<PropertyInfo>();
 
 				var considered = new List<Type>();
 				var queue = new Queue<Type>();
 				considered.Add(type);
 				queue.Enqueue(type);
 
-				while (queue.Count > 0)
-				{
-					var subType = queue.Dequeue();
-					foreach (var subInterface in subType.GetTypeInterfaces())
-					{
-						if (considered.Contains(subInterface)) continue;
+                while (queue.Count > 0)
+                {
+                    var subType = queue.Dequeue();
+                    foreach (var subInterface in subType.GetInterfaces())
+                    {
+                        if (considered.Contains(subInterface)) continue;
 
 						considered.Add(subInterface);
 						queue.Enqueue(subInterface);
@@ -579,23 +565,23 @@ namespace ServiceStack
 				.ToArray();
 		}
 
-		public static PropertyInfo[] GetPublicProperties(this Type type)
-		{
-			if (type.IsInterface())
-			{
-				var propertyInfos = new List<PropertyInfo>();
+        public static PropertyInfo[] GetPublicProperties(this Type type)
+        {
+            if (type.IsInterface)
+            {
+                var propertyInfos = new List<PropertyInfo>();
 
 				var considered = new List<Type>();
 				var queue = new Queue<Type>();
 				considered.Add(type);
 				queue.Enqueue(type);
 
-				while (queue.Count > 0)
-				{
-					var subType = queue.Dequeue();
-					foreach (var subInterface in subType.GetTypeInterfaces())
-					{
-						if (considered.Contains(subInterface)) continue;
+                while (queue.Count > 0)
+                {
+                    var subType = queue.Dequeue();
+                    foreach (var subInterface in subType.GetInterfaces())
+                    {
+                        if (considered.Contains(subInterface)) continue;
 
 						considered.Add(subInterface);
 						queue.Enqueue(subInterface);
@@ -640,10 +626,10 @@ namespace ServiceStack
 			return properties.OnlySerializableProperties(type);
 		}
 
-		public static PropertyInfo[] OnlySerializableProperties(this PropertyInfo[] properties, Type type = null)
-		{
-			var isDto = type.IsDto();
-			var readableProperties = properties.Where(x => x.PropertyGetMethod(nonPublic: isDto) != null);
+        public static PropertyInfo[] OnlySerializableProperties(this PropertyInfo[] properties, Type type = null)
+        {
+            var isDto = type.IsDto();
+            var readableProperties = properties.Where(x => x.GetGetMethod(nonPublic: isDto) != null);
 
 			if (isDto)
 			{

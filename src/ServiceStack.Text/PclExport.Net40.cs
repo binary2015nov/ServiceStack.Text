@@ -82,7 +82,7 @@ namespace ServiceStack
         public override bool IsAnonymousType(Type type)
         {
             return type.HasAttribute<CompilerGeneratedAttribute>()
-                   && type.IsGeneric() && type.Name.Contains("AnonymousType")
+                   && type.IsGenericType && type.Name.Contains("AnonymousType")
                    && (type.Name.StartsWith("<>", StringComparison.Ordinal) || type.Name.StartsWith("VB$", StringComparison.Ordinal))
                    && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
         }
@@ -284,10 +284,10 @@ namespace ServiceStack
 			return Encoding.ASCII.GetBytes(str);
 		}
 
-		public override bool InSameAssembly(Type t1, Type t2)
-		{
-			return t1.GetAssembly() == t2.GetAssembly();
-		}
+        public override bool InSameAssembly(Type t1, Type t2)
+        {
+            return t1.Assembly == t2.Assembly;
+        }
 
 		public override Type GetGenericCollectionType(Type type)
 		{
@@ -457,11 +457,11 @@ namespace ServiceStack
 		public override ParseStringDelegate GetJsReaderParseMethod<TSerializer>(Type type)
 		{
 #if !(__IOS__ || LITE)
-			if (type.AssignableFrom(typeof(System.Dynamic.IDynamicMetaObjectProvider)) ||
-				type.HasInterface(typeof(System.Dynamic.IDynamicMetaObjectProvider)))
-			{
-				return DeserializeDynamic<TSerializer>.Parse;
-			}
+            if (type.IsAssignableFrom(typeof(System.Dynamic.IDynamicMetaObjectProvider)) ||
+                type.HasInterface(typeof(System.Dynamic.IDynamicMetaObjectProvider)))
+            {
+                return DeserializeDynamic<TSerializer>.Parse;
+            }
 #endif
 			return null;
 		}
@@ -469,11 +469,11 @@ namespace ServiceStack
 		public override ParseStringSegmentDelegate GetJsReaderParseStringSegmentMethod<TSerializer>(Type type)
 		{
 #if !(__IOS__ || LITE)
-			if (type.AssignableFrom(typeof(System.Dynamic.IDynamicMetaObjectProvider)) ||
-				type.HasInterface(typeof(System.Dynamic.IDynamicMetaObjectProvider)))
-			{
-				return DeserializeDynamic<TSerializer>.ParseStringSegment;
-			}
+            if (type.IsAssignableFrom(typeof(System.Dynamic.IDynamicMetaObjectProvider)) ||
+                type.HasInterface(typeof(System.Dynamic.IDynamicMetaObjectProvider)))
+            {
+                return DeserializeDynamic<TSerializer>.ParseStringSegment;
+            }
 #endif
 			return null;
 		}

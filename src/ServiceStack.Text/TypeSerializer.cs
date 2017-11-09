@@ -86,7 +86,7 @@ namespace ServiceStack.Text
             {
                 return SerializeToString(value, value.GetType());
             }
-            if (typeof(T).IsAbstract() || typeof(T).IsInterface())
+            if (typeof(T).IsAbstract || typeof(T).IsInterface)
             {
                 JsState.IsWritingDynamic = true;
                 var result = SerializeToString(value, value.GetType());
@@ -121,7 +121,7 @@ namespace ServiceStack.Text
             {
                 SerializeToWriter(value, value.GetType(), writer);
             }
-            else if (typeof(T).IsAbstract() || typeof(T).IsInterface())
+            else if (typeof(T).IsAbstract || typeof(T).IsInterface)
             {
                 JsState.IsWritingDynamic = false;
                 SerializeToWriter(value, value.GetType(), writer);
@@ -152,7 +152,7 @@ namespace ServiceStack.Text
             {
                 SerializeToStream(value, value.GetType(), stream);
             }
-            else if (typeof(T).IsAbstract() || typeof(T).IsInterface())
+            else if (typeof(T).IsAbstract || typeof(T).IsInterface)
             {
                 JsState.IsWritingDynamic = false;
                 SerializeToStream(value, value.GetType(), stream);
@@ -285,7 +285,7 @@ namespace ServiceStack.Text
                 sb.AppendFormat("{0} {1}", param.ParameterType.Name, param.Name);
             }
 
-            var methodName = fn.Method().Name;
+            var methodName = fn.Method.Name;
             return "{0} {1}({2})".Fmt(method.ReturnType.Name, methodName, sb.ToString());
         }
 
@@ -296,9 +296,9 @@ namespace ServiceStack.Text
 
         private static bool HasCircularReferences(object value, Stack<object> parentValues)
         {
-            var type = value != null ? value.GetType() : null;
+            var type = value?.GetType();
 
-            if (type == null || !type.IsClass() || value is string)
+            if (type == null || !type.IsClass || value is string)
                 return false;
 
             if (parentValues == null)
@@ -307,8 +307,7 @@ namespace ServiceStack.Text
                 parentValues.Push(value);
             }
 
-            var valueEnumerable = value as IEnumerable;
-            if (valueEnumerable != null)
+            if (value is IEnumerable valueEnumerable)
             {
                 foreach (var item in valueEnumerable)
                 {
@@ -325,7 +324,7 @@ namespace ServiceStack.Text
                     if (pi.GetIndexParameters().Length > 0)
                         continue;
 
-                    var mi = pi.PropertyGetMethod();
+                    var mi = pi.GetGetMethod(nonPublic:false);
                     var pValue = mi != null ? mi.Invoke(value, null) : null;
                     if (pValue == null)
                         continue;

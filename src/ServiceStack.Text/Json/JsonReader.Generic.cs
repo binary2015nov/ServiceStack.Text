@@ -77,7 +77,7 @@ namespace ServiceStack.Text.Json
 
             if (ReadFn == null)
             {
-                if (typeof(T).IsAbstract() || typeof(T).IsInterface())
+                if (typeof(T).IsAbstract || typeof(T).IsInterface)
                 {
                     if (value.IsNullOrEmpty()) return null;
                     var concreteType = DeserializeType<JsonTypeSerializer>.ExtractType(value);
