@@ -1,11 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2008
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{F7FB50ED-EAFF-4839-935A-5BB4A4158245}"
 	ProjectSection(SolutionItems) = preProject
-		..\build\appsettings.license.txt = ..\build\appsettings.license.txt
 		..\build\build-core.proj = ..\build\build-core.proj
 		..\build\build-core.sh = ..\build\build-core.sh
 		..\build\build.bat = ..\build\build.bat
@@ -14,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{F7FB50ED
 		..\build\copy.bat = ..\build\copy.bat
 		..\README.md = ..\README.md
 		..\NuGet\ServiceStack.Text\servicestack.text.nuspec = ..\NuGet\ServiceStack.Text\servicestack.text.nuspec
-		..\NuGet.Signed\ServiceStack.Text.Signed\servicestack.text.signed.nuspec = ..\NuGet.Signed\ServiceStack.Text.Signed\servicestack.text.signed.nuspec
-		..\build\build-core.proj = ..\build\build-core.proj
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceStack.Text", "ServiceStack.Text\ServiceStack.Text.csproj", "{579B3FDB-CDAD-44E1-8417-885C38E49A0E}"
@@ -44,64 +41,10 @@ Global
 		{DD3BEB33-2509-423A-8545-CE1A83684530}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|ARM.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|ARM.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|x64.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|x64.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|x86.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|x86.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|Xbox 360.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Release|Xbox 360.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|Any CPU.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|Any CPU.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|ARM.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|ARM.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|Mixed Platforms.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|x64.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|x64.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|x86.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|x86.Build.0 = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|Xbox 360.ActiveCfg = Release|Any CPU
-		{DD3BEB33-2509-423A-8545-CE1A83684530}.Signed|Xbox 360.Build.0 = Release|Any CPU
 		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|ARM.Build.0 = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|x64.Build.0 = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|x86.Build.0 = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|Xbox 360.ActiveCfg = Debug|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Debug|Xbox 360.Build.0 = Debug|Any CPU
 		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|Any CPU.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|ARM.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|ARM.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|x64.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|x64.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|x86.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|x86.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|Xbox 360.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Release|Xbox 360.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|Any CPU.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|Any CPU.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|ARM.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|ARM.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|Mixed Platforms.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|x64.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|x64.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|x86.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|x86.Build.0 = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|Xbox 360.ActiveCfg = Release|Any CPU
-		{495EBC3A-0F73-4D25-9641-D6ECA70D0026}.Signed|Xbox 360.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
