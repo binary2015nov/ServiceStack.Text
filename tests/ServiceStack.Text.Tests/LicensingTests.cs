@@ -89,7 +89,7 @@ namespace ServiceStack.Text.Tests
                 LicenseUtils.ApprovedUsage(LicenseFeature.None, licenseUseCase.Feature, licenseUseCase.AllowedLimit, int.MaxValue, "Failed"));
         }
 
-        [Test, Explicit("Licenses are expired")]
+        [Test, Ignore("Licenses are expired")]
         public void Can_register_Text_License()
         {
             Licensing.RegisterLicense(TestText2013Text);
@@ -107,7 +107,7 @@ namespace ServiceStack.Text.Tests
             LicenseUtils.ApprovedUsage(LicenseFeature.Text, LicenseFeature.Text, 1, 2, "Failed");
         }
 
-        [Test, Explicit("Licenses are expired")]
+        [Test, Ignore("Licenses are expired")]
         public void Can_register_valid_licenses()
         {
             Licensing.RegisterLicense(TestBusiness2013Text);
@@ -131,7 +131,7 @@ namespace ServiceStack.Text.Tests
             Assert.That(LicenseUtils.ActivatedLicenseFeatures(), Is.EqualTo(LicenseFeature.All));
         }
 
-        [Test, Explicit]
+        [Test, Ignore("Licenses are expired")]
         public void Can_register_valid_license_from_EnvironmentVariable()
         {
             var licenseKeyText = Environment.GetEnvironmentVariable("SERVICESTACK_LICENSE");

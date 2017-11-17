@@ -101,7 +101,7 @@ namespace ServiceStack.Text.Tests.JsvTests
             Assert.That(actual.EquivalentTo(
                 new Dictionary<string, string>
                 {
-                    {"Id","1"},
+                    {"Id","2"},
                     {"LastName","Davolio"},
                     {"FirstName","Nancy"},
                     {"Title","Sales Representative"},
@@ -116,7 +116,7 @@ namespace ServiceStack.Text.Tests.JsvTests
                     {"HomePhone","(206) 555-9857"},
                     {"Extension","5467"},
                     {"Notes","Education includes a BA in psychology from Colorado State University in 1970.  She also completed 'The Art of the Cold Call.'  Nancy is a member of Toastmasters International."},
-                    {"ReportsTo","2"},
+                    {"ReportsTo","1"},
                     {"PhotoPath","http://accweb/emmployees/davolio.bmp"},
                 }));
         }

@@ -3,7 +3,7 @@
     <TargetFrameworks>net45;netcoreapp2.0</TargetFrameworks>
     <DebugType>portable</DebugType>
     <AssemblyName>ServiceStack.Text.Tests</AssemblyName>
-    <OutputType>Library</OutputType>
+    <!--<OutputType>Library</OutputType>-->
     <PackageId>ServiceStack.Text.Tests</PackageId>
     <GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
     <GenerateAssemblyDescriptionAttribute>false</GenerateAssemblyDescriptionAttribute>
@@ -14,16 +14,17 @@
     <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
   </PropertyGroup>
-  <PropertyGroup>
+  <!--<PropertyGroup>
     <DebugType Condition="'$(TargetFramework)' != '' AND '$(TargetFramework)' != 'netcoreapp2.0'">Full</DebugType>
-  </PropertyGroup>
+  </PropertyGroup>-->
   <ItemGroup>
     <ProjectReference Include="..\..\src\ServiceStack.Text\ServiceStack.Text.csproj" />
+    <ProjectReference Include="..\Northwind.Common\Northwind.Common.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="NUnit3TestAdapter" Version="3.8.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0-preview-20170923-02" />
-    <PackageReference Include="NUnit" Version="3.8.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="NUnit" Version="3.9.0" />
     <PackageReference Include="protobuf-net" Version="2.3.2" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
   </ItemGroup>
@@ -43,7 +44,7 @@
     <Reference Include="..\..\lib\net45\ServiceStack.Client.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.Common.dll" />
     <Reference Include="..\..\lib\net45\ServiceStack.dll" />
-    <Reference Include="..\..\lib\net45\Northwind.Common.dll" />
+    <!--<Reference Include="..\..\lib\net45\Northwind.Common.dll" />-->
   </ItemGroup>
   <!-- Enable NunitLite build, becase NUnit is not supported on .NET Core SDK 1.0.2 
    https://github.com/nunit/dotnet-test-nunit/issues/91 
@@ -59,6 +60,9 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
     <DefineConstants>$(DefineConstants);NETCORE_SUPPORT;NETCORE;NETSTANDARD2_0</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net45|AnyCPU'">
+    <NoWarn />
+  </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
     <PackageReference Include="Microsoft.Extensions.Primitives" Version="2.*" />
     <PackageReference Include="System.Drawing.Primitives" Version="4.*" />
@@ -73,7 +77,7 @@
     <Reference Include="..\..\lib\netstandard2.0\ServiceStack.Client.dll" />
     <Reference Include="..\..\lib\netstandard2.0\ServiceStack.Common.dll" />
     <Reference Include="..\..\lib\netstandard2.0\ServiceStack.dll" />
-    <Reference Include="..\..\lib\netstandard2.0\Northwind.Common.dll" />
+    <!--<Reference Include="..\..\lib\netstandard2.0\Northwind.Common.dll" />-->
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82a7f48d-3b50-4b1e-b82e-3ada8210c358}" />
