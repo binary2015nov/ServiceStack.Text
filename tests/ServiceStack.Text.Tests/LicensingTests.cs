@@ -231,7 +231,8 @@ namespace ServiceStack.Text.Tests
 
             var assembly = Assembly.Load(dllBytes);
 
-            Assert.That(assembly.ManifestModule.Name, Is.EqualTo("<Unknown>"));
+            Assert.IsNotNull(assembly.ManifestModule);
+            Assert.That(assembly.ManifestModule.ScopeName, Is.EqualTo("ServiceStack.Client.dll"));
         }
 #endif
 

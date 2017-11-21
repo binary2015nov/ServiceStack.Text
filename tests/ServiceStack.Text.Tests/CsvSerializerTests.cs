@@ -345,7 +345,7 @@ namespace ServiceStack.Text.Tests
                 { "CustomerId", "" },
             };
 
-            Assert.That(row.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,").Or.EqualTo("CustomerId,Id\n,1"));
+            Assert.That(row.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,\n").Or.EqualTo("CustomerId,Id\n,1\n"));
 
             var kvps = new[]
             {
@@ -353,7 +353,7 @@ namespace ServiceStack.Text.Tests
                 new KeyValuePair<string, object>("CustomerId", ""),
             };
 
-            Assert.That(kvps.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,").Or.EqualTo("CustomerId,Id\n,1"));
+            Assert.That(kvps.ToCsv().NormalizeNewLines(), Is.EqualTo("Id,CustomerId\n1,\n").Or.EqualTo("CustomerId,Id\n,1\n"));
         }
         
         [Test]
