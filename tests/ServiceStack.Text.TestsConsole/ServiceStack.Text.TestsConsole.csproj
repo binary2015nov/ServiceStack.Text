@@ -14,6 +14,9 @@
 
   <ItemGroup>
     <PackageReference Include="NUnit" Version="3.9.0" />
+    <Reference Include="..\..\lib\net45\ServiceStack.Interfaces.dll" />
+    <Reference Include="..\..\lib\net45\ServiceStack.Client.dll" />
+    <Reference Include="..\..\lib\net45\ServiceStack.Common.dll" />
     <ProjectReference Include="..\..\src\ServiceStack.Text\ServiceStack.Text.csproj" />
     <ProjectReference Include="..\ServiceStack.Text.Tests\ServiceStack.Text.Tests.csproj" />
     <PackageReference Include="System.ValueTuple" Version="4.4.0" />
