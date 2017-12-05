@@ -137,9 +137,6 @@ namespace ServiceStack
         /// <returns>A System.String that contains the escaped representation of uriComponent.</returns>       
         public static string UrlEncode(this string uriComponent, bool upperCase = false)
         {
-            if (uriComponent.IsNullOrEmpty())
-                return string.Empty;
-
             var sb = new StringBuilder();
             var format = upperCase ? "X2" : "x2";
             foreach (var charCode in Encoding.UTF8.GetBytes(uriComponent))
@@ -288,15 +285,18 @@ namespace ServiceStack
         /// <returns>A string representation for a System.Uri instance.</returns>
         public static string AppendPaths(this string baseUriString, string[] uriComponents, bool escape)
         {
-            var sb = new StringBuilder(baseUriString, 128);
-            if (sb.Length == 0 || sb[sb.Length - 1] != '/')
-                sb.Append('/');
             if (uriComponents == null || uriComponents.Length == 0)
-                return sb.ToString();
+                return baseUriString;
 
+            var sb = new StringBuilder(baseUriString, 128);
             foreach (var urlCom in uriComponents)
             {
-                if (sb[sb.Length - 1] != '/') sb.Append('/');
+                if (urlCom.IsNullOrEmpty())
+                    continue;
+
+                if (sb.Length != 0 && sb[sb.Length - 1] != '/')
+                    sb.Append('/');
+
                 sb.Append(escape ? urlCom.UrlEncode() : urlCom.TrimStart('/'));
             }
             return sb.ToString();
@@ -307,7 +307,7 @@ namespace ServiceStack
         public static string NormalizeScheme(this string urlString, bool useHttps)
         {
             if (string.IsNullOrWhiteSpace(urlString))
-                return useHttps ? "https://" : "http://";
+                return "";
 
             urlString = urlString.Trim();
             if (!useHttps)
@@ -1190,7 +1190,8 @@ namespace ServiceStack
 
             foreach (var prefix in prefixes)
             {
-                if (value.StartsWith(prefix)) return value.Substring(prefix.Length);
+                if (value.StartsWith(prefix))
+                    return value.Substring(prefix.Length);
             }
             return value;
         }
