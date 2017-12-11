@@ -102,6 +102,20 @@ namespace ServiceStack
             return urlString + prefix + key + "=" + val.UrlEncode();
         }
 
+        public static bool HasRequestBody(string httpMethod)
+        {
+            switch (httpMethod)
+            {
+                case HttpMethods.Get:
+                case HttpMethods.Delete:
+                case HttpMethods.Head:
+                case HttpMethods.Options:
+                    return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Gets the string representation response from the Internet resource to an HTTP-specific request, whose 
         /// Accept HTTP header is <see cref="MimeTypes.Json"/>.
@@ -637,6 +651,10 @@ namespace ServiceStack
                 {
                     writer.Write(requestBody);
                 }
+            }
+            else if (method != null && HasRequestBody(method))
+            {
+                webReq.ContentLength = 0;
             }
             requestFilter?.Invoke(webReq);
             using (var webRes = PclExport.Instance.GetResponse(webReq))
@@ -1344,7 +1362,7 @@ namespace ServiceStack
 
     public static class HttpMethods
     {
-        public static readonly HashSet<string> AllVerbs = new HashSet<string> {
+        static readonly string[] allVerbs = {
             "OPTIONS", "GET", "HEAD", "POST", "PUT", "DELETE", "TRACE", "CONNECT", // RFC 2616
             "PROPFIND", "PROPPATCH", "MKCOL", "COPY", "MOVE", "LOCK", "UNLOCK",    // RFC 2518
             "VERSION-CONTROL", "REPORT", "CHECKOUT", "CHECKIN", "UNCHECKOUT",
@@ -1357,6 +1375,11 @@ namespace ServiceStack
             "POLL",  "SUBSCRIBE", "UNSUBSCRIBE" //MS Exchange WebDav: http://msdn.microsoft.com/en-us/library/aa142917.aspx
         };
 
+        public static HashSet<string> AllVerbs = new HashSet<string>(allVerbs);
+
+        public static bool Exists(string httpMethod) => AllVerbs.Contains(httpMethod.ToUpper());
+        public static bool HasVerb(string httpVerb) => Exists(httpVerb);
+
         public const string Get = "GET";
         public const string Put = "PUT";
         public const string Post = "POST";
@@ -1364,29 +1387,6 @@ namespace ServiceStack
         public const string Options = "OPTIONS";
         public const string Head = "HEAD";
         public const string Patch = "PATCH";
-
-        public static bool HasVerb(string httpVerb)
-        {
-#if NETFX_CORE
-            return AllVerbs.Any(p => p.Equals(httpVerb.ToUpper()));
-#else
-            return AllVerbs.Contains(httpVerb.ToUpper());
-#endif
-        }
-
-        public static bool HasRequestBody(this string httpMethod)
-        {
-            switch (httpMethod)
-            {
-                case HttpMethods.Get:
-                case HttpMethods.Delete:
-                case HttpMethods.Head:
-                case HttpMethods.Options:
-                    return false;
-            }
-
-            return true;
-        }
     }
 
     public static class CompressionTypes

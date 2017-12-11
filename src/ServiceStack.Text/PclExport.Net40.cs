@@ -69,11 +69,6 @@ namespace ServiceStack
             return File.ReadAllText(filePath);
         }
 
-        public override string ToTitleCase(string value)
-        {
-            return TextInfo.ToTitleCase(value).Replace("_", String.Empty);
-        }
-
         public override string ToInvariantUpper(char value)
         {
             return value.ToString(CultureInfo.InvariantCulture).ToUpper();
@@ -563,10 +558,10 @@ namespace ServiceStack
 	}
 #endif
 
-#if NET45 || NETFX_CORE
-	public class Net45PclExport : Net40PclExport
-	{
-		public static new Net45PclExport Provider = new Net45PclExport();
+#if NET45 || NETSTANDARD2_0
+    public class Net45PclExport : Net40PclExport
+    {
+        public static new Net45PclExport Provider = new Net45PclExport();
 
 		public Net45PclExport()
 		{
