@@ -10,10 +10,9 @@ namespace ServiceStack.Common.Support
 
 		public AssemblyTypeDefinition(string typeDefinition)
 		{
-			if (string.IsNullOrEmpty(typeDefinition))
-			{
-				throw new ArgumentNullException();
-			}
+			if (typeDefinition.IsNullOrEmpty())		
+				throw new ArgumentException("The value cannot be null or empty.", nameof(typeDefinition));
+			
 			var parts = typeDefinition.Split(TypeDefinitionSeperator);
 			TypeName = parts[TypeNameIndex].Trim();
 			AssemblyName = (parts.Length > AssemblyNameIndex) ? parts[AssemblyNameIndex].Trim() : null;
