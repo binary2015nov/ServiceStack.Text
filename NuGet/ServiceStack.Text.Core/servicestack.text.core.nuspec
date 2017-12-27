@@ -6,7 +6,7 @@
     <version>5.0.0</version> 
     <authors>ServiceStack</authors> 
     <owners>ServiceStack</owners>
-    <summary>.NET's Standard 2.0 version of ServiceStack.Text</summary>
+    <summary>.NET Standard 2.0 version of ServiceStack.Text</summary>
     <description>
         .NET's fastest JSON, JSV and CSV Text Serializers. Fast, Light, Resilient.
         Contains ServiceStack's high-performance text-processing powers, for more info see: https://servicestack.net/text
@@ -22,8 +22,6 @@
       <group targetFramework=".netstandard2.0">
         <dependency id="Microsoft.Extensions.Primitives" version="[2.0.0, )" />
         <dependency id="System.Runtime" version="[4.3.0, )" />
-        <dependency id="System.Reflection.Emit" version="[4.3.0, )" />
-        <dependency id="System.Reflection.Emit.LightWeight" version="[4.3.0, )" />
         <dependency id="Microsoft.CSharp" version="[4.4.0, )" />
       </group>
     </dependencies>
