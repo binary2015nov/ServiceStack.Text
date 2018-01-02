@@ -71,12 +71,12 @@ namespace ServiceStack.Text
 
             VersionString = ServiceStackVersion.ToString(CultureInfo.InvariantCulture);
 
-            __releaseDate = new DateTime(2017,09,29);
+            __releaseDate = new DateTime(2017,12,27);
         }
 
         public static string VersionString { get; set; }
 
-        public static decimal ServiceStackVersion = 5.00m;
+        public static decimal ServiceStackVersion = 5.10m;
 
         public static bool IsLinux { get; set; }
 
