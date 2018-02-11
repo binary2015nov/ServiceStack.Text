@@ -42,7 +42,7 @@ namespace ServiceStack
             var qsPos = urlString.IndexOf('?');
             if (qsPos != -1)
             {
-                var existingKeyPos = qsPos + 1 == urlString.IndexOf(key, qsPos, PclExport.Instance.InvariantComparison)
+                var existingKeyPos = qsPos + 1 == urlString.IndexOf(key + "=", qsPos, PclExport.Instance.InvariantComparison)
                     ? qsPos
                     : urlString.IndexOf("&" + key, qsPos, PclExport.Instance.InvariantComparison);
 
@@ -81,7 +81,7 @@ namespace ServiceStack
             var hPos = urlString.IndexOf('#');
             if (hPos != -1)
             {
-                var existingKeyPos = hPos + 1 == urlString.IndexOf(key, hPos, PclExport.Instance.InvariantComparison)
+                var existingKeyPos = hPos + 1 == urlString.IndexOf(key + "=", hPos, PclExport.Instance.InvariantComparison)
                     ? hPos
                     : urlString.IndexOf("/" + key, hPos, PclExport.Instance.InvariantComparison);
 
@@ -956,7 +956,7 @@ namespace ServiceStack
         }
 
         public static void UploadFile(this HttpWebRequest webRequest, Stream fileStream, string fileName, string mimeType,
-            string accept = null, Action<HttpWebRequest> requestFilter = null, string method = HttpMethods.Post)
+            string accept = null, Action<HttpWebRequest> requestFilter = null, string method = HttpMethods.Post, string field = "file")
         {
             var httpReq = webRequest;
             httpReq.Method = method;
@@ -972,10 +972,8 @@ namespace ServiceStack
 
             var boundarybytes = ("\r\n--" + boundary + "--\r\n").ToAsciiBytes();
 
-            var headerTemplate = "\r\n--" + boundary +
-                                 "\r\nContent-Disposition: form-data; name=\"file\"; filename=\"{0}\"\r\nContent-Type: {1}\r\n\r\n";
-
-            var header = string.Format(headerTemplate, fileName, mimeType);
+            var header = "\r\n--" + boundary +
+                         $"\r\nContent-Disposition: form-data; name=\"{field}\"; filename=\"{fileName}\"\r\nContent-Type: {mimeType}\r\n\r\n";
 
             var headerbytes = header.ToAsciiBytes();
             var contentLength = fileStream.Length + headerbytes.Length + boundarybytes.Length;
