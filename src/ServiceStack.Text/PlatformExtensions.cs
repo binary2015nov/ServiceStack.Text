@@ -770,7 +770,7 @@ namespace ServiceStack
                     }
                     catch (Exception ignore)
                     {
-                        Tracer.Instance.WriteDebug($"Could not retrieve value from '{valueType?.GetType().Name}': ${ignore.Message}");
+                        Tracer.Default.WriteDebug($"Could not retrieve value from '{valueType?.GetType().Name}': ${ignore.Message}");
                     }
                 }
             }

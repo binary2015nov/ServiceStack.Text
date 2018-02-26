@@ -71,7 +71,7 @@ namespace ServiceStack.Text
 
             VersionString = ServiceStackVersion.ToString(CultureInfo.InvariantCulture);
 
-            __releaseDate = new DateTime(2018,02,11);
+            __releaseDate = new DateTime(2018,02,26);
         }
 
         public static string VersionString { get; set; }

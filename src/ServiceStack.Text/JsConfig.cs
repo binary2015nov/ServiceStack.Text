@@ -19,11 +19,11 @@ namespace ServiceStack.Text
             //JsConfig<System.Drawing.Color>.SerializeFn = c => c.ToString().Replace("Color ", "").Replace("[", "").Replace("]", "");
             //JsConfig<System.Drawing.Color>.DeSerializeFn = System.Drawing.Color.FromName;
             Reset();
-            LicenseUtils.Init();
+            //LicenseUtils.Init();
         }
 
         // force deterministic initialization of static constructor
-        public static void InitStatics() { }
+        //public static void InitStatics() { }
 
         public static JsConfigScope BeginScope()
         {
